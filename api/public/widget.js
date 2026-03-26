@@ -1,54 +1,106 @@
 (function () {
   'use strict';
 
-  // ─── CONFIG ────────────────────────────────────────────────────────────────
-  // Change CHAT_ENDPOINT if your Vercel project URL is different
+  // ─── READ CONFIG FROM SCRIPT TAG ─────────────────────────────────────────────
+  // Reads:  <script src="..." data-key="cvg_villagie" data-color="#C8622A"></script>
+  // Falls back to defaults if attributes are missing.
+  const scriptTag = document.currentScript ||
+    document.querySelector('script[src*="widget.js"]');
+
+  const CLIENT_KEY   = scriptTag?.dataset?.key   || 'cvg_demo';
   const CHAT_ENDPOINT = 'https://converge-landing-mbgp.vercel.app/api/chat';
 
-  const CONFIG = {
-    agentName: 'Aria',
-    agentRole: 'AI Sales Closer',
-    brandColor: '#6C47FF',
-    greeting: "Hey 👋 I'm Aria — what brings you here today? Looking to boost conversions, or just exploring what Converge can do?",
+  // ─── DEFAULT CONFIG ──────────────────────────────────────────────────────────
+  // These are overridden by the first API response (which returns the client's config).
+  let CONFIG = {
+    agentName:   scriptTag?.dataset?.name  || 'Aria',
+    agentRole:   scriptTag?.dataset?.role  || 'AI Sales Closer',
+    brandColor:  scriptTag?.dataset?.color || '#6C47FF',
+    greeting:    null,   // loaded from server on first exchange
     quickReplies: [
-      "Which plan suits my business?",
-      "How does the AI actually work?",
-      "This looks expensive",
-      "Book a demo"
-    ]
+      "Tell me more",
+      "How does this work?",
+      "Pricing?",
+      "I have a question"
+    ],
   };
 
-  // ─── STATE ──────────────────────────────────────────────────────────────────
+  // ─── CLIENT-SPECIFIC DEFAULTS ────────────────────────────────────────────────
+  // Greeting and quick replies vary per client — define them here so the widget
+  // doesn't need a round-trip before it can say hello.
+  const CLIENT_PRESETS = {
+    'cvg_demo': {
+      greeting: "Hey 👋 I'm Aria — what brings you to Converge today? Looking to boost conversions, or just exploring what we do?",
+      quickReplies: ["Which plan suits my business?", "How does the AI actually work?", "This looks expensive", "Book a demo"],
+    },
+    'cvg_villagie': {
+      greeting: "Hi! 👋 I'm Amara, your Villagie shopping assistant. Are you looking for something specific — fashion, accessories, or a gift — or shall I show you what's popular right now?",
+      quickReplies: ["What's new in women's fashion?", "I'm looking for a gift", "Do you ship internationally?", "Show me your best sellers"],
+    },
+  };
+
+  const preset = CLIENT_PRESETS[CLIENT_KEY] || CLIENT_PRESETS['cvg_demo'];
+  CONFIG.greeting = preset.greeting;
+  CONFIG.quickReplies = preset.quickReplies;
+
+  // ─── STATE ───────────────────────────────────────────────────────────────────
   let isOpen = false;
   let isTyping = false;
   let conversationHistory = [];
+  let quickRepliesShown = false;
 
-  // ─── STYLES ─────────────────────────────────────────────────────────────────
-  const STYLES = `
+  // ─── PAGE CONTEXT DETECTION ──────────────────────────────────────────────────
+  function getPageContext() {
+    const hash = window.location.hash?.replace('#', '') || '';
+    const sectionLabels = {
+      compare: 'Comparison vs Alternatives',
+      pricing: 'Pricing',
+      faq: 'FAQ',
+      showcase: 'Product Demo',
+      for: "Who It's For",
+      shop: 'Shop',
+      cart: 'Cart',
+      product: 'Product Page',
+    };
+    if (hash && sectionLabels[hash]) return { section: sectionLabels[hash] };
+    if (window.__cvgActiveSection && sectionLabels[window.__cvgActiveSection])
+      return { section: sectionLabels[window.__cvgActiveSection] };
+
+    // Try to infer from URL path
+    const path = window.location.pathname;
+    if (path.includes('/shop'))    return { section: 'Shop' };
+    if (path.includes('/cart'))    return { section: 'Cart' };
+    if (path.includes('/product')) return { section: 'Product Page' };
+    if (path.includes('/contact')) return { section: 'Contact Page' };
+    return { section: 'Homepage' };
+  }
+
+  function initSectionObserver() {
+    const sectionIds = ['compare', 'pricing', 'faq', 'showcase', 'for', 'shop'];
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && sectionIds.includes(e.target.id))
+          window.__cvgActiveSection = e.target.id;
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[id]').forEach(el => {
+      if (sectionIds.includes(el.id)) observer.observe(el);
+    });
+  }
+
+  // ─── STYLES (generated from CONFIG.brandColor) ───────────────────────────────
+  function buildStyles(color) {
+    return `
     #cvg-root * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
-
-    #cvg-root {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 999999;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 12px;
-    }
+    #cvg-root { position: fixed; bottom: 24px; right: 24px; z-index: 999999; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
 
     #cvg-launcher {
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: ${CONFIG.brandColor};
-      border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 24px rgba(108,71,255,0.45);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      width: 56px; height: 56px; border-radius: 50%; background: ${color};
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 24px ${color}70; transition: transform 0.2s ease, box-shadow 0.2s ease;
       position: relative; flex-shrink: 0;
     }
-    #cvg-launcher:hover { transform: scale(1.07); box-shadow: 0 6px 28px rgba(108,71,255,0.55); }
+    #cvg-launcher:hover { transform: scale(1.07); }
     #cvg-launcher:active { transform: scale(0.96); }
 
     #cvg-launcher-icon, #cvg-close-icon { position: absolute; transition: opacity 0.2s, transform 0.2s; }
@@ -58,124 +110,76 @@
     #cvg-root.open #cvg-close-icon    { opacity: 1; transform: scale(1); }
 
     #cvg-unread {
-      position: absolute; top: -2px; right: -2px;
-      width: 16px; height: 16px; border-radius: 50%;
-      background: #FF4D6D; border: 2px solid #fff;
-      font-size: 9px; font-weight: 700; color: #fff;
+      position: absolute; top: -2px; right: -2px; width: 16px; height: 16px; border-radius: 50%;
+      background: #FF4D6D; border: 2px solid #fff; font-size: 9px; font-weight: 700; color: #fff;
       display: flex; align-items: center; justify-content: center;
       opacity: 0; transform: scale(0); transition: all 0.2s;
     }
     #cvg-unread.show { opacity: 1; transform: scale(1); }
 
     #cvg-window {
-      width: 360px; height: 520px;
-      background: #ffffff; border-radius: 20px;
+      width: 360px; height: 520px; background: #ffffff; border-radius: 20px;
       box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06);
       display: flex; flex-direction: column; overflow: hidden;
-      opacity: 0; transform: translateY(16px) scale(0.96);
-      pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      transform-origin: bottom right;
+      opacity: 0; transform: translateY(16px) scale(0.96); pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease; transform-origin: bottom right;
     }
     #cvg-root.open #cvg-window { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
 
-    #cvg-header {
-      background: ${CONFIG.brandColor};
-      padding: 16px 18px;
-      display: flex; align-items: center; gap: 12px; flex-shrink: 0;
-    }
+    #cvg-header { background: ${color}; padding: 16px 18px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
     #cvg-avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: rgba(255,255,255,0.2);
+      width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2);
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 600; color: #fff;
-      flex-shrink: 0; position: relative;
+      font-size: 16px; font-weight: 600; color: #fff; flex-shrink: 0; position: relative;
     }
-    #cvg-status-dot {
-      position: absolute; bottom: 1px; right: 1px;
-      width: 10px; height: 10px; border-radius: 50%;
-      background: #2ECC71; border: 2px solid ${CONFIG.brandColor};
-    }
+    #cvg-status-dot { position: absolute; bottom: 1px; right: 1px; width: 10px; height: 10px; border-radius: 50%; background: #2ECC71; border: 2px solid ${color}; }
     #cvg-header-info { flex: 1; }
     #cvg-header-name { font-size: 15px; font-weight: 600; color: #fff; line-height: 1.2; }
     #cvg-header-sub  { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 1px; }
-    #cvg-powered {
-      font-size: 10px; color: rgba(255,255,255,0.45);
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 2px 7px; border-radius: 20px; letter-spacing: 0.02em;
-    }
+    #cvg-powered { font-size: 10px; color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.2); padding: 2px 7px; border-radius: 20px; letter-spacing: 0.02em; }
 
     #cvg-messages {
-      flex: 1; overflow-y: auto; padding: 16px;
-      display: flex; flex-direction: column; gap: 10px;
+      flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px;
       background: #F8F7FF; scroll-behavior: smooth;
     }
     #cvg-messages::-webkit-scrollbar { width: 4px; }
     #cvg-messages::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
 
     .cvg-msg {
-      max-width: 82%; font-size: 13.5px; line-height: 1.55;
-      padding: 10px 13px; border-radius: 14px;
+      max-width: 82%; font-size: 13.5px; line-height: 1.55; padding: 10px 13px; border-radius: 14px;
       animation: cvgFadeIn 0.2s ease; word-wrap: break-word;
     }
     @keyframes cvgFadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+    .cvg-msg.ai { background: #ffffff; color: #1a1a2e; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+    .cvg-msg.user { background: ${color}; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-    .cvg-msg.ai {
-      background: #ffffff; color: #1a1a2e;
-      align-self: flex-start; border-bottom-left-radius: 4px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    }
-    .cvg-msg.user {
-      background: ${CONFIG.brandColor}; color: #ffffff;
-      align-self: flex-end; border-bottom-right-radius: 4px;
-    }
-
-    #cvg-typing {
-      display: none; align-self: flex-start;
-      background: #ffffff; border-radius: 14px; border-bottom-left-radius: 4px;
-      padding: 12px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-      gap: 4px; align-items: center;
-    }
+    #cvg-typing { display: none; align-self: flex-start; background: #ffffff; border-radius: 14px; border-bottom-left-radius: 4px; padding: 12px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); gap: 4px; align-items: center; }
     #cvg-typing.show { display: flex; }
-    .cvg-dot {
-      width: 7px; height: 7px; border-radius: 50%; background: #bbb;
-      animation: cvgBounce 1.2s infinite ease-in-out;
-    }
+    .cvg-dot { width: 7px; height: 7px; border-radius: 50%; background: #bbb; animation: cvgBounce 1.2s infinite ease-in-out; }
     .cvg-dot:nth-child(2) { animation-delay: 0.15s; }
     .cvg-dot:nth-child(3) { animation-delay: 0.3s; }
     @keyframes cvgBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
 
-    #cvg-quick-replies {
-      display: flex; flex-wrap: wrap; gap: 6px;
-      padding: 8px 14px; background: #F8F7FF; flex-shrink: 0;
-    }
+    #cvg-quick-replies { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 14px; background: #F8F7FF; flex-shrink: 0; }
     .cvg-qr {
       font-size: 12px; padding: 6px 12px; border-radius: 20px;
-      border: 1.5px solid ${CONFIG.brandColor}; color: ${CONFIG.brandColor};
-      background: rgba(108,71,255,0.04); cursor: pointer;
+      border: 1.5px solid ${color}; color: ${color};
+      background: rgba(0,0,0,0.02); cursor: pointer;
       transition: all 0.15s; font-family: inherit; font-weight: 500; white-space: nowrap;
     }
-    .cvg-qr:hover { background: ${CONFIG.brandColor}; color: #fff; }
+    .cvg-qr:hover { background: ${color}; color: #fff; }
 
-    #cvg-input-area {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 14px 14px; background: #fff;
-      border-top: 1px solid rgba(0,0,0,0.06); flex-shrink: 0;
-    }
+    #cvg-input-area { display: flex; align-items: center; gap: 8px; padding: 10px 14px 14px; background: #fff; border-top: 1px solid rgba(0,0,0,0.06); flex-shrink: 0; }
     #cvg-input {
-      flex: 1; border: 1.5px solid #e8e8f0; border-radius: 22px;
-      padding: 9px 14px; font-size: 13px; outline: none;
-      font-family: inherit; color: #1a1a2e; background: #fafafa;
-      transition: border-color 0.15s;
+      flex: 1; border: 1.5px solid #e8e8f0; border-radius: 22px; padding: 9px 14px;
+      font-size: 13px; outline: none; font-family: inherit; color: #1a1a2e; background: #fafafa; transition: border-color 0.15s;
     }
-    #cvg-input:focus { border-color: ${CONFIG.brandColor}; background: #fff; }
+    #cvg-input:focus { border-color: ${color}; background: #fff; }
     #cvg-input::placeholder { color: #aaa; }
 
     #cvg-send {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: ${CONFIG.brandColor}; border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: transform 0.15s, opacity 0.15s;
+      width: 36px; height: 36px; border-radius: 50%; background: ${color}; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.15s, opacity 0.15s;
     }
     #cvg-send:hover { transform: scale(1.08); }
     #cvg-send:active { transform: scale(0.94); }
@@ -186,17 +190,25 @@
       #cvg-root { right: 12px; bottom: 12px; }
     }
   `;
+  }
 
-  // ─── BUILD DOM ───────────────────────────────────────────────────────────────
+  let styleEl;
+  function applyStyles(color) {
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = buildStyles(color);
+  }
+
+  // ─── BUILD DOM ────────────────────────────────────────────────────────────────
   function buildWidget() {
     const font = document.createElement('link');
     font.rel = 'stylesheet';
     font.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap';
     document.head.appendChild(font);
 
-    const style = document.createElement('style');
-    style.textContent = STYLES;
-    document.head.appendChild(style);
+    applyStyles(CONFIG.brandColor);
 
     const root = document.createElement('div');
     root.id = 'cvg-root';
@@ -204,7 +216,7 @@
       <div id="cvg-window">
         <div id="cvg-header">
           <div id="cvg-avatar">
-            ${CONFIG.agentName[0]}
+            <span id="cvg-avatar-letter">${CONFIG.agentName[0]}</span>
             <div id="cvg-status-dot"></div>
           </div>
           <div id="cvg-header-info">
@@ -215,9 +227,7 @@
         </div>
         <div id="cvg-messages">
           <div id="cvg-typing">
-            <div class="cvg-dot"></div>
-            <div class="cvg-dot"></div>
-            <div class="cvg-dot"></div>
+            <div class="cvg-dot"></div><div class="cvg-dot"></div><div class="cvg-dot"></div>
           </div>
         </div>
         <div id="cvg-quick-replies"></div>
@@ -246,9 +256,11 @@
     `;
     document.body.appendChild(root);
 
+    initSectionObserver();
+
     document.getElementById('cvg-launcher').addEventListener('click', toggleWidget);
     document.getElementById('cvg-send').addEventListener('click', sendMessage);
-    document.getElementById('cvg-input').addEventListener('keydown', (e) => {
+    document.getElementById('cvg-input').addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     });
     document.getElementById('cvg-input').addEventListener('input', () => {
@@ -263,7 +275,7 @@
     }, 1200);
   }
 
-  // ─── WIDGET TOGGLE ───────────────────────────────────────────────────────────
+  // ─── WIDGET TOGGLE ────────────────────────────────────────────────────────────
   function toggleWidget() {
     isOpen = !isOpen;
     document.getElementById('cvg-root').classList.toggle('open', isOpen);
@@ -273,17 +285,10 @@
     }
   }
 
-  function showUnread() {
-    const el = document.getElementById('cvg-unread');
-    el.textContent = '1';
-    el.classList.add('show');
-  }
+  function showUnread() { const el = document.getElementById('cvg-unread'); el.textContent = '1'; el.classList.add('show'); }
+  function hideUnread() { document.getElementById('cvg-unread').classList.remove('show'); }
 
-  function hideUnread() {
-    document.getElementById('cvg-unread').classList.remove('show');
-  }
-
-  // ─── MESSAGES ────────────────────────────────────────────────────────────────
+  // ─── MESSAGES ─────────────────────────────────────────────────────────────────
   function addMessage(role, text) {
     const msgs = document.getElementById('cvg-messages');
     const typing = document.getElementById('cvg-typing');
@@ -310,11 +315,10 @@
   function hideTyping() {
     isTyping = false;
     document.getElementById('cvg-typing').classList.remove('show');
-    document.getElementById('cvg-send').disabled =
-      document.getElementById('cvg-input').value.trim() === '';
+    document.getElementById('cvg-send').disabled = document.getElementById('cvg-input').value.trim() === '';
   }
 
-  // ─── QUICK REPLIES ───────────────────────────────────────────────────────────
+  // ─── QUICK REPLIES ────────────────────────────────────────────────────────────
   function showQuickReplies(replies) {
     const container = document.getElementById('cvg-quick-replies');
     container.innerHTML = '';
@@ -327,7 +331,7 @@
     });
   }
 
-  // ─── SEND MESSAGE ────────────────────────────────────────────────────────────
+  // ─── SEND MESSAGE ─────────────────────────────────────────────────────────────
   function sendMessage() {
     const input = document.getElementById('cvg-input');
     const text = input.value.trim();
@@ -347,23 +351,31 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: conversationHistory.slice(-12)
+          messages: conversationHistory.slice(-16),
+          clientKey: CLIENT_KEY,
+          pageContext: getPageContext(),
         }),
       });
 
       const data = await res.json();
       hideTyping();
 
+      // If server returns updated config (e.g. different brand color), apply it
+      if (data.config) {
+        if (data.config.brandColor && data.config.brandColor !== CONFIG.brandColor) {
+          CONFIG.brandColor = data.config.brandColor;
+          applyStyles(CONFIG.brandColor);
+        }
+        if (data.config.agentName) {
+          document.getElementById('cvg-header-name').textContent = data.config.agentName;
+          document.getElementById('cvg-avatar-letter').textContent = data.config.agentName[0];
+          document.getElementById('cvg-header-sub').textContent =
+            (data.config.agentRole || CONFIG.agentRole) + ' · Active now';
+        }
+      }
+
       const reply = data.reply || "I didn't quite catch that — could you rephrase?";
       addMessage('ai', reply);
-
-      // Contextual follow-up quick replies
-      const lower = reply.toLowerCase();
-      let followUps = ['Tell me more', 'How do I get started?'];
-      if (lower.includes('plan') || lower.includes('pricing')) followUps = ['Tell me more', 'Start free trial'];
-      if (lower.includes('demo') || lower.includes('call'))    followUps = ['Book a demo', 'Share my email'];
-      if (lower.includes('trial') || lower.includes('free'))   followUps = ['Start free now', "What's included?"];
-      showQuickReplies(followUps);
 
     } catch (err) {
       hideTyping();
@@ -371,7 +383,7 @@
     }
   }
 
-  // ─── INIT ────────────────────────────────────────────────────────────────────
+  // ─── INIT ─────────────────────────────────────────────────────────────────────
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', buildWidget);
   } else {
