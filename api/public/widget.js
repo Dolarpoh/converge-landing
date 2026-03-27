@@ -6,9 +6,8 @@
 
   const CLIENT_KEY    = scriptTag?.dataset?.key || 'cvg_demo';
   const SITE_URL      = window.location.origin;
-  const CHAT_ENDPOINT = 'https://converge-landing-mbgp.vercel.app/api/chat';
-  const REG_ENDPOINT  = 'https://converge-landing-mbgp.vercel.app/api/register';
-
+  const CHAT_ENDPOINT = 'https://converge-landing-ecru.vercel.app/api/chat';
+  const REG_ENDPOINT  = 'https://converge-landing-ecru.vercel.app/api/register';
   // ─── STATE ────────────────────────────────────────────────────────────────
   let isOpen = false;
   let isTyping = false;
