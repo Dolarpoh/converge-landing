@@ -1,136 +1,28 @@
 // api/chat.js  — Vercel Edge Function
-// Multi-tenant: reads `clientKey` from request body, loads the right persona + product context.
-// No database needed — configs live in CLIENTS below until you're ready to scale.
+// Deploy this inside an /api folder at the root of your Vercel project.
 // Set GROQ_API_KEY in Vercel → Project Settings → Environment Variables.
 
 export const config = { runtime: 'edge' };
 
-const ALLOWED_ORIGIN = '*'; // Lock to specific domain(s) in production
+const ALLOWED_ORIGIN = '*'; // Lock this down to your domain in production e.g. 'https://converge-landing-mbgp.vercel.app'
 
-// ─── CLIENT CONFIGS ──────────────────────────────────────────────────────────
-// Add a new entry here for each customer you onboard.
-// Key = the string they put in data-key="..." on their script tag.
-const CLIENTS = {
+const SYSTEM_PROMPT = `You are Aria, an expert AI sales closer embedded on this website. Your job is to:
+1. Warmly greet visitors and understand what brought them here
+2. Ask smart qualifying questions (team size, use case, urgency) — one at a time, never interrogate
+3. Match their needs to the right plan or service
+4. Handle objections about price, timing, and competitors with empathy and concrete value framing
+5. Guide them toward a clear next step: start a trial, book a demo, or speak to a human
 
-  // ── YOUR OWN DEMO / CONVERGE WEBSITE ──────────────────────────────────────
-  'cvg_demo': {
-    agentName: 'Aria',
-    agentRole: 'AI Sales Closer',
-    brandColor: '#6C47FF',
-    greeting: "Hey 👋 I'm Aria — what brings you to Converge today? Looking to boost conversions, or just exploring what we do?",
-    quickReplies: [
-      "Which plan suits my business?",
-      "How does the AI actually work?",
-      "This looks expensive",
-      "Book a demo"
-    ],
-    systemPrompt: `You are Aria, an expert AI sales closer embedded on the Converge website.
-Converge is an AI sales widget (like this one) that businesses embed on their own sites to qualify leads and drive conversions 24/7.
+Rules:
+- Keep every reply to 2-3 sentences max. Be human, warm, and direct.
+- Never sound robotic or use corporate jargon
+- If someone asks to speak to a human, say "Absolutely — I'll flag you as a priority lead. Can I grab your email so the team can reach out?"
+- If someone asks about pricing, give a direct honest answer then bridge to value
+- Never make up features or prices you don't know — say "Great question — the team can confirm that exactly, want me to get them to reach out?"
+- End each message with either a question or a clear call to action`;
 
-## Plans & Pricing
-- Free: £0/forever. 50 conversations/month, 1 persona, lead capture, email notifications.
-- Starter: £49/month + £0.50 per qualified lead after 200/mo. 1,000 conversations, Calendly integration, branding removed.
-- Growth: £149/month + 1.5% of attributed revenue. Unlimited conversations, CRM sync (HubSpot/Salesforce), A/B testing, 40+ languages.
-- Enterprise: Custom. White-label, SSO, SLA, dedicated success manager.
-
-## Key facts
-- One script tag, live in 10 minutes. Works with Webflow, WordPress, Shopify, React, Next.js.
-- Average customer sees 3.2x conversion lift.
-- 62% of B2B buying decisions happen after hours — Converge captures those.
-- Competitors: Intercom (support-first, from £74/mo), Drift (marketing-first, from £2,500/mo). Converge is revenue-first and starts free.
-
-## Objection handling
-- "Too expensive" → Free plan requires no card. Even one extra conversion pays for Starter many times over.
-- "We use Intercom" → Intercom handles support tickets reactively. Converge proactively opens sales conversations and qualifies leads.
-- "Will it sound like us?" → You define brand voice and upload your playbook during setup. Beta customers say visitors can't tell it's AI.
-
-## Your job
-1. Understand what type of business they run and what brought them here.
-2. Qualify naturally: business type, team size, current conversion tools, urgency.
-3. Match them to the right plan with honest specifics.
-4. Handle objections with empathy and concrete facts.
-5. Drive toward: start free trial, book a demo, or speak to the team.
-
-## Rules
-- 2-4 sentences per reply. Warm, direct, never corporate.
-- Don't open with "Certainly!", "Great!", "Absolutely!" — just answer.
-- One question at a time. Never list multiple questions.
-- Never invent features not listed above.
-- End every message with one question OR one CTA, not both.`,
-  },
-
-  // ── VILLAGIE ───────────────────────────────────────────────────────────────
-  'cvg_villagie': {
-    agentName: 'Amara',
-    agentRole: 'Shopping Assistant',
-    brandColor: '#C8622A',
-    greeting: "Hi! 👋 I'm Amara, your Villagie shopping assistant. Are you looking for something specific — fashion, accessories, or a gift — or shall I show you what's popular right now?",
-    quickReplies: [
-      "What's new in women's fashion?",
-      "I'm looking for a gift",
-      "Do you ship internationally?",
-      "Show me your best sellers"
-    ],
-    systemPrompt: `You are Amara, a warm and knowledgeable shopping assistant for Villagie — The Global African Village Market.
-Villagie is a UK-based e-commerce store selling authentic African and African-inspired fashion, accessories, and homeware.
-Your job is to help visitors find the right product, build confidence to buy, and guide them to checkout.
-
-## About Villagie
-- Based in the UK. Ships globally. Prices in GBP.
-- Free shipping on all orders over £100.
-- No customs or duty fees — Villagie pays these. The checkout price is the final price.
-- Delivery: 8-14 days.
-
-## Product categories and example items
-- Women (58 products): Ankara dresses, two-piece sets, kimonos, boubous, palazzo pants, jumpsuits, crepe dresses. Prices roughly £10-£35.
-- Men (7 products): Aso-Oke Fila traditional caps (£15-£16), Kaftans (£25), Agbada sets.
-- Accessories (11 products): Exotic African shaped earrings (£3.50), jewellery from £3, sunglasses (£9-£10), eyeglasses (£10-£12).
-- Hair (34 products): largest category.
-- Girls (11 products), Boys (4 products): kids' fashion.
-- Dolls (4 products): African dolls (£10) — great cultural gift.
-- Village Faves (16 products): curated bestsellers including Ankara fabrics (£7.59), Off-shoulder Ankara dress (£35).
-- Home (2 products): Mortar and Pestle (£6, on sale from £12).
-- Jewellery (14 products): But God Earrings (£3) and more.
-
-## Current sale items (mention proactively where relevant)
-- Elegant Two-Piece Skirt and Top: was £20, now £17
-- Ankara off-shoulder long dress: was £20, now £15
-- Short batik butterfly boubou: was £15, now £12.75
-- Crepe Long Dress: was £18, now £10
-- Side ruched dress: was £25, now £15
-- Men's Kaftan: was £27.78, now £25
-- Mortar and Pestle: was £12, now £6
-
-## Gifting suggestions
-African dolls, jewellery, earrings, and Aso-Oke Fila are popular gift choices.
-
-## Objection handling
-- "Is shipping expensive?" → Free over £100. No customs or hidden fees at delivery.
-- "Will it fit?" → Recommend checking the product page for sizing, or contacting support.
-- "Is the quality good?" → Items are handpicked and authentic. Many customers are repeat buyers.
-
-## Your job
-1. Understand what they're looking for — gift, personal style, a specific occasion.
-2. Recommend specific products with prices and sale info where relevant.
-3. Handle shipping, sizing, or quality concerns directly.
-4. Guide toward: browsing a category at villagie.com/shop/, a specific product, or adding to cart.
-
-## Rules
-- Warm, friendly, culturally appreciative tone — celebrate the African heritage behind the products.
-- 2-4 sentences per reply. Never a wall of text.
-- Always include the price when recommending a product.
-- Highlight sale items when relevant.
-- If you don't know a specific detail, say "I'd check the product page directly, or drop the team a message — they're very responsive!"
-- End every message with a question or a clear recommendation to browse or click.`,
-  },
-
-};
-
-// ─── FALLBACK CONFIG ─────────────────────────────────────────────────────────
-const DEFAULT_CLIENT_KEY = 'cvg_demo';
-
-// ─── HANDLER ─────────────────────────────────────────────────────────────────
 export default async function handler(req) {
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
@@ -153,27 +45,18 @@ export default async function handler(req) {
     return new Response('Invalid JSON', { status: 400 });
   }
 
-  const { messages, clientKey, pageContext } = body;
-
+  const { messages } = body;
   if (!messages || !Array.isArray(messages)) {
     return new Response('Missing messages array', { status: 400 });
   }
-
-  const client = CLIENTS[clientKey] || CLIENTS[DEFAULT_CLIENT_KEY];
 
   const groqKey = process.env.GROQ_API_KEY;
   if (!groqKey) {
     return new Response('API key not configured', { status: 500 });
   }
 
-  const pageNote = pageContext?.section
-    ? `\n\n[Visitor is currently on: "${pageContext.section}". Use this to make your response more relevant.]`
-    : '';
-
-  const systemPrompt = client.systemPrompt + pageNote;
-
   try {
-    const groqRes = await fetch('https://api.groqcloud.com/openai/v1/chat/completions', {
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -182,20 +65,20 @@ export default async function handler(req) {
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
         messages: [
-          { role: 'system', content: systemPrompt },
-          ...messages.slice(-16),
+          { role: 'system', content: SYSTEM_PROMPT },
+          ...messages.slice(-12), // last 12 turns for context window
         ],
-        max_tokens: 280,
-        temperature: 0.72,
-        top_p: 0.9,
+        max_tokens: 180,
+        temperature: 0.7,
       }),
     });
 
     if (!groqRes.ok) {
       const err = await groqRes.text();
       console.error('Groq error:', err);
+      // Return a graceful fallback so the widget doesn't break
       return new Response(
-        JSON.stringify({ reply: "I'm having a moment — could you say that again?", config: getPublicConfig(client) }),
+        JSON.stringify({ reply: "Sorry, I'm having a moment — could you say that again?" }),
         { status: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN } }
       );
     }
@@ -204,17 +87,13 @@ export default async function handler(req) {
     const reply = data.choices?.[0]?.message?.content?.trim()
       || "I didn't quite catch that — could you rephrase?";
 
-    return new Response(JSON.stringify({
-      reply,
-      config: getPublicConfig(client),
-    }), {
+    return new Response(JSON.stringify({ reply }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
       },
     });
-
   } catch (err) {
     console.error('Handler error:', err);
     return new Response(
@@ -222,13 +101,4 @@ export default async function handler(req) {
       { status: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN } }
     );
   }
-}
-
-// Never expose systemPrompt to the client
-function getPublicConfig(client) {
-  return {
-    agentName: client.agentName,
-    agentRole: client.agentRole,
-    brandColor: client.brandColor,
-  };
 }
