@@ -1,36 +1,62 @@
-// api/chat.js  — Vercel Edge Function
-// Deploy this inside an /api folder at the root of your Vercel project.
-// Set GROQ_API_KEY in Vercel → Project Settings → Environment Variables.
+// api/chat.js — Vercel Edge Function
+// Reads client configs from public/clients.json (via GitHub raw).
+// Falls back to a sensible generic prompt if the key is unknown.
+//
+// Required env vars:
+//   GROQ_API_KEY
+//   GITHUB_REPO   — e.g. "Dolarpoh/converge-landing"
+//   GITHUB_BRANCH — e.g. "main"
 
 export const config = { runtime: 'edge' };
 
-const ALLOWED_ORIGIN = '*'; // Lock this down to your domain in production e.g. 'https://converge-landing-mbgp.vercel.app'
+const ALLOWED_ORIGIN = '*';
 
-const SYSTEM_PROMPT = `You are Aria, an expert AI sales closer embedded on this website. Your job is to:
-1. Warmly greet visitors and understand what brought them here
-2. Ask smart qualifying questions (team size, use case, urgency) — one at a time, never interrogate
-3. Match their needs to the right plan or service
-4. Handle objections about price, timing, and competitors with empathy and concrete value framing
-5. Guide them toward a clear next step: start a trial, book a demo, or speak to a human
+// ─── FALLBACK CONFIG ─────────────────────────────────────────────────────────
+// Used when clientKey is not in clients.json, or clients.json can't be fetched.
+const FALLBACK = {
+  agentName: 'Aria',
+  agentRole: 'AI Sales Closer',
+  systemPrompt: `You are Aria, an AI sales closer embedded on a business website.
+Your job is to warmly greet visitors, understand what they need, and guide them toward a next step.
+Keep replies to 2-4 sentences. End every message with one question or one clear CTA.
+Never invent prices or features. Be warm, direct, and human.`,
+};
 
-Rules:
-- Keep every reply to 2-3 sentences max. Be human, warm, and direct.
-- Never sound robotic or use corporate jargon
-- If someone asks to speak to a human, say "Absolutely — I'll flag you as a priority lead. Can I grab your email so the team can reach out?"
-- If someone asks about pricing, give a direct honest answer then bridge to value
-- Never make up features or prices you don't know — say "Great question — the team can confirm that exactly, want me to get them to reach out?"
-- End each message with either a question or a clear call to action`;
+// ─── LOAD CLIENTS ────────────────────────────────────────────────────────────
+let clientsCache = null;
+let cacheTime = 0;
+const CACHE_TTL = 60_000; // 60 seconds — short enough to pick up new registrations quickly
 
+async function getClients() {
+  const now = Date.now();
+  if (clientsCache && now - cacheTime < CACHE_TTL) return clientsCache;
+
+  const repo   = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || 'main';
+
+  if (!repo) return {};
+
+  try {
+    const res = await fetch(
+      `https://raw.githubusercontent.com/${repo}/${branch}/public/clients.json`,
+      { signal: AbortSignal.timeout(4000) }
+    );
+    if (!res.ok) return {};
+    const data = await res.json();
+    clientsCache = data;
+    cacheTime = now;
+    return data;
+  } catch {
+    return clientsCache || {};
+  }
+}
+
+// ─── HANDLER ─────────────────────────────────────────────────────────────────
 export default async function handler(req) {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
+      headers: corsHeaders(),
     });
   }
 
@@ -39,13 +65,12 @@ export default async function handler(req) {
   }
 
   let body;
-  try {
-    body = await req.json();
-  } catch {
+  try { body = await req.json(); } catch {
     return new Response('Invalid JSON', { status: 400 });
   }
 
-  const { messages } = body;
+  const { messages, clientKey, pageContext } = body;
+
   if (!messages || !Array.isArray(messages)) {
     return new Response('Missing messages array', { status: 400 });
   }
@@ -54,6 +79,16 @@ export default async function handler(req) {
   if (!groqKey) {
     return new Response('API key not configured', { status: 500 });
   }
+
+  // Resolve client — check clients.json first, fall back to FALLBACK
+  const clients = await getClients();
+  const client  = clients[clientKey] || FALLBACK;
+  const systemPrompt = client.systemPrompt || FALLBACK.systemPrompt;
+
+  // Inject page context
+  const pageNote = pageContext?.section
+    ? `\n\n[The visitor is currently viewing: "${pageContext.section}". Use this to make your response more relevant.]`
+    : '';
 
   try {
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -65,40 +100,59 @@ export default async function handler(req) {
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
         messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          ...messages.slice(-12), // last 12 turns for context window
+          { role: 'system', content: systemPrompt + pageNote },
+          ...messages.slice(-16),
         ],
-        max_tokens: 180,
-        temperature: 0.7,
+        max_tokens: 280,
+        temperature: 0.72,
+        top_p: 0.9,
       }),
     });
 
     if (!groqRes.ok) {
-      const err = await groqRes.text();
-      console.error('Groq error:', err);
-      // Return a graceful fallback so the widget doesn't break
-      return new Response(
-        JSON.stringify({ reply: "Sorry, I'm having a moment — could you say that again?" }),
-        { status: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN } }
-      );
+      console.error('Groq error:', await groqRes.text());
+      return fallbackResponse(corsHeaders());
     }
 
-    const data = await groqRes.json();
+    const data  = await groqRes.json();
     const reply = data.choices?.[0]?.message?.content?.trim()
-      || "I didn't quite catch that — could you rephrase?";
+      || "I didn't quite catch that. Could you rephrase?";
 
-    return new Response(JSON.stringify({ reply }), {
+    return new Response(JSON.stringify({
+      reply,
+      config: getPublicConfig(client),
+    }), {
       status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
-      },
+      headers: { 'Content-Type': 'application/json', ...corsHeaders() },
     });
+
   } catch (err) {
     console.error('Handler error:', err);
-    return new Response(
-      JSON.stringify({ reply: "Connection issue on my end — try again in a moment." }),
-      { status: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ALLOWED_ORIGIN } }
-    );
+    return fallbackResponse(corsHeaders());
   }
+}
+
+function fallbackResponse(headers) {
+  return new Response(
+    JSON.stringify({ reply: "Connection issue on my end. Try again in a moment." }),
+    { status: 200, headers: { 'Content-Type': 'application/json', ...headers } }
+  );
+}
+
+function getPublicConfig(client) {
+  return {
+    agentName:   client.agentName   || FALLBACK.agentName,
+    agentRole:   client.agentRole   || FALLBACK.agentRole,
+    brandColor:  client.brandColor  || '#6C47FF',
+    greeting:    client.greeting,
+    quickReplies: client.quickReplies,
+  };
+}
+
+function corsHeaders() {
+  return {
+    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
 }
