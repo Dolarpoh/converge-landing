@@ -1,72 +1,83 @@
 (function () {
   'use strict';
 
-  // ─── READ CONFIG FROM SCRIPT TAG ─────────────────────────────────────────────
-  // Reads:  <script src="..." data-key="cvg_villagie" data-color="#C8622A"></script>
-  // Falls back to defaults if attributes are missing.
   const scriptTag = document.currentScript ||
     document.querySelector('script[src*="widget.js"]');
 
-  const CLIENT_KEY   = scriptTag?.dataset?.key   || 'cvg_demo';
+  const CLIENT_KEY    = scriptTag?.dataset?.key || 'cvg_demo';
+  const SITE_URL      = window.location.origin;
   const CHAT_ENDPOINT = 'https://converge-landing-mbgp.vercel.app/api/chat';
+  const REG_ENDPOINT  = 'https://converge-landing-mbgp.vercel.app/api/register';
 
-  // ─── DEFAULT CONFIG ──────────────────────────────────────────────────────────
-  // These are overridden by the first API response (which returns the client's config).
-  let CONFIG = {
-    agentName:   scriptTag?.dataset?.name  || 'Aria',
-    agentRole:   scriptTag?.dataset?.role  || 'AI Sales Closer',
-    brandColor:  scriptTag?.dataset?.color || '#6C47FF',
-    greeting:    null,   // loaded from server on first exchange
-    quickReplies: [
-      "Tell me more",
-      "How does this work?",
-      "Pricing?",
-      "I have a question"
-    ],
-  };
-
-  // ─── CLIENT-SPECIFIC DEFAULTS ────────────────────────────────────────────────
-  // Greeting and quick replies vary per client — define them here so the widget
-  // doesn't need a round-trip before it can say hello.
-  const CLIENT_PRESETS = {
-    'cvg_demo': {
-      greeting: "Hey 👋 I'm Aria — what brings you to Converge today? Looking to boost conversions, or just exploring what we do?",
-      quickReplies: ["Which plan suits my business?", "How does the AI actually work?", "This looks expensive", "Book a demo"],
-    },
-    'cvg_villagie': {
-      greeting: "Hi! 👋 I'm Amara, your Villagie shopping assistant. Are you looking for something specific — fashion, accessories, or a gift — or shall I show you what's popular right now?",
-      quickReplies: ["What's new in women's fashion?", "I'm looking for a gift", "Do you ship internationally?", "Show me your best sellers"],
-    },
-  };
-
-  const preset = CLIENT_PRESETS[CLIENT_KEY] || CLIENT_PRESETS['cvg_demo'];
-  CONFIG.greeting = preset.greeting;
-  CONFIG.quickReplies = preset.quickReplies;
-
-  // ─── STATE ───────────────────────────────────────────────────────────────────
+  // ─── STATE ────────────────────────────────────────────────────────────────
   let isOpen = false;
   let isTyping = false;
+  let isRegistered = false;
   let conversationHistory = [];
-  let quickRepliesShown = false;
 
-  // ─── PAGE CONTEXT DETECTION ──────────────────────────────────────────────────
+  let CONFIG = {
+    agentName:   'Aria',
+    agentRole:   'Sales Assistant',
+    brandColor:  scriptTag?.dataset?.color || '#6C47FF',
+    greeting:    null,
+    quickReplies: ['Tell me more', 'How does this work?', 'Pricing?', 'I have a question'],
+  };
+
+  // ─── REGISTRATION ─────────────────────────────────────────────────────────
+  // Called once on load. If the key is unknown, the backend scrapes the site
+  // and generates a custom config. Subsequent visits use the cached config.
+  async function register() {
+    try {
+      const res = await fetch(REG_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientKey: CLIENT_KEY, siteUrl: SITE_URL }),
+      });
+      const data = await res.json();
+      if (data.config) applyConfig(data.config);
+    } catch {
+      // Registration failed silently — widget still works with defaults
+    } finally {
+      isRegistered = true;
+      // Now show the greeting (delayed until we have the right config)
+      showGreeting();
+    }
+  }
+
+  function applyConfig(cfg) {
+    if (cfg.brandColor)   { CONFIG.brandColor = cfg.brandColor; applyStyles(cfg.brandColor); }
+    if (cfg.agentName)    {
+      CONFIG.agentName = cfg.agentName;
+      const nameEl   = document.getElementById('cvg-header-name');
+      const avatarEl = document.getElementById('cvg-avatar-letter');
+      const subEl    = document.getElementById('cvg-header-sub');
+      if (nameEl)   nameEl.textContent   = cfg.agentName;
+      if (avatarEl) avatarEl.textContent = cfg.agentName[0];
+      if (subEl)    subEl.textContent    = (cfg.agentRole || CONFIG.agentRole) + ' · Active now';
+      CONFIG.agentRole = cfg.agentRole || CONFIG.agentRole;
+    }
+    if (cfg.greeting)     CONFIG.greeting     = cfg.greeting;
+    if (cfg.quickReplies) CONFIG.quickReplies = cfg.quickReplies;
+  }
+
+  function showGreeting() {
+    const greeting = CONFIG.greeting ||
+      `Hi! I'm ${CONFIG.agentName} — what brings you here today?`;
+    addMessage('ai', greeting);
+    showQuickReplies(CONFIG.quickReplies);
+    showUnread();
+  }
+
+  // ─── PAGE CONTEXT ─────────────────────────────────────────────────────────
   function getPageContext() {
     const hash = window.location.hash?.replace('#', '') || '';
-    const sectionLabels = {
-      compare: 'Comparison vs Alternatives',
-      pricing: 'Pricing',
-      faq: 'FAQ',
-      showcase: 'Product Demo',
-      for: "Who It's For",
-      shop: 'Shop',
-      cart: 'Cart',
-      product: 'Product Page',
+    const labels = {
+      compare: 'Comparison vs Alternatives', pricing: 'Pricing', faq: 'FAQ',
+      showcase: 'Product Demo', for: "Who It's For",
+      shop: 'Shop', cart: 'Cart', product: 'Product Page',
     };
-    if (hash && sectionLabels[hash]) return { section: sectionLabels[hash] };
-    if (window.__cvgActiveSection && sectionLabels[window.__cvgActiveSection])
-      return { section: sectionLabels[window.__cvgActiveSection] };
-
-    // Try to infer from URL path
+    if (hash && labels[hash]) return { section: labels[hash] };
+    if (window.__cvgActiveSection) return { section: labels[window.__cvgActiveSection] || window.__cvgActiveSection };
     const path = window.location.pathname;
     if (path.includes('/shop'))    return { section: 'Shop' };
     if (path.includes('/cart'))    return { section: 'Cart' };
@@ -76,132 +87,72 @@
   }
 
   function initSectionObserver() {
-    const sectionIds = ['compare', 'pricing', 'faq', 'showcase', 'for', 'shop'];
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting && sectionIds.includes(e.target.id))
-          window.__cvgActiveSection = e.target.id;
-      });
+    const ids = ['compare', 'pricing', 'faq', 'showcase', 'for', 'shop'];
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting && ids.includes(e.target.id)) window.__cvgActiveSection = e.target.id; });
     }, { threshold: 0.3 });
-    document.querySelectorAll('[id]').forEach(el => {
-      if (sectionIds.includes(el.id)) observer.observe(el);
-    });
+    document.querySelectorAll('[id]').forEach(el => { if (ids.includes(el.id)) obs.observe(el); });
   }
 
-  // ─── STYLES (generated from CONFIG.brandColor) ───────────────────────────────
+  // ─── STYLES ───────────────────────────────────────────────────────────────
   function buildStyles(color) {
     return `
     #cvg-root * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
     #cvg-root { position: fixed; bottom: 24px; right: 24px; z-index: 999999; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
-
-    #cvg-launcher {
-      width: 56px; height: 56px; border-radius: 50%; background: ${color};
-      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 24px ${color}70; transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative; flex-shrink: 0;
-    }
+    #cvg-launcher { width: 56px; height: 56px; border-radius: 50%; background: ${color}; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px ${color}70; transition: transform 0.2s ease, box-shadow 0.2s ease; position: relative; flex-shrink: 0; }
     #cvg-launcher:hover { transform: scale(1.07); }
     #cvg-launcher:active { transform: scale(0.96); }
-
     #cvg-launcher-icon, #cvg-close-icon { position: absolute; transition: opacity 0.2s, transform 0.2s; }
     #cvg-launcher-icon { opacity: 1; transform: scale(1); }
     #cvg-close-icon    { opacity: 0; transform: scale(0.5); }
     #cvg-root.open #cvg-launcher-icon { opacity: 0; transform: scale(0.5); }
     #cvg-root.open #cvg-close-icon    { opacity: 1; transform: scale(1); }
-
-    #cvg-unread {
-      position: absolute; top: -2px; right: -2px; width: 16px; height: 16px; border-radius: 50%;
-      background: #FF4D6D; border: 2px solid #fff; font-size: 9px; font-weight: 700; color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; transform: scale(0); transition: all 0.2s;
-    }
+    #cvg-unread { position: absolute; top: -2px; right: -2px; width: 16px; height: 16px; border-radius: 50%; background: #FF4D6D; border: 2px solid #fff; font-size: 9px; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0); transition: all 0.2s; }
     #cvg-unread.show { opacity: 1; transform: scale(1); }
-
-    #cvg-window {
-      width: 360px; height: 520px; background: #ffffff; border-radius: 20px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06);
-      display: flex; flex-direction: column; overflow: hidden;
-      opacity: 0; transform: translateY(16px) scale(0.96); pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease; transform-origin: bottom right;
-    }
+    #cvg-window { width: 360px; height: 520px; background: #ffffff; border-radius: 20px; box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06); display: flex; flex-direction: column; overflow: hidden; opacity: 0; transform: translateY(16px) scale(0.96); pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease; transform-origin: bottom right; }
     #cvg-root.open #cvg-window { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
-
     #cvg-header { background: ${color}; padding: 16px 18px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-    #cvg-avatar {
-      width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 600; color: #fff; flex-shrink: 0; position: relative;
-    }
+    #cvg-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; color: #fff; flex-shrink: 0; position: relative; }
     #cvg-status-dot { position: absolute; bottom: 1px; right: 1px; width: 10px; height: 10px; border-radius: 50%; background: #2ECC71; border: 2px solid ${color}; }
     #cvg-header-info { flex: 1; }
     #cvg-header-name { font-size: 15px; font-weight: 600; color: #fff; line-height: 1.2; }
     #cvg-header-sub  { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 1px; }
     #cvg-powered { font-size: 10px; color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.2); padding: 2px 7px; border-radius: 20px; letter-spacing: 0.02em; }
-
-    #cvg-messages {
-      flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px;
-      background: #F8F7FF; scroll-behavior: smooth;
-    }
+    #cvg-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: #F8F7FF; scroll-behavior: smooth; }
     #cvg-messages::-webkit-scrollbar { width: 4px; }
     #cvg-messages::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
-
-    .cvg-msg {
-      max-width: 82%; font-size: 13.5px; line-height: 1.55; padding: 10px 13px; border-radius: 14px;
-      animation: cvgFadeIn 0.2s ease; word-wrap: break-word;
-    }
+    .cvg-msg { max-width: 82%; font-size: 13.5px; line-height: 1.55; padding: 10px 13px; border-radius: 14px; animation: cvgFadeIn 0.2s ease; word-wrap: break-word; }
     @keyframes cvgFadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
     .cvg-msg.ai { background: #ffffff; color: #1a1a2e; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
     .cvg-msg.user { background: ${color}; color: #ffffff; align-self: flex-end; border-bottom-right-radius: 4px; }
-
     #cvg-typing { display: none; align-self: flex-start; background: #ffffff; border-radius: 14px; border-bottom-left-radius: 4px; padding: 12px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); gap: 4px; align-items: center; }
     #cvg-typing.show { display: flex; }
     .cvg-dot { width: 7px; height: 7px; border-radius: 50%; background: #bbb; animation: cvgBounce 1.2s infinite ease-in-out; }
     .cvg-dot:nth-child(2) { animation-delay: 0.15s; }
     .cvg-dot:nth-child(3) { animation-delay: 0.3s; }
     @keyframes cvgBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
-
     #cvg-quick-replies { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 14px; background: #F8F7FF; flex-shrink: 0; }
-    .cvg-qr {
-      font-size: 12px; padding: 6px 12px; border-radius: 20px;
-      border: 1.5px solid ${color}; color: ${color};
-      background: rgba(0,0,0,0.02); cursor: pointer;
-      transition: all 0.15s; font-family: inherit; font-weight: 500; white-space: nowrap;
-    }
+    .cvg-qr { font-size: 12px; padding: 6px 12px; border-radius: 20px; border: 1.5px solid ${color}; color: ${color}; background: rgba(0,0,0,0.02); cursor: pointer; transition: all 0.15s; font-family: inherit; font-weight: 500; white-space: nowrap; }
     .cvg-qr:hover { background: ${color}; color: #fff; }
-
     #cvg-input-area { display: flex; align-items: center; gap: 8px; padding: 10px 14px 14px; background: #fff; border-top: 1px solid rgba(0,0,0,0.06); flex-shrink: 0; }
-    #cvg-input {
-      flex: 1; border: 1.5px solid #e8e8f0; border-radius: 22px; padding: 9px 14px;
-      font-size: 13px; outline: none; font-family: inherit; color: #1a1a2e; background: #fafafa; transition: border-color 0.15s;
-    }
+    #cvg-input { flex: 1; border: 1.5px solid #e8e8f0; border-radius: 22px; padding: 9px 14px; font-size: 13px; outline: none; font-family: inherit; color: #1a1a2e; background: #fafafa; transition: border-color 0.15s; }
     #cvg-input:focus { border-color: ${color}; background: #fff; }
     #cvg-input::placeholder { color: #aaa; }
-
-    #cvg-send {
-      width: 36px; height: 36px; border-radius: 50%; background: ${color}; border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.15s, opacity 0.15s;
-    }
+    #cvg-send { width: 36px; height: 36px; border-radius: 50%; background: ${color}; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.15s, opacity 0.15s; }
     #cvg-send:hover { transform: scale(1.08); }
     #cvg-send:active { transform: scale(0.94); }
     #cvg-send:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-
-    @media (max-width: 420px) {
-      #cvg-window { width: calc(100vw - 24px); height: 480px; }
-      #cvg-root { right: 12px; bottom: 12px; }
-    }
-  `;
+    @media (max-width: 420px) { #cvg-window { width: calc(100vw - 24px); height: 480px; } #cvg-root { right: 12px; bottom: 12px; } }
+    `;
   }
 
   let styleEl;
   function applyStyles(color) {
-    if (!styleEl) {
-      styleEl = document.createElement('style');
-      document.head.appendChild(styleEl);
-    }
+    if (!styleEl) { styleEl = document.createElement('style'); document.head.appendChild(styleEl); }
     styleEl.textContent = buildStyles(color);
   }
 
-  // ─── BUILD DOM ────────────────────────────────────────────────────────────────
+  // ─── BUILD DOM ────────────────────────────────────────────────────────────
   function buildWidget() {
     const font = document.createElement('link');
     font.rel = 'stylesheet';
@@ -255,7 +206,6 @@
       </button>
     `;
     document.body.appendChild(root);
-
     initSectionObserver();
 
     document.getElementById('cvg-launcher').addEventListener('click', toggleWidget);
@@ -268,30 +218,32 @@
         document.getElementById('cvg-input').value.trim() === '' || isTyping;
     });
 
-    setTimeout(() => {
-      addMessage('ai', CONFIG.greeting);
-      showQuickReplies(CONFIG.quickReplies);
-      showUnread();
-    }, 1200);
+    // Show typing indicator while we register/scrape
+    showTypingIndicator();
+
+    // Register fires immediately — widget greets once it resolves
+    register();
   }
 
-  // ─── WIDGET TOGGLE ────────────────────────────────────────────────────────────
+  // ─── WIDGET TOGGLE ────────────────────────────────────────────────────────
   function toggleWidget() {
     isOpen = !isOpen;
     document.getElementById('cvg-root').classList.toggle('open', isOpen);
-    if (isOpen) {
-      hideUnread();
-      setTimeout(() => document.getElementById('cvg-input').focus(), 300);
-    }
+    if (isOpen) { hideUnread(); setTimeout(() => document.getElementById('cvg-input').focus(), 300); }
   }
 
   function showUnread() { const el = document.getElementById('cvg-unread'); el.textContent = '1'; el.classList.add('show'); }
   function hideUnread() { document.getElementById('cvg-unread').classList.remove('show'); }
 
-  // ─── MESSAGES ─────────────────────────────────────────────────────────────────
+  // ─── MESSAGES ─────────────────────────────────────────────────────────────
+  function showTypingIndicator() {
+    document.getElementById('cvg-typing').classList.add('show');
+  }
+
   function addMessage(role, text) {
-    const msgs = document.getElementById('cvg-messages');
+    const msgs   = document.getElementById('cvg-messages');
     const typing = document.getElementById('cvg-typing');
+    typing.classList.remove('show');
     const div = document.createElement('div');
     div.className = `cvg-msg ${role}`;
     div.textContent = text;
@@ -318,11 +270,11 @@
     document.getElementById('cvg-send').disabled = document.getElementById('cvg-input').value.trim() === '';
   }
 
-  // ─── QUICK REPLIES ────────────────────────────────────────────────────────────
+  // ─── QUICK REPLIES ────────────────────────────────────────────────────────
   function showQuickReplies(replies) {
     const container = document.getElementById('cvg-quick-replies');
     container.innerHTML = '';
-    replies.forEach(r => {
+    (replies || []).forEach(r => {
       const btn = document.createElement('button');
       btn.className = 'cvg-qr';
       btn.textContent = r;
@@ -331,7 +283,7 @@
     });
   }
 
-  // ─── SEND MESSAGE ─────────────────────────────────────────────────────────────
+  // ─── SEND MESSAGE ─────────────────────────────────────────────────────────
   function sendMessage() {
     const input = document.getElementById('cvg-input');
     const text = input.value.trim();
@@ -360,30 +312,18 @@
       const data = await res.json();
       hideTyping();
 
-      // If server returns updated config (e.g. different brand color), apply it
-      if (data.config) {
-        if (data.config.brandColor && data.config.brandColor !== CONFIG.brandColor) {
-          CONFIG.brandColor = data.config.brandColor;
-          applyStyles(CONFIG.brandColor);
-        }
-        if (data.config.agentName) {
-          document.getElementById('cvg-header-name').textContent = data.config.agentName;
-          document.getElementById('cvg-avatar-letter').textContent = data.config.agentName[0];
-          document.getElementById('cvg-header-sub').textContent =
-            (data.config.agentRole || CONFIG.agentRole) + ' · Active now';
-        }
-      }
+      if (data.config) applyConfig(data.config);
 
       const reply = data.reply || "I didn't quite catch that — could you rephrase?";
       addMessage('ai', reply);
 
-    } catch (err) {
+    } catch {
       hideTyping();
       addMessage('ai', "Connection issue on my end — try again in a moment.");
     }
   }
 
-  // ─── INIT ─────────────────────────────────────────────────────────────────────
+  // ─── INIT ─────────────────────────────────────────────────────────────────
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', buildWidget);
   } else {
