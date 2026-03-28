@@ -38,26 +38,10 @@ nav.scrolled{padding:12px 52px;background:rgba(6,6,8,.98);}
 .nav-links{display:flex;gap:28px;align-items:center;}
 .nav-links a{color:var(--muted2);text-decoration:none;font-size:14px;font-weight:400;transition:color .2s;}
 .nav-links a:hover{color:var(--white);}
-.nav-cta{background:var(--green);color:var(--black);padding:9px 22px;border-radius:6px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;}
+.nav-cta{background:var(--green);color:var(--black) !important;padding:9px 22px;border-radius:6px;font-size:14px !important;font-weight:600 !important;text-decoration:none;transition:all .2s;}
 .nav-cta:hover{background:#00ff88;box-shadow:0 0 24px var(--green-glow-s);}
-/* Mobile hamburger */
-.nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
-.nav-burger span{width:22px;height:2px;background:var(--white);border-radius:2px;transition:all .3s;}
-.nav-burger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
-.nav-burger.open span:nth-child(2){opacity:0;}
-.nav-burger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
-.nav-mobile{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(6,6,8,.98);backdrop-filter:blur(20px);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:32px;}
-.nav-mobile.open{display:flex;}
-.nav-mobile a{font-family:'Syne',sans-serif;font-weight:700;font-size:28px;color:var(--white);text-decoration:none;transition:color .2s;}
-.nav-mobile a:hover{color:var(--green);}
-.nav-mobile .nav-cta{font-size:18px;padding:14px 36px;border-radius:10px;}
 
-/* ── LIVE ACTIVITY TOAST ── */
-.live-toast{position:fixed;bottom:90px;left:24px;z-index:300;background:var(--card);border:1px solid rgba(0,232,122,.25);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;max-width:280px;transform:translateX(-120%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 32px rgba(0,0,0,.4);}
-.live-toast.show{transform:translateX(0);}
-.lt-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 1.5s infinite;}
-.lt-text{font-size:12px;color:var(--muted2);line-height:1.4;}
-.lt-text strong{color:var(--white);display:block;font-size:13px;}
+
 
 /* ── HERO ── */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 48px 80px;position:relative;overflow:hidden;text-align:center;}
@@ -88,7 +72,6 @@ h1 em{font-style:normal;color:var(--green);}
 .ticker-item{padding:0 28px;height:38px;display:flex;align-items:center;font-size:12px;color:var(--muted2);border-right:1px solid var(--border);}
 .ticker-item strong{color:var(--white);margin-right:4px;}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
 @keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── TRUST BAR ── */
@@ -123,6 +106,7 @@ h2 em{font-style:normal;color:var(--green);}
 .tester-btn:disabled{opacity:.5;cursor:not-allowed;}
 .tester-note{font-size:12px;color:var(--muted);margin-top:16px;font-family:'DM Mono',monospace;}
 .tester-status{margin-top:20px;font-size:13px;color:var(--green);font-family:'DM Mono',monospace;min-height:20px;transition:opacity .3s;}
+#ariaDemo{margin-top:28px;background:var(--card);border:1px solid rgba(0,232,122,.25);border-radius:16px;overflow:hidden;display:none;}
 
 /* ── CONVERSATION SHOWCASE ── */
 .convo-section{background:var(--deep);}
@@ -201,7 +185,7 @@ h2 em{font-style:normal;color:var(--green);}
 .feat-title{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--white);margin-bottom:10px;}
 .feat-desc{font-size:14px;color:var(--muted2);line-height:1.7;}
 
-/* ── ROI CALC — gold tint ── */
+/* ── ROI CALC ── */
 .roi-section{background:linear-gradient(180deg,var(--black) 0%,#0b0a06 50%,var(--black) 100%);position:relative;}
 .roi-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.04) 0%,transparent 70%);pointer-events:none;}
 .roi-inner{max-width:900px;margin:0 auto;position:relative;}
@@ -224,7 +208,7 @@ h2 em{font-style:normal;color:var(--green);}
 /* ── COMPARISON ── */
 .comp-section{background:var(--deep);}
 .comp-wrap{overflow-x:auto;margin-top:64px;}
-.comp-table{width:100%;min-width:680px;border-collapse:collapse;border-radius:16px;overflow:hidden;border:1px solid var(--border);}
+.comp-table{width:100%;min-width:780px;border-collapse:collapse;border-radius:16px;overflow:hidden;border:1px solid var(--border);}
 .comp-table th{background:var(--card);padding:18px 22px;text-align:left;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);font-weight:400;letter-spacing:.5px;border-bottom:1px solid var(--border);}
 .comp-table th.hl{background:linear-gradient(135deg,#111118,#0d1410);color:var(--green);border-bottom:2px solid var(--green);position:relative;}
 .comp-table th.hl::after{content:'';position:absolute;inset:0;background:var(--green-glow);animation:compPulse 3s ease infinite;}
@@ -236,6 +220,7 @@ h2 em{font-style:normal;color:var(--green);}
 .comp-table tr:last-child td.hl{border-bottom:2px solid var(--green);}
 .cy{color:var(--green);}.cn{color:var(--muted);}.cp{color:#fbbf24;font-size:13px;}
 .comp-badge{display:inline-flex;background:var(--green-glow);border:1px solid rgba(0,232,122,.2);color:var(--green);padding:2px 8px;border-radius:4px;font-size:11px;font-family:'DM Mono',monospace;margin-left:6px;}
+.price-note-small{display:block;font-size:11px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace;line-height:1.4;}
 
 /* ── ONBOARDING ── */
 .ob-section{background:var(--black);}
@@ -268,8 +253,6 @@ h2 em{font-style:normal;color:var(--green);}
 .chart-bars{display:flex;align-items:flex-end;gap:8px;height:80px;}
 .chart-bar{flex:1;border-radius:4px 4px 0 0;background:var(--border-light);transition:all .3s;}
 .chart-bar.hi{background:var(--green);box-shadow:0 0 12px var(--green-glow);}
-
-/* Scanning animation in step 1 */
 .scan-progress{height:2px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden;}
 .scan-bar{height:100%;width:0%;background:linear-gradient(to right,var(--green),#00c4ff);border-radius:2px;transition:width .1s linear;}
 .scan-findings{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
@@ -277,7 +260,7 @@ h2 em{font-style:normal;color:var(--green);}
 .scan-finding.appear{opacity:1;transform:translateX(0);}
 .scan-finding-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
 
-/* ── PRICING — purple tint on section, dramatic feat card ── */
+/* ── PRICING ── */
 .price-section{background:linear-gradient(180deg,var(--deep) 0%,#0e0b14 50%,var(--deep) 100%);position:relative;}
 .price-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,252,.05) 0%,transparent 70%);pointer-events:none;}
 .price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:64px;position:relative;}
@@ -305,7 +288,7 @@ h2 em{font-style:normal;color:var(--green);}
 .price-cta.pf-out{background:transparent;color:var(--white);border:1px solid var(--border-light);}
 .price-cta.pf-out:hover{border-color:var(--muted2);background:rgba(255,255,255,.04);}
 
-/* ── PROOF — purple tint ── */
+/* ── PROOF ── */
 .proof-section{background:linear-gradient(180deg,var(--black) 0%,#0a080f 50%,var(--black) 100%);position:relative;}
 .proof-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,252,.06) 0%,transparent 70%);pointer-events:none;}
 .proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px;position:relative;}
@@ -319,8 +302,6 @@ h2 em{font-style:normal;color:var(--green);}
 .proof-name{font-weight:500;font-size:14px;color:var(--white);}
 .proof-role{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
 .proof-metric{display:inline-flex;align-items:center;gap:6px;background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.2);padding:4px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:11px;color:#a88aff;margin-top:16px;}
-
-/* Animated counters */
 .proof-counter{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;color:var(--purple);letter-spacing:-1px;margin-bottom:4px;}
 
 /* ── FAQ ── */
@@ -341,7 +322,7 @@ h2 em{font-style:normal;color:var(--green);}
 .fpill.r{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.2);color:#ff8099;}
 .fpill.g{background:var(--green-glow);border:1px solid rgba(0,232,122,.2);color:var(--green);}
 
-/* ── CTA — maximum green blast ── */
+/* ── CTA ── */
 .cta-section{text-align:center;padding:120px 48px;background:var(--black);position:relative;overflow:hidden;}
 .cta-glow{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(0,232,122,.12) 0%,rgba(0,232,122,.04) 40%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:ctaPulse 4s ease infinite;}
 .cta-glow2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,252,.08) 0%,transparent 70%);top:50%;left:30%;transform:translate(-50%,-50%);pointer-events:none;}
@@ -358,7 +339,7 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
 .foot-links a:hover{color:var(--muted2);}
 .foot-copy{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
 
-/* ── MODAL ── */
+/* ── MAIN SIGN-UP MODAL ── */
 .modal-ov{position:fixed;inset:0;background:rgba(6,6,8,.92);backdrop-filter:blur(12px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
 .modal-ov.open{opacity:1;pointer-events:all;}
 .modal{background:var(--card);border:1px solid var(--border-light);border-radius:20px;padding:44px;max-width:500px;width:90%;transform:translateY(20px);transition:transform .3s;position:relative;max-height:90vh;overflow-y:auto;}
@@ -376,14 +357,19 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
 .fsub:hover{background:#00ff88;box-shadow:0 0 30px var(--green-glow-s);}
 .fdisc{font-size:12px;color:var(--muted);text-align:center;margin-top:12px;}
 
-/* Exit intent modal variant */
-.modal.exit-modal .modal-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
-.modal.exit-modal h3{color:var(--white);}
+/* ── EXIT INTENT MODAL ── */
+.exit-modal-ov{position:fixed;inset:0;background:rgba(6,6,8,.92);backdrop-filter:blur(12px);z-index:1001;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.exit-modal-ov.open{opacity:1;pointer-events:all;}
+.exit-modal{background:var(--card);border:1px solid var(--border-light);border-radius:20px;padding:44px;max-width:480px;width:90%;transform:translateY(20px);transition:transform .3s;position:relative;}
+.exit-modal-ov.open .exit-modal{transform:translateY(0);}
+.exit-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:#ff6b6b;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;}
+.exit-headline{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;letter-spacing:-1px;line-height:1.15;margin-bottom:12px;color:var(--white);}
+.exit-sub{font-size:14px;color:var(--muted2);line-height:1.6;margin-bottom:24px;}
 
 ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px;}
 
 @media(max-width:1000px){
-  nav{padding:16px 20px;}.nav-links{display:none;}.nav-burger{display:flex;}
+  nav{padding:16px 20px;}
   section{padding:64px 20px;}.hero{padding:100px 20px 60px;}
   .tester-strip{padding:0 20px 60px;}.tester-input-row{flex-direction:column;}
   .convo-layout{grid-template-columns:1fr;}.for-grid{grid-template-columns:1fr;}
@@ -393,19 +379,20 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   .foot-inner{flex-direction:column;gap:20px;text-align:center;}.fr{grid-template-columns:1fr;}
   .dash-metrics{grid-template-columns:1fr 1fr;}
   .hero-ticker{display:none;}
+  /* Collapse nav links on mobile, show simple CTA */
+  .nav-links{display:none;}
+  .nav-mobile-cta{display:inline-flex !important;}
 }
 @media(max-width:600px){.price-grid{grid-template-columns:1fr;}h1{letter-spacing:-2px;}}
+
+/* Mobile-only standalone CTA in nav */
+.nav-mobile-cta{display:none;background:var(--green);color:var(--black);padding:9px 18px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;}
+.nav-mobile-cta:hover{background:#00ff88;}
 </style>
 </head>
 <body>
 
-<!-- LIVE ACTIVITY TOAST -->
-<div class="live-toast" id="liveToast">
-  <div class="lt-dot"></div>
-  <div class="lt-text"><strong id="toastMsg">Aria just booked a demo</strong><span id="toastSub">for SaaSco · 2 minutes ago</span></div>
-</div>
-
-<!-- NAV -->
+<!-- NAV — hamburger removed; mobile gets a single CTA button instead -->
 <nav id="mainNav">
   <a href="#" class="logo"><span class="logo-dot"></span>Converge</a>
   <div class="nav-links">
@@ -414,31 +401,20 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
     <a href="#compare">vs. Alternatives</a>
     <a href="#pricing">Pricing</a>
     <a href="#faq">FAQ</a>
-    <a href="#" class="nav-cta" onclick="openModal()">Start Free</a>
+    <a href="#" class="nav-cta" onclick="openModal();return false;">Start Free</a>
   </div>
-  <div class="nav-burger" id="navBurger" onclick="toggleMobileNav()">
-    <span></span><span></span><span></span>
-  </div>
+  <!-- Mobile: single CTA, no hamburger overlay -->
+  <a href="#" class="nav-mobile-cta" onclick="openModal();return false;">Start Free</a>
 </nav>
-
-<!-- MOBILE NAV -->
-<div class="nav-mobile" id="navMobile">
-  <a href="#showcase" onclick="closeMobileNav()">See it in action</a>
-  <a href="#for" onclick="closeMobileNav()">Who it's for</a>
-  <a href="#compare" onclick="closeMobileNav()">vs. Alternatives</a>
-  <a href="#pricing" onclick="closeMobileNav()">Pricing</a>
-  <a href="#faq" onclick="closeMobileNav()">FAQ</a>
-  <a href="#" class="nav-cta" onclick="closeMobileNav();openModal()">Start Free →</a>
-</div>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-glow"></div><div class="hero-glow2"></div>
   <div class="badge"><span class="badge-dot"></span>AI Sales Closer · Now in beta</div>
   <h1>Your website is losing<br>sales <em>every night</em> you sleep</h1>
-  <p class="hero-sub">Converge is an AI sales closer that engages every visitor, qualifies leads, handles objections, and drives them to a decision. 24 hours a day, 365 days a year.</p>
+  <p class="hero-sub">Converge engages every visitor, qualifies leads, handles objections, and drives them to a decision. 24 hours a day, 365 days a year.</p>
   <div class="hero-actions">
-    <a href="#" class="btn-p" onclick="openModal()">
+    <a href="#" class="btn-p" onclick="openModal();return false;">
       <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
       Start Free. No Card Needed.
     </a>
@@ -450,21 +426,19 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
     <div class="stat"><div class="stat-num"><span>95</span>%</div><div class="stat-label">Visitors leave without buying</div></div>
     <div class="stat"><div class="stat-num">24<span>/7</span></div><div class="stat-label">Never off the clock</div></div>
   </div>
-  <!-- LIVE TICKER -->
   <div class="hero-ticker">
     <div class="ticker-inner">
       <div class="ticker-label"><span class="badge-dot" style="width:5px;height:5px;"></span>Live activity</div>
       <div class="ticker-track">
         <div class="ticker-scroll" id="tickerScroll">
           <div class="ticker-item"><strong>Aria</strong> booked a $12k discovery call · 3 min ago</div>
-          <div class="ticker-item"><strong>Aria</strong> recovered a price objection at stripe.io · 7 min ago</div>
+          <div class="ticker-item"><strong>Aria</strong> recovered a price objection · 7 min ago</div>
           <div class="ticker-item"><strong>Aria</strong> started a Growth trial · 11 min ago</div>
           <div class="ticker-item"><strong>Aria</strong> qualified a lead from London · 14 min ago</div>
           <div class="ticker-item"><strong>Aria</strong> booked a demo at 11:42pm · 18 min ago</div>
           <div class="ticker-item"><strong>Aria</strong> handled a competitor comparison · 22 min ago</div>
-          <!-- duplicate for seamless loop -->
           <div class="ticker-item"><strong>Aria</strong> booked a $12k discovery call · 3 min ago</div>
-          <div class="ticker-item"><strong>Aria</strong> recovered a price objection at stripe.io · 7 min ago</div>
+          <div class="ticker-item"><strong>Aria</strong> recovered a price objection · 7 min ago</div>
           <div class="ticker-item"><strong>Aria</strong> started a Growth trial · 11 min ago</div>
           <div class="ticker-item"><strong>Aria</strong> qualified a lead from London · 14 min ago</div>
           <div class="ticker-item"><strong>Aria</strong> booked a demo at 11:42pm · 18 min ago</div>
@@ -485,21 +459,39 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   </div>
 </div>
 
-<!-- LIVE TESTER -->
+<!-- LIVE TESTER — AI-powered, calls Anthropic API -->
 <div class="tester-strip" id="try" style="padding-top:80px">
   <div class="tester-wrap">
     <div class="tester-eyebrow">// Live demo</div>
     <div class="tester-heading">See Converge on <em style="color:var(--green);font-style:normal;">your</em> website</div>
-    <p class="tester-sub">Enter your URL. Aria will scan your site and show you exactly how she'd close your visitors — starting with you.</p>
+    <p class="tester-sub">Enter your URL. Aria scans your site and shows you exactly how she would close your visitors — starting with you.</p>
     <div class="tester-input-row">
       <input class="tester-input" id="testerUrl" type="url" placeholder="https://yourcompany.com" />
       <button class="tester-btn" id="testerBtn" onclick="runTester()">
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        Meet Your Closer
+        Train my AI
       </button>
     </div>
     <div class="tester-status" id="testerStatus"></div>
     <p class="tester-note">No signup needed. Takes about 10 seconds.</p>
+    <!-- Aria demo panel, shown after training -->
+    <div id="ariaDemo">
+      <div style="background:var(--deep);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green),#00c4ff);display:flex;align-items:center;justify-content:center;font-size:14px;">🤖</div>
+        <div>
+          <div id="ariaDomainLabel" style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;">Aria · AI Sales Closer</div>
+          <div style="font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px;margin-top:1px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite;"></span>Active now</div>
+        </div>
+      </div>
+      <div id="ariaMsgs" style="padding:20px;display:flex;flex-direction:column;gap:10px;min-height:140px;"></div>
+      <div id="ariaEmailCapture" style="display:none;padding:0 20px 20px;">
+        <div style="font-size:13px;color:var(--muted2);margin-bottom:10px;">Drop your email and get the real widget on your site in under 10 minutes:</div>
+        <div style="display:flex;gap:10px;">
+          <input id="ariaEmail" class="tester-input" type="email" placeholder="you@company.com" style="font-size:14px;padding:10px 14px;" />
+          <button class="tester-btn" onclick="submitAriaEmail()" style="padding:10px 18px;font-size:14px;">Send setup</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -513,23 +505,23 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
       <div class="convo-tabs" id="convoTabs">
         <div class="convo-tab active" onclick="switchConvo(0,this)">
           <div class="ct-label">Scenario 01</div>
-          <div class="ct-title">Plan confusion to Decision</div>
+          <div class="ct-title">Plan confusion to decision</div>
           <div class="ct-desc">Visitor doesn't know which plan to pick. Converge qualifies and recommends in seconds.</div>
         </div>
         <div class="convo-tab" onclick="switchConvo(1,this)">
           <div class="ct-label">Scenario 02</div>
-          <div class="ct-title">Price objection to Recovery</div>
-          <div class="ct-desc">Visitor says it looks expensive. Converge reframes the value and recovers the sale.</div>
+          <div class="ct-title">Price objection to recovered sale</div>
+          <div class="ct-desc">Visitor says it looks expensive. Converge reframes the value and wins the sale.</div>
         </div>
         <div class="convo-tab" onclick="switchConvo(2,this)">
           <div class="ct-label">Scenario 03</div>
-          <div class="ct-title">Midnight inquiry to Booked call</div>
+          <div class="ct-title">Midnight inquiry to booked call</div>
           <div class="ct-desc">11pm. Visitor is a $15k real estate lead. No human available. Converge qualifies and books.</div>
         </div>
         <div class="convo-tab" onclick="switchConvo(3,this)">
           <div class="ct-label">Scenario 04</div>
-          <div class="ct-title">Competitor comparison to Won</div>
-          <div class="ct-desc">Visitor is evaluating Intercom. Converge handles the objection and converts.</div>
+          <div class="ct-title">Competitor comparison to closed deal</div>
+          <div class="ct-desc">Visitor is evaluating Intercom. Converge handles the comparison and converts.</div>
         </div>
       </div>
       <div class="convo-preview" id="convoPreview">
@@ -552,13 +544,13 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   <div class="w1100">
     <div class="sec-label">// Built for you</div>
     <h2>One platform.<br><em>Three types of business.</em></h2>
-    <p class="sec-sub">Converge adapts to your sales context. Whether you're closing SaaS trials, high-ticket services, or agency retainers.</p>
+    <p class="sec-sub">Converge adapts to your sales context — SaaS trials, high-ticket services, or agency retainers.</p>
     <div class="for-grid">
       <div class="for-card fc-saas">
         <div class="for-icon">🚀</div>
         <div class="for-eyebrow">SaaS & Software</div>
         <div class="for-title">Turn free users into<br>paying customers</div>
-        <div class="for-desc">High traffic, complex pricing, feature comparisons. Converge guides visitors from curious to committed. Qualifying, comparing plans, and starting trials autonomously.</div>
+        <div class="for-desc">High traffic, complex pricing, feature comparisons. Converge guides visitors from curious to committed, qualifying leads, comparing plans, and starting trials — autonomously.</div>
         <div class="for-wins">
           <div class="fw"><div class="fw-dot"></div>Guides plan selection based on team size and use case</div>
           <div class="fw"><div class="fw-dot"></div>A/B tests conversation flows to find what converts</div>
@@ -570,7 +562,7 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
         <div class="for-icon">🌙</div>
         <div class="for-eyebrow">High-Ticket Services</div>
         <div class="for-title">Never miss another<br>$10k client at midnight</div>
-        <div class="for-desc">Real estate, legal, aesthetics, financial services. Your team stops responding at 5pm. But your highest-intent leads are browsing at 11pm. Converge qualifies them and books calls while you sleep.</div>
+        <div class="for-desc">Real estate, legal, aesthetics, financial services. Your team stops responding at 5pm. Your highest-intent leads are browsing at 11pm. Converge qualifies them and books calls while you sleep.</div>
         <div class="for-wins">
           <div class="fw"><div class="fw-dot"></div>Handles 10 to 15 standard objections without human help</div>
           <div class="fw"><div class="fw-dot"></div>Books calls directly into your calendar at any time of day</div>
@@ -582,10 +574,10 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
         <div class="for-icon">🎯</div>
         <div class="for-eyebrow">Agencies & Consultancies</div>
         <div class="for-title">Close retainers while<br>you're on client calls</div>
-        <div class="for-desc">New business conversations get dropped when you're heads-down. Converge keeps the pipeline warm. Qualifying inbound leads, explaining your services, and booking discovery calls on your behalf.</div>
+        <div class="for-desc">New business conversations get dropped when you're heads-down. Converge keeps the pipeline warm, qualifying inbound leads, explaining your services, and booking discovery calls on your behalf.</div>
         <div class="for-wins">
           <div class="fw"><div class="fw-dot"></div>Trained on your services, case studies, and positioning</div>
-          <div class="fw"><div class="fw-dot"></div>White-label option. Your brand, your AI persona.</div>
+          <div class="fw"><div class="fw-dot"></div>White-label option — your brand, your AI persona</div>
           <div class="fw"><div class="fw-dot"></div>Resell to your own clients as an add-on revenue stream</div>
         </div>
         <div class="for-quote">We resell Converge to our clients. It's our highest-margin product now.</div>
@@ -604,7 +596,7 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
       <div class="how-step"><div class="step-num">👋</div><div class="step-title">Engage</div><div class="step-desc">Context-aware openers based on page, source, and time of day. No cold starts.</div></div>
       <div class="how-step"><div class="step-num">🎯</div><div class="step-title">Qualify</div><div class="step-desc">Smart questions identify intent, company size, and urgency without feeling like a form.</div></div>
       <div class="how-step"><div class="step-num">💡</div><div class="step-title">Recommend</div><div class="step-desc">Matches visitors to the right product, plan, or service based on what they've actually shared.</div></div>
-      <div class="how-step"><div class="step-num">🛡️</div><div class="step-title">Handle Objections</div><div class="step-desc">Price, timing, and competitor objections resolved in real time with human-quality responses.</div></div>
+      <div class="how-step"><div class="step-num">🛡️</div><div class="step-title">Handle objections</div><div class="step-desc">Price, timing, and competitor objections resolved in real time with human-quality responses.</div></div>
       <div class="how-step"><div class="step-num">🚀</div><div class="step-title">Convert</div><div class="step-desc">Books demos, starts trials, or guides to checkout. Escalates hot leads to humans with full context.</div></div>
     </div>
   </div>
@@ -663,28 +655,87 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   </div>
 </section>
 
-<!-- COMPARISON -->
+<!-- COMPARISON TABLE — corrected competitor pricing -->
 <section class="comp-section" id="compare">
   <div class="w1100">
     <div class="sec-label">// vs. Alternatives</div>
-    <h2>Built to <em>close,</em> not just<br>to answer tickets</h2>
-    <p class="sec-sub">Traditional chat tools are built for support. Converge is built for revenue.</p>
+    <h2>Built for revenue.<br><em>They were built for support.</em></h2>
+    <p class="sec-sub">Traditional chat tools wait for someone to ask a question. Converge starts conversations and closes deals.</p>
     <div class="comp-wrap">
       <table class="comp-table">
         <thead><tr>
-          <th style="width:26%">Capability</th>
+          <th style="width:24%">Capability</th>
           <th class="hl"><div style="display:flex;align-items:center;gap:8px;position:relative;z-index:1;"><span class="logo-dot" style="width:7px;height:7px;flex-shrink:0;animation:pulse 2s infinite"></span>Converge</div></th>
-          <th>Intercom</th><th>Drift</th><th>Zendesk</th>
+          <th>Intercom</th>
+          <th>Drift (Salesloft)</th>
+          <th>Zendesk</th>
         </tr></thead>
         <tbody>
-          <tr><td class="fn">Built for revenue / sales</td><td class="hl"><span class="cy">✓</span><span class="comp-badge">Core focus</span></td><td><span class="cp">~ Support + sales</span></td><td><span class="cp">~ Marketing focus</span></td><td><span class="cn">✕ Support only</span></td></tr>
-          <tr><td class="fn">AI objection handling</td><td class="hl"><span class="cy">✓</span></td><td><span class="cn">✕</span></td><td><span class="cp">~ Basic</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">Proactive sales conversations</td><td class="hl"><span class="cy">✓</span></td><td><span class="cp">~ Reactive only</span></td><td><span class="cy">✓</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">Revenue attribution</td><td class="hl"><span class="cy">✓</span></td><td><span class="cn">✕</span></td><td><span class="cp">~ Limited</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">A/B conversation testing</td><td class="hl"><span class="cy">✓</span></td><td><span class="cn">✕</span></td><td><span class="cn">✕</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">Performance-based pricing</td><td class="hl"><span class="cy">✓</span><span class="comp-badge">Unique</span></td><td><span class="cn">✕</span></td><td><span class="cn">✕</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">Starting price</td><td class="hl" style="color:var(--green);font-weight:500;">Free</td><td>$74/mo</td><td>$2,500/mo</td><td>$55/agent/mo</td></tr>
-          <tr><td class="fn">Setup time</td><td class="hl" style="color:var(--green);font-weight:500;">~10 minutes</td><td>Days</td><td>Weeks</td><td>Days</td></tr>
+          <tr>
+            <td class="fn">Core purpose</td>
+            <td class="hl"><span class="cy">✓</span><span class="comp-badge">Revenue generation</span></td>
+            <td><span class="cp">~ Support + some sales</span></td>
+            <td><span class="cp">~ Enterprise pipeline</span></td>
+            <td><span class="cn">✕ Support ticketing</span></td>
+          </tr>
+          <tr>
+            <td class="fn">AI objection handling</td>
+            <td class="hl"><span class="cy">✓ Full</span></td>
+            <td><span class="cn">✕</span></td>
+            <td><span class="cp">~ Basic</span></td>
+            <td><span class="cn">✕</span></td>
+          </tr>
+          <tr>
+            <td class="fn">Proactive sales conversations</td>
+            <td class="hl"><span class="cy">✓</span></td>
+            <td><span class="cp">~ Reactive only</span></td>
+            <td><span class="cy">✓</span></td>
+            <td><span class="cn">✕</span></td>
+          </tr>
+          <tr>
+            <td class="fn">Revenue attribution</td>
+            <td class="hl"><span class="cy">✓</span></td>
+            <td><span class="cn">✕</span></td>
+            <td><span class="cp">~ Limited</span></td>
+            <td><span class="cn">✕</span></td>
+          </tr>
+          <tr>
+            <td class="fn">A/B conversation testing</td>
+            <td class="hl"><span class="cy">✓</span></td>
+            <td><span class="cn">✕</span></td>
+            <td><span class="cn">✕</span></td>
+            <td><span class="cn">✕</span></td>
+          </tr>
+          <tr>
+            <td class="fn">Performance-based pricing</td>
+            <td class="hl"><span class="cy">✓</span><span class="comp-badge">Unique</span></td>
+            <td><span class="cn">✕</span></td>
+            <td><span class="cn">✕</span></td>
+            <td><span class="cn">✕</span></td>
+          </tr>
+          <tr>
+            <td class="fn">Starting price</td>
+            <td class="hl" style="color:var(--green);font-weight:500;">Free forever</td>
+            <td>
+              $29/seat/mo
+              <span class="price-note-small">AI resolutions billed separately at $0.99 each. Costs scale sharply with volume.</span>
+            </td>
+            <td>
+              $2,500/mo minimum
+              <span class="price-note-small">Annual contract required. Requires a sales call before trial. Now part of Salesloft.</span>
+            </td>
+            <td>
+              $55/agent/mo (Suite Team)
+              <span class="price-note-small">AI add-ons billed on top. Real costs typically 2–3× the base rate.</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="fn">Setup time</td>
+            <td class="hl" style="color:var(--green);font-weight:500;">~10 minutes</td>
+            <td>Days</td>
+            <td>Weeks + onboarding fees</td>
+            <td>Days</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -707,13 +758,12 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
       <div class="ob-preview">
         <div class="ob-tab-bar"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--green);">● Preview</div></div>
         <div class="ob-content" id="obContent">
-          <!-- Step 0 — enhanced scanning animation -->
           <div id="ostep0">
             <div style="background:var(--deep);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;">
               <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:20px;">Create your workspace</div>
               <div style="margin-bottom:12px;">
                 <div style="font-size:12px;color:var(--muted2);margin-bottom:6px;font-family:'DM Mono',monospace;">Company website</div>
-                <div id="scanUrlDisplay" style="background:var(--card);border:1px solid var(--green);border-radius:8px;padding:11px 14px;font-size:14px;color:var(--white);">https://yourcompany.com</div>
+                <div style="background:var(--card);border:1px solid var(--green);border-radius:8px;padding:11px 14px;font-size:14px;color:var(--white);">https://yourcompany.com</div>
               </div>
               <div style="background:var(--green-glow);border:1px solid rgba(0,232,122,.2);border-radius:8px;padding:12px 14px;">
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
@@ -721,18 +771,13 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
                   <div id="scanStatusText" style="font-size:13px;color:var(--green);font-weight:500;">Scanning your website...</div>
                 </div>
                 <div class="scan-progress"><div class="scan-bar" id="scanBar"></div></div>
-                <div class="scan-findings" id="scanFindings">
-                  <div class="scan-finding"><div class="scan-finding-dot"></div>Loading pages...</div>
-                </div>
+                <div class="scan-findings" id="scanFindings"></div>
               </div>
             </div>
             <div style="font-size:13px;color:var(--muted2);line-height:1.6;">We analyze your content so your AI already knows your product before its first conversation.</div>
           </div>
-          <!-- Step 1 -->
           <div id="ostep1" style="display:none"><div style="margin-bottom:16px;"><div style="font-size:12px;color:var(--muted2);margin-bottom:12px;font-family:'DM Mono',monospace">Choose your AI personality</div><div style="display:flex;flex-direction:column;gap:8px;"><div style="background:var(--green-glow);border:1px solid rgba(0,232,122,.3);border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:500;color:var(--white);">Consultative Advisor</div><div style="font-size:12px;color:var(--green);margin-top:2px;">Asks questions · listens · recommends</div></div><div style="width:18px;height:18px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--black);font-weight:700;">✓</div></div><div style="background:var(--deep);border:1px solid var(--border);border-radius:8px;padding:12px 16px;"><div style="font-size:14px;color:var(--muted2);">Direct Closer</div><div style="font-size:12px;color:var(--muted);">Drives urgency · pushes to decision</div></div><div style="background:var(--deep);border:1px solid var(--border);border-radius:8px;padding:12px 16px;"><div style="font-size:14px;color:var(--muted2);">Friendly Educator</div><div style="font-size:12px;color:var(--muted);">Informs · builds trust first</div></div></div></div></div>
-          <!-- Step 2 -->
           <div id="ostep2" style="display:none"><div class="code-block"><button class="code-copy" onclick="copyCode(this)">Copy</button><div><span class="cc">&lt;!-- Converge AI Sales Closer --&gt;</span></div><div><span class="ct">&lt;script</span></div><div>&nbsp;&nbsp;<span class="ca">src</span>=<span class="cv">"https://cdn.converge.ai/v2/widget.js"</span></div><div>&nbsp;&nbsp;<span class="ca">data-key</span>=<span class="cv">"cvg_live_a8f2x..."</span></div><div>&nbsp;&nbsp;<span class="ca">async</span></div><div><span class="ct">&gt;&lt;/script&gt;</span></div></div><div style="display:flex;flex-direction:column;gap:8px;"><div style="display:flex;gap:10px;align-items:center;padding:10px 14px;background:var(--deep);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--green);">✓</span><span style="font-size:13px;color:var(--muted2);">Works with Webflow, WordPress, Shopify, React, Next.js</span></div><div style="display:flex;gap:10px;align-items:center;padding:10px 14px;background:var(--deep);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--green);">✓</span><span style="font-size:13px;color:var(--muted2);">Under 8kb · zero impact on Core Web Vitals</span></div></div></div>
-          <!-- Step 3 -->
           <div id="ostep3" style="display:none"><div class="dash-hdr"><div class="dash-title">This week</div><div class="dash-badge">● Live</div></div><div class="dash-metrics"><div class="dash-m"><div class="dm-v g">347</div><div class="dm-l">Conversations</div><div class="dm-c">↑ +23%</div></div><div class="dash-m"><div class="dm-v">89</div><div class="dm-l">Qualified leads</div><div class="dm-c">↑ +41%</div></div><div class="dash-m"><div class="dm-v">$28k</div><div class="dm-l">Pipeline</div><div class="dm-c">↑ 3.2x</div></div></div><div class="dash-chart-wrap"><div style="font-size:11px;color:var(--muted);margin-bottom:12px;font-family:'DM Mono',monospace">Daily conversions</div><div class="chart-bars"><div class="chart-bar" style="height:30%"></div><div class="chart-bar" style="height:45%"></div><div class="chart-bar" style="height:38%"></div><div class="chart-bar" style="height:60%"></div><div class="chart-bar" style="height:52%"></div><div class="chart-bar hi" style="height:85%"></div><div class="chart-bar" style="height:70%"></div></div></div></div>
         </div>
       </div>
@@ -814,12 +859,11 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   </div>
 </section>
 
-<!-- PROOF -->
+<!-- PROOF / TESTIMONIALS -->
 <section class="proof-section">
   <div class="w1100" style="position:relative;">
     <div class="sec-label">// Results</div>
     <h2>Numbers that make<br><em>CFOs smile</em></h2>
-    <!-- Animated counters bar -->
     <div style="display:flex;gap:0;margin-top:40px;margin-bottom:48px;background:var(--card);border:1px solid rgba(124,92,252,.2);border-radius:16px;overflow:hidden;">
       <div style="flex:1;padding:24px;text-align:center;border-right:1px solid var(--border);">
         <div class="proof-counter" id="ctr1">0</div>
@@ -850,37 +894,38 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
     <div class="faq-list">
       <div class="faq-item open">
         <div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">How much revenue am I actually losing right now?</div><div class="faq-ic">+</div></div>
-        <div class="faq-a"><div class="faq-ai">More than most founders realise. Research consistently shows that <strong>between 60 and 65% of B2B buying decisions involve after-hours research</strong>. Evenings, early mornings, and weekends, when your human team is offline.<br><br>
+        <div class="faq-a"><div class="faq-ai">More than most founders realise. Research consistently shows that <strong>between 60 and 65% of B2B buying decisions involve after-hours research</strong> — evenings, early mornings, and weekends, when your team is offline.<br><br>
         <div class="fpill r">📊 62% of purchase decisions involve after-hours or weekend activity</div><br>
         Without a closer available at those moments, visitors land, browse, hit a question and leave. Forever. <strong>The average website converts under 2% of its traffic</strong>, meaning 98 out of every 100 people you paid to acquire never become customers.<br><br>
-        Converge engages them at the exact moment of intent. Whether that's 2pm Tuesday or 11pm Sunday. Use the ROI calculator above to see your specific number.</div></div>
+        Converge engages them at the exact moment of intent — 2pm Tuesday or 11pm Sunday. Use the ROI calculator above to see your specific number.</div></div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">Is this just another chatbot? How is it different from Intercom or Drift?</div><div class="faq-ic">+</div></div>
-        <div class="faq-a"><div class="faq-ai">Traditional chat tools are built for <strong>customer support</strong>. Answering tickets, routing to agents. They're reactive: they wait for someone to ask a question, then try to answer it.<br><br>
-        Converge is built for <strong>revenue generation</strong>. It proactively starts conversations, runs a qualification process, handles objections, and guides visitors toward a decision without human involvement. Think of it less like a help desk and more like your best SDR, available at 3am on a Sunday.<br><br>
-        <div class="fpill g">💡 Intercom starts at $74/mo for support. Drift starts at $2,500/mo. Converge starts free.</div></div></div>
+        <div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">How is Converge different from Intercom or Drift?</div><div class="faq-ic">+</div></div>
+        <div class="faq-a"><div class="faq-ai">Intercom and Zendesk are built for <strong>customer support</strong> — answering tickets, routing to agents. They wait for someone to ask a question and then try to answer it.<br><br>
+        Drift was a conversational marketing pioneer, but it was acquired by Salesloft in 2024 and now sits inside an enterprise sales platform priced at $2,500/month minimum. It's built for a very different buyer.<br><br>
+        Converge is built for <strong>revenue generation</strong>: proactive conversations, qualification, objection handling, and conversion — without human involvement. Think of it as your best SDR, available at 3am on a Sunday, starting free for any size team.<br><br>
+        <div class="fpill g">💡 Intercom starts at $29/seat/mo. Drift starts at $2,500/mo. Converge starts free.</div></div></div>
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">Will it sound robotic? I don't want to put off potential customers.</div><div class="faq-ic">+</div></div>
-        <div class="faq-a"><div class="faq-ai">This is the question we get most. The answer: <strong>no, if you train it well. And we make that easy.</strong><br><br>
-        During setup, you define your brand voice, tone, and response style. Upload existing sales scripts, FAQs, and example conversations from your best reps. The result sounds like your company, not a generic bot.<br><br>
-        Customers in our beta consistently report visitors couldn't tell they were talking to AI. Full transparency is always an option. Some brands disclose upfront, and both approaches work.</div></div>
+        <div class="faq-a"><div class="faq-ai">This is the question we get most. The short answer: <strong>no, if you train it well. And we make that easy.</strong><br><br>
+        During setup, you define your brand voice, tone, and response style. Upload existing sales scripts, FAQs, and example conversations from your best reps. The result sounds like your company.<br><br>
+        Customers in our beta consistently report visitors couldn't tell they were talking to AI. Full transparency is always an option. Some brands disclose upfront, some don't. Both approaches convert well.</div></div>
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">What happens when someone wants to talk to a real person?</div><div class="faq-ic">+</div></div>
-        <div class="faq-a"><div class="faq-ai">Converge knows when to step aside. When a visitor requests a human, or when the AI detects a hot enough lead, it routes to your team via Slack, email, or your CRM <strong>with the full conversation context attached.</strong><br><br>
+        <div class="faq-a"><div class="faq-ai">Converge knows when to step aside. When a visitor requests a human, or when the AI detects a high-intent lead, it routes to your team via Slack, email, or your CRM <strong>with the full conversation context attached.</strong><br><br>
         Your rep jumps in already knowing what the prospect wants, what they've been told, and where they are in the decision. No awkward recaps, no dropped context.</div></div>
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">How does the free plan work?</div><div class="faq-ic">+</div></div>
         <div class="faq-a"><div class="faq-ai">The free plan gives you <strong>50 AI conversations per month</strong>. No credit card, no time limit. It's designed to let you experience the conversion lift before deciding to grow.<br><br>
-        Free plan includes: 1 AI persona, lead capture, email notifications, and basic analytics. The main constraint is volume and the small "Powered by Converge" badge on the widget.<br><br>
+        Included: 1 AI persona, lead capture, email notifications, and basic analytics. The main constraint is volume and the small "Powered by Converge" badge on the widget.<br><br>
         <div class="fpill g">💡 Most teams upgrade within 2 weeks after seeing the lift firsthand.</div></div></div>
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">What does "1.5% of attributed revenue" mean on the Growth plan?</div><div class="faq-ic">+</div></div>
-        <div class="faq-a"><div class="faq-ai">It means our incentives are aligned with yours. We only charge the performance percentage on revenue we can <strong>demonstrably prove Converge helped generate</strong>. Tracked through CRM integration or UTM parameters on closed deals with a Converge conversation in the journey.<br><br>
+        <div class="faq-a"><div class="faq-ai">It means our incentives are aligned with yours. We only charge the performance percentage on revenue we can <strong>demonstrably prove Converge helped generate</strong> — tracked through CRM integration or UTM parameters on closed deals with a Converge conversation in the journey.<br><br>
         The $149/mo base covers platform access. <strong>If you're converting well, the 1.5% is a fraction of what you're gaining.</strong> A customer with $50,000/mo in attributed revenue pays $750 on the performance side and gained $50,000.</div></div>
       </div>
       <div class="faq-item">
@@ -892,15 +937,15 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   </div>
 </section>
 
-<!-- CTA -->
+<!-- FINAL CTA -->
 <section class="cta-section">
   <div class="cta-glow"></div>
   <div class="cta-glow2"></div>
   <div class="sec-label">// Get Started</div>
   <h2>Your best salesperson<br>starts work <em>tonight</em></h2>
-  <p class="sec-sub" style="margin:20px auto 40px;text-align:center;">Your first conversions are on us. No credit card. No engineering. Just more revenue starting with your next visitor.</p>
+  <p class="sec-sub" style="margin:20px auto 40px;text-align:center;">Free forever for small teams. No credit card. No engineering. Just more revenue, starting with your next visitor.</p>
   <div class="hero-actions" style="justify-content:center">
-    <a href="#" class="btn-p" onclick="openModal()"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Start Free Today</a>
+    <a href="#" class="btn-p" onclick="openModal();return false;"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Start Free Today</a>
     <a href="#showcase" class="btn-s">See it in action</a>
   </div>
 </section>
@@ -912,15 +957,18 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   <div class="foot-copy">© 2026 Converge AI, Inc.</div>
 </div></footer>
 
-<!-- MAIN MODAL -->
+<!-- MAIN SIGN-UP MODAL -->
 <div class="modal-ov" id="modalOv" onclick="handleOvClick(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">×</button>
     <div class="badge" style="margin-bottom:16px;display:inline-flex"><span class="badge-dot"></span>Free forever · No card needed</div>
-    <h3>Start converting<br>more visitors</h3>
+    <h3>Get your first<br>conversions tonight</h3>
     <p class="modal-sub">Setup takes under 10 minutes. Start free, upgrade when you're ready.</p>
-    <div class="fr"><div class="fg"><label class="fl">First name</label><input class="fi" type="text" placeholder="Alex"></div><div class="fg"><label class="fl">Last name</label><input class="fi" type="text" placeholder="Johnson"></div></div>
-    <div class="fg"><label class="fl">Work email</label><input class="fi" type="email" placeholder="alex@company.com" id="mainEmail"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">First name</label><input class="fi" type="text" placeholder="Alex"></div>
+      <div class="fg"><label class="fl">Last name</label><input class="fi" type="text" placeholder="Johnson"></div>
+    </div>
+    <div class="fg"><label class="fl">Work email</label><input class="fi" type="email" placeholder="alex@company.com"></div>
     <div class="fg"><label class="fl">Company website</label><input class="fi" type="url" placeholder="https://yourcompany.com"></div>
     <div class="fg"><label class="fl">Monthly visitors (approx.)</label><select class="fi" style="cursor:pointer"><option>Under 1,000</option><option>1,000 – 10,000</option><option selected>10,000 – 100,000</option><option>100,000+</option></select></div>
     <button class="fsub" onclick="submitForm(this)">Create My Free Account →</button>
@@ -928,17 +976,17 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   </div>
 </div>
 
-<!-- EXIT INTENT MODAL -->
-<div class="modal-ov" id="exitModalOv" onclick="handleExitOvClick(event)">
-  <div class="modal exit-modal">
+<!-- EXIT INTENT MODAL — rewritten copy -->
+<div class="exit-modal-ov" id="exitModalOv" onclick="handleExitOvClick(event)">
+  <div class="exit-modal">
     <button class="modal-close" onclick="closeExitModal()">×</button>
-    <div class="modal-eyebrow">// Wait — before you go</div>
-    <h3>Your visitors are leaving<br>money on the table <em style="color:var(--green);">tonight</em></h3>
-    <p class="modal-sub" style="margin-bottom:20px;">Drop your email. We'll show you exactly how many leads your site is losing right now — free, in 2 minutes.</p>
+    <div class="exit-eyebrow">// Before you go</div>
+    <div class="exit-headline">Every visitor who just left<br>cost you money.</div>
+    <p class="exit-sub">Converge catches the ones who almost converted and closes them — automatically. Takes 10 minutes to set up. Free forever to start.</p>
     <div class="fg"><label class="fl">Work email</label><input class="fi" type="email" placeholder="you@company.com" id="exitEmail"></div>
-    <div class="fg"><label class="fl">Company website</label><input class="fi" type="url" placeholder="https://yoursite.com" id="exitUrl"></div>
-    <button class="fsub" onclick="submitExitForm(this)">Show me what I'm losing →</button>
-    <p class="fdisc">We'll reply within an hour. No spam, ever.</p>
+    <div class="fg"><label class="fl">Your website</label><input class="fi" type="url" placeholder="https://yoursite.com" id="exitUrl"></div>
+    <button class="fsub" onclick="submitExitForm(this)">Show me the revenue I'm missing →</button>
+    <p class="fdisc">We reply within an hour. No spam, ever.</p>
   </div>
 </div>
 
@@ -947,14 +995,11 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
 function openModal(){document.getElementById('modalOv').classList.add('open');}
 function closeModal(){document.getElementById('modalOv').classList.remove('open');}
 function handleOvClick(e){if(e.target===document.getElementById('modalOv'))closeModal();}
-function submitForm(btn){btn.textContent='✓ You\'re in! Check your email.';btn.style.background='var(--green)';btn.disabled=true;setTimeout(closeModal,2200);}
+function submitForm(btn){btn.textContent='✓ You\'re in! Check your email.';btn.disabled=true;setTimeout(closeModal,2200);}
 
-function closeExitModal(){
-  document.getElementById('exitModalOv').classList.remove('open');
-  sessionStorage.setItem('exitShown','1');
-}
+function closeExitModal(){document.getElementById('exitModalOv').classList.remove('open');sessionStorage.setItem('exitShown','1');}
 function handleExitOvClick(e){if(e.target===document.getElementById('exitModalOv'))closeExitModal();}
-function submitExitForm(btn){btn.textContent='✓ We\'ll be in touch!';btn.style.background='var(--green)';btn.disabled=true;setTimeout(closeExitModal,2000);}
+function submitExitForm(btn){btn.textContent='✓ We\'ll be in touch!';btn.disabled=true;setTimeout(closeExitModal,2000);}
 
 // ── EXIT INTENT ────────────────────────────────────────────────────────────
 let exitFired=false;
@@ -968,150 +1013,96 @@ document.addEventListener('mouseleave',function(e){
 // ── NAV SCROLL ─────────────────────────────────────────────────────────────
 window.addEventListener('scroll',()=>{
   const nav=document.getElementById('mainNav');
-  if(window.scrollY>60)nav.classList.add('scrolled');
-  else nav.classList.remove('scrolled');
+  if(window.scrollY>60)nav.classList.add('scrolled');else nav.classList.remove('scrolled');
 });
 
-// ── MOBILE NAV ─────────────────────────────────────────────────────────────
-function toggleMobileNav(){
-  const burger=document.getElementById('navBurger');
-  const mobile=document.getElementById('navMobile');
-  burger.classList.toggle('open');
-  mobile.classList.toggle('open');
-}
-function closeMobileNav(){
-  document.getElementById('navBurger').classList.remove('open');
-  document.getElementById('navMobile').classList.remove('open');
-}
 
-// ── LIVE TOAST ─────────────────────────────────────────────────────────────
-const toasts=[
-  {msg:'Aria just booked a demo',sub:'for a SaaS company · 2 min ago'},
-  {msg:'New lead qualified',sub:'$8k deal size · 5 min ago'},
-  {msg:'Price objection recovered',sub:'visitor upgraded to Growth · 8 min ago'},
-  {msg:'Aria closed at 11:47pm',sub:'legal services firm · 12 min ago'},
-  {msg:'Discovery call booked',sub:'48 hrs of dormant traffic · 15 min ago'},
-  {msg:'Trial started',sub:'from a competitor comparison · 18 min ago'},
-];
-let toastIdx=0;
-function showToast(){
-  const toast=document.getElementById('liveToast');
-  const t=toasts[toastIdx%toasts.length];toastIdx++;
-  document.getElementById('toastMsg').textContent=t.msg;
-  document.getElementById('toastSub').textContent=t.sub;
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'),4500);
-}
-setTimeout(()=>{showToast();setInterval(showToast,12000);},5000);
 
-// ── LIVE TESTER ─────────────────────────────────────────────────────────────
-async function runTester() {
-  const urlInput = document.getElementById('testerUrl');
-  const btn      = document.getElementById('testerBtn');
-  const status   = document.getElementById('testerStatus');
-  let url = urlInput.value.trim();
-  if (!url) { status.textContent = 'Enter your site URL first.'; return; }
-  if (!url.startsWith('http')) url = 'https://' + url;
+// ── LIVE TESTER — calls Anthropic API to generate real opener ──────────────
+async function runTester(){
+  const urlInput=document.getElementById('testerUrl');
+  const btn=document.getElementById('testerBtn');
+  const status=document.getElementById('testerStatus');
+  let url=urlInput.value.trim();
+  if(!url){status.textContent='Enter your site URL first.';return;}
+  if(!url.startsWith('http'))url='https://'+url;
 
-  btn.disabled = true;
-  btn.textContent = 'Scanning...';
-  status.textContent = '🔍 Training Aria on your site...';
+  btn.disabled=true;
+  btn.innerHTML='<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Training...';
+  status.textContent='🔍 Scanning your site and training Aria...';
 
-  // Simulate a brief training delay then open widget + start conversation
-  await new Promise(r=>setTimeout(r,1800));
+  let domain='';
+  try{domain=new URL(url).hostname.replace('www.','');}catch{domain=url;}
 
-  status.textContent = '✓ Aria is ready. She\'ll introduce herself now 👇';
-  btn.disabled = false;
-  btn.innerHTML = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Train again';
-
-  // Try to fire the live widget first; fall back to a simulated inline demo
-  try {
-    const res = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clientKey: 'cvg_tester_' + Date.now(), siteUrl: url }),
-    });
-    const data = await res.json();
-    if (data.config && window.__cvgApplyConfig) {
-      window.__cvgApplyConfig(data.config);
-      window.__cvgOpen && window.__cvgOpen();
-      return;
-    }
-  } catch {}
-
-  // Fallback: show Aria's opener inline in the tester section
-  openAriaDemo(url);
-}
-
-function openAriaDemo(url) {
-  const domain = (() => { try { return new URL(url).hostname.replace('www.',''); } catch { return url; } })();
-  const wrap = document.getElementById('ariaDemo');
-  if (!wrap) {
-    // Insert demo panel below tester
-    const strip = document.querySelector('.tester-wrap');
-    const panel = document.createElement('div');
-    panel.id = 'ariaDemo';
-    panel.style.cssText = 'margin-top:28px;background:var(--card);border:1px solid rgba(0,232,122,.25);border-radius:16px;overflow:hidden;';
-    panel.innerHTML = `
-      <div style="background:var(--deep);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;">
-        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green),#00c4ff);display:flex;align-items:center;justify-content:center;font-size:14px;">🤖</div>
-        <div>
-          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;">Aria · Trained on ${domain}</div>
-          <div style="font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px;margin-top:1px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s infinite;"></span>Active now</div>
-        </div>
-      </div>
-      <div id="ariaMsgs" style="padding:20px;display:flex;flex-direction:column;gap:10px;min-height:180px;"></div>
-      <div id="ariaEmailCapture" style="display:none;padding:0 20px 20px;">
-        <div style="display:flex;gap:10px;">
-          <input id="ariaEmail" class="tester-input" type="email" placeholder="your@email.com" style="font-size:14px;padding:10px 14px;" />
-          <button class="tester-btn" onclick="submitAriaEmail()" style="padding:10px 18px;font-size:14px;">Send setup →</button>
-        </div>
-      </div>`;
-    strip.appendChild(panel);
-  }
-  playAriaOpener(domain);
-}
-
-function addAriaMsg(text, isUser) {
-  const msgs = document.getElementById('ariaMsgs');
-  const div = document.createElement('div');
-  div.style.cssText = `max-width:85%;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;${isUser?'align-self:flex-end':''}`;
-  const bubble = document.createElement('div');
-  bubble.style.cssText = isUser
-    ? 'background:var(--green);color:var(--black);border-radius:14px 4px 14px 14px;padding:10px 14px;font-size:13.5px;font-weight:500;'
-    : 'background:var(--deep);border:1px solid var(--border);border-radius:4px 14px 14px 14px;padding:10px 14px;font-size:13.5px;color:#d8d8e8;';
-  bubble.innerHTML = text;
-  div.appendChild(bubble);
-  const label = document.createElement('div');
-  label.style.cssText = `font-size:10px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;padding:0 4px;${isUser?'text-align:right':''}`;
-  label.textContent = isUser ? 'You' : 'Aria · Converge AI';
-  div.appendChild(label);
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{div.style.opacity='1';div.style.transform='translateY(0)';}));
-}
-
-function playAriaOpener(domain) {
-  const msgs = document.getElementById('ariaMsgs');
-  if (msgs) msgs.innerHTML = '';
-  setTimeout(()=>addAriaMsg(`Hey! I just scanned <strong>${domain}</strong> and I'm ready to close your visitors. Quick question — what's the biggest reason people leave your site without buying?`, false), 400);
-  setTimeout(()=>{
-    document.getElementById('ariaEmailCapture').style.display='block';
-    const cap = document.getElementById('ariaEmailCapture');
-    // Replace with a response + email ask
-    const promptDiv = document.createElement('div');
-    promptDiv.style.cssText = 'padding:0 20px 12px;font-size:13px;color:var(--muted2);';
-    promptDiv.innerHTML = '💬 Type a reply — or drop your email and I\'ll send you a full setup in 2 minutes:';
-    cap.parentNode.insertBefore(promptDiv, cap);
-  }, 1200);
-}
-
-function submitAriaEmail() {
-  const email = document.getElementById('ariaEmail').value.trim();
-  if (!email) return;
+  document.getElementById('ariaDomainLabel').textContent='Aria · Trained on '+domain;
+  document.getElementById('ariaMsgs').innerHTML='';
   document.getElementById('ariaEmailCapture').style.display='none';
-  addAriaMsg(email, true);
-  setTimeout(()=>addAriaMsg('Perfect. I\'m sending your personalised setup to that address now. You\'ll be live in under 10 minutes. 🚀', false), 800);
+  document.getElementById('ariaDemo').style.display='block';
+
+  // Call Anthropic API
+  let msg='';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`You are Aria, an AI sales closer trained on a specific company's website. Given a domain, write a warm, direct opening sales message that would appear in a chat widget on that company's site.
+
+The message must:
+- Address the visitor by mentioning something plausible and specific about what the company likely sells or does (infer from the domain name — be specific, not generic)
+- Ask a single open-ended qualifying question at the end
+- Sound like a confident, human sales rep — not a bot
+- Be 2 to 3 sentences maximum
+- Use no markdown, no asterisks, no lists
+
+Return only the message. No preamble, no explanation.`,
+        messages:[{role:'user',content:'Domain: '+domain+'\nURL: '+url}]
+      })
+    });
+    const data=await res.json();
+    msg=data.content?.[0]?.text||'';
+  }catch(e){}
+
+  if(!msg)msg=`Hey — I'm Aria, ${domain}'s AI sales assistant. I can help you find exactly what you're looking for and answer any questions. What brings you here today?`;
+
+  status.textContent='✓ Aria is trained and ready — see her opener below';
+  btn.disabled=false;
+  btn.innerHTML='<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Train again';
+
+  // Render the opener message
+  addAriaMsg(msg,false);
+  setTimeout(()=>document.getElementById('ariaEmailCapture').style.display='block',1000);
+}
+
+document.getElementById('testerUrl').addEventListener('keydown',e=>{if(e.key==='Enter')runTester();});
+
+function addAriaMsg(text,isUser){
+  const msgs=document.getElementById('ariaMsgs');
+  const d=document.createElement('div');
+  d.style.cssText=`max-width:85%;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s;${isUser?'align-self:flex-end':''}`;
+  const b=document.createElement('div');
+  b.style.cssText=isUser
+    ?'background:var(--green);color:var(--black);border-radius:14px 4px 14px 14px;padding:10px 14px;font-size:13.5px;font-weight:500;'
+    :'background:var(--deep);border:1px solid var(--border);border-radius:4px 14px 14px 14px;padding:10px 14px;font-size:13.5px;color:#d8d8e8;line-height:1.55;';
+  b.innerHTML=text;
+  d.appendChild(b);
+  const lbl=document.createElement('div');
+  lbl.style.cssText=`font-size:10px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;padding:0 4px;${isUser?'text-align:right':''}`;
+  lbl.textContent=isUser?'You':'Aria · Converge AI';
+  d.appendChild(lbl);
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.opacity='1';d.style.transform='translateY(0)';}));
+}
+
+function submitAriaEmail(){
+  const email=document.getElementById('ariaEmail').value.trim();
+  if(!email)return;
+  document.getElementById('ariaEmailCapture').style.display='none';
+  addAriaMsg(email,true);
+  setTimeout(()=>addAriaMsg('Perfect. Sending your personalised setup to that address now. You\'ll be live in under 10 minutes. 🚀',false),800);
 }
 
 // ── CONVERSATION SHOWCASE ─────────────────────────────────────────────────
@@ -1122,9 +1113,9 @@ const scenarios=[
       {t:'u',text:"I'm not sure which plan is right for me."},
       {t:'ai',text:"No problem. Quick question: roughly how many people will be using it on your team?"},
       {t:'u',text:"About 15 people across two departments."},
-      {t:'ai',text:"Got it. For a team that size, most companies choose the <strong>Growth plan</strong>. It gives you unlimited conversations, 5 AI personas, and full CRM sync. Want me to show you exactly what's included?"},
-      {t:'u',text:"Yes, please."},
-      {t:'ai',text:"Here's what you get: unlimited conversations, HubSpot and Salesforce sync, A/B conversation testing, and revenue attribution so you can prove the ROI. It's $149/mo plus a small % of revenue we help generate. We only win when you do. Want to start a free trial right now?"},
+      {t:'ai',text:"For a team that size, most companies choose the <strong>Growth plan</strong>. It gives you unlimited conversations, 5 AI personas, and full CRM sync. Want me to walk you through exactly what's included?"},
+      {t:'u',text:"Yes please."},
+      {t:'ai',text:"Here's what you get: unlimited conversations, HubSpot and Salesforce sync, A/B testing, and revenue attribution so you can prove the ROI. It's $149/mo plus a small % of revenue we help generate. We only win when you do. Want to start a free trial right now?"},
       {t:'u',text:"Sure, let's do it."},
     ],
     outcome:{icon:'✓',text:'Growth plan free trial started'}
@@ -1133,38 +1124,38 @@ const scenarios=[
     name:'Aria · Objection Handler',status:'Active now',
     msgs:[
       {t:'u',text:"This looks expensive for what it does."},
-      {t:'ai',text:"That's a fair thing to think. Can I show you something?"},
+      {t:'ai',text:"That's a fair reaction. Can I show you something?"},
       {t:'u',text:"Go ahead."},
-      {t:'ai',text:"Most companies recover the full cost from <strong>one extra customer per month</strong>. At typical traffic levels, that usually happens in the first week. The real question isn't the cost. It's whether you can afford to keep missing those conversions."},
+      {t:'ai',text:"Most customers recover the full cost from <strong>one extra customer per month</strong>. At typical traffic levels, that usually happens in the first week. The real question isn't the cost. It's what it's costing you to keep missing those conversions."},
       {t:'u',text:"Fair point."},
-      {t:'ai',text:"And you can try it completely free. 50 conversations, no card. If it doesn't pay for itself, you never upgrade. Want to start now?"},
+      {t:'ai',text:"And you can try it completely free. 50 conversations, no card required. If it doesn't pay for itself, you never upgrade. Want to start now?"},
       {t:'u',text:"Yeah, let's try it."},
     ],
-    outcome:{icon:'✓',text:'Free plan activated. No card needed.'}
+    outcome:{icon:'✓',text:'Free plan activated — no card needed'}
   },
   {
     name:'Aria · After-Hours Closer',status:'Active now · 11:47pm',
     msgs:[
       {t:'u',text:"Hi. I'm looking for a real estate attorney. Not sure if you're the right fit."},
-      {t:'ai',text:"You've come to the right place. What's the situation: are you buying, selling, or dealing with a dispute?"},
+      {t:'ai',text:"You've come to the right place. What's the situation — buying, selling, or a dispute?"},
       {t:'u',text:"Buying commercial property. It's a $1.8M deal and I want someone experienced."},
-      {t:'ai',text:"We handle transactions at that level regularly. Our team has closed over $200M in commercial real estate. The key questions for a deal this size are timing and due diligence complexity. How soon are you looking to close?"},
+      {t:'ai',text:"We handle transactions at that level regularly. Our team has closed over $200M in commercial real estate. For a deal this size, the key questions are timing and due diligence complexity. How soon are you looking to close?"},
       {t:'u',text:"Probably 6 weeks. Is that realistic?"},
-      {t:'ai',text:"Tight, but doable. We've done it in 4. I'm going to book you in for a 20-minute call with Marcus, our commercial lead. I have slots tomorrow at 9am or 2pm. Which works?"},
+      {t:'ai',text:"Tight, but doable. We've done it in 4. I'm booking you in for a 20-minute call with Marcus, our commercial lead. I have slots tomorrow at 9am or 2pm. Which works?"},
       {t:'u',text:"9am works."},
     ],
-    outcome:{icon:'📅',text:'Discovery call booked. 9am tomorrow.'}
+    outcome:{icon:'📅',text:'Discovery call booked — 9am tomorrow'}
   },
   {
     name:'Aria · Competitor Handler',status:'Active now',
     msgs:[
       {t:'u',text:"We're already looking at Intercom. Why should we use Converge instead?"},
-      {t:'ai',text:"They're actually quite different tools. Intercom is built for <strong>customer support</strong>: tickets, agent routing, help docs. Converge is built for <strong>revenue generation</strong>: qualifying leads, handling objections, and driving people to buy."},
+      {t:'ai',text:"They're actually different tools built for different jobs. Intercom is built for <strong>customer support</strong>: tickets, agent routing, help docs. Converge is built for <strong>revenue</strong>: qualifying leads, handling objections, closing sales."},
       {t:'u',text:"We need both support and sales though."},
-      {t:'ai',text:"A lot of teams do. Converge handles the sales side and integrates with your support stack. You could run Intercom for tickets and Converge for conversions. Many customers do exactly that. They say Converge pays for itself while Intercom is a cost centre."},
+      {t:'ai',text:"A lot of teams do. Converge handles the sales side and integrates with your support stack. You could run Intercom for tickets and Converge for conversions. Many customers do exactly that — they say Converge pays for itself while Intercom is a cost centre."},
       {t:'u',text:"That's actually a good point. How do I get started?"},
     ],
-    outcome:{icon:'✓',text:'Trial started. Converting from evaluation.'}
+    outcome:{icon:'✓',text:'Trial started — converting from evaluation'}
   }
 ];
 
@@ -1209,7 +1200,7 @@ document.querySelectorAll('.convo-tab').forEach(t=>{
   t.addEventListener('click',()=>{clearInterval(autoCycleTimer);setTimeout(startAutoCycle,20000);});
 });
 
-// ── ONBOARDING STEPS ─────────────────────────────────────────────────────
+// ── ONBOARDING STEPS ──────────────────────────────────────────────────────
 function selStep(idx,el){
   document.querySelectorAll('.ob-item').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');
@@ -1239,7 +1230,7 @@ function runScanAnimation(){
       f.innerHTML=`<div class="scan-finding-dot"></div>${s.text}`;
       findings.appendChild(f);
       requestAnimationFrame(()=>requestAnimationFrame(()=>f.classList.add('appear')));
-      if(s.pct===100)statusTxt.textContent='Ready. AI trained on your site ✓';
+      if(s.pct===100)statusTxt.textContent='Ready — AI trained on your site ✓';
     },s.delay);
   });
 }
@@ -1248,7 +1239,12 @@ function runScanAnimation(){
 function copyCode(btn){btn.textContent='Copied!';btn.style.color='var(--green)';setTimeout(()=>{btn.textContent='Copy';btn.style.color='';},2000);}
 
 // ── FAQ ───────────────────────────────────────────────────────────────────
-function toggleFAQ(el){const item=el.parentElement;const wasOpen=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!wasOpen)item.classList.add('open');}
+function toggleFAQ(el){
+  const item=el.parentElement;
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
+}
 
 // ── ROI CALC ──────────────────────────────────────────────────────────────
 function fmt(n){if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'$'+(n/1000).toFixed(0)+'k';return'$'+Math.round(n);}
@@ -1290,18 +1286,15 @@ const counterObs=new IntersectionObserver(es=>{
   });
 },{threshold:.3});
 const ctrEl=document.getElementById('ctr1');
-if(ctrEl)counterObs.observe(ctrEl.closest('div').parentElement);
+if(ctrEl)counterObs.observe(ctrEl.closest('[style]')||ctrEl.parentElement);
 
 // ── SCROLL ANIMATIONS ─────────────────────────────────────────────────────
 const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:.08});
 document.querySelectorAll('.feat-card,.proof-card,.price-card,.how-step,.for-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity .5s ease,transform .5s ease';obs.observe(el);});
 
-// ── INIT SCAN ANIMATION ON LOAD ───────────────────────────────────────────
+// ── INIT SCAN ANIMATION ───────────────────────────────────────────────────
 window.addEventListener('load',()=>{setTimeout(runScanAnimation,400);});
 </script>
-
-<!-- CONVERGE LIVE WIDGET -->
-<script src="/widget.js" data-key="cvg_demo" async></script>
 
 </body>
 </html>
