@@ -107,8 +107,6 @@ h2 em{font-style:normal;color:var(--green);}
 
 /* ── BROWSER MOCKUP ── */
 #browserMockup{display:none;margin-top:32px;border-radius:12px;overflow:hidden;border:1px solid var(--border-light);box-shadow:0 24px 80px rgba(0,0,0,.6);text-align:left;position:relative;}
-
-/* Browser chrome bar */
 .browser-chrome{background:#1a1a24;padding:10px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
 .browser-dots{display:flex;gap:6px;flex-shrink:0;}
 .browser-dot{width:12px;height:12px;border-radius:50%;}
@@ -121,18 +119,12 @@ h2 em{font-style:normal;color:var(--green);}
 .browser-url .url-domain{color:var(--white);}
 .browser-actions{display:flex;gap:8px;flex-shrink:0;}
 .browser-action{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;}
-
-/* Fake website content inside mockup */
 .browser-body{background:#f8f8fc;position:relative;overflow:hidden;min-height:420px;}
-
-/* Fake site nav */
 .fake-nav{background:white;border-bottom:1px solid #e8e8ef;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
 .fake-nav-logo{width:80px;height:12px;background:#d0d0dc;border-radius:3px;}
 .fake-nav-links{display:flex;gap:16px;}
 .fake-nav-link{height:8px;border-radius:2px;background:#e0e0ea;}
 .fake-nav-cta{height:28px;width:80px;background:#e8e0ff;border-radius:5px;}
-
-/* Fake hero content */
 .fake-hero{padding:40px 24px 32px;background:white;}
 .fake-h1-line{height:18px;border-radius:4px;background:#c8c8d8;margin-bottom:12px;}
 .fake-h1-line.w70{width:70%;}
@@ -145,8 +137,6 @@ h2 em{font-style:normal;color:var(--green);}
 .fake-btn{height:36px;border-radius:7px;}
 .fake-btn-p{width:120px;background:#6c47ff;}
 .fake-btn-s{width:100px;background:#e8e8f0;}
-
-/* Fake content blocks */
 .fake-features{padding:24px;background:#f4f4f9;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
 .fake-card{background:white;border-radius:8px;padding:16px;border:1px solid #e8e8ef;}
 .fake-card-icon{width:28px;height:28px;border-radius:6px;background:#ede8ff;margin-bottom:10px;}
@@ -154,51 +144,39 @@ h2 em{font-style:normal;color:var(--green);}
 .fake-card-text{height:6px;background:#e8e8f0;border-radius:2px;margin-bottom:5px;}
 .fake-card-text.w60{width:60%;}
 
-/* Converge widget overlay */
+/* ── CONVERGE WIDGET ── */
 .cvg-widget{position:absolute;bottom:20px;right:20px;width:296px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.25));z-index:10;}
-
-/* Widget launcher button (collapsed state) */
 .cvg-launcher{width:52px;height:52px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(0,232,122,.4);margin-left:auto;transition:transform .2s;}
 .cvg-launcher:hover{transform:scale(1.08);}
 .cvg-launcher svg{width:22px;height:22px;}
-
-/* Widget chat panel */
 .cvg-panel{background:white;border-radius:16px;overflow:hidden;border:1px solid #e8e8ef;margin-bottom:10px;transform-origin:bottom right;animation:widgetPop .35s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes widgetPop{from{opacity:0;transform:scale(.85) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
-
 .cvg-panel-head{background:linear-gradient(135deg,#0d0d12 0%,#1a1a2e 100%);padding:14px 16px;display:flex;align-items:center;gap:10px;}
 .cvg-head-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--green),#00c4ff);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
 .cvg-head-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:white;}
 .cvg-head-status{font-size:10px;color:var(--green);display:flex;align-items:center;gap:4px;margin-top:2px;}
 .cvg-status-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
 .cvg-head-brand{margin-left:auto;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;color:var(--green);opacity:.7;letter-spacing:-.3px;}
-
 .cvg-msgs{padding:14px;display:flex;flex-direction:column;gap:8px;min-height:120px;max-height:200px;overflow-y:auto;background:#fafafa;}
 .cvg-msgs::-webkit-scrollbar{width:3px;}
 .cvg-msgs::-webkit-scrollbar-thumb{background:#e0e0ea;border-radius:2px;}
-
 .cvg-msg{max-width:90%;font-size:12.5px;line-height:1.5;}
 .cvg-msg-ai .cvg-msg-b{background:white;border:1px solid #e8e8ef;border-radius:3px 12px 12px 12px;padding:9px 12px;color:#2a2a3a;}
 .cvg-msg-user{align-self:flex-end;}
 .cvg-msg-user .cvg-msg-b{background:var(--green);color:#050a05;border-radius:12px 3px 12px 12px;padding:9px 12px;font-weight:500;}
 .cvg-msg-lbl{font-size:9px;color:#9090a8;margin-top:3px;padding:0 3px;font-family:'DM Mono',monospace;}
 .cvg-msg-user .cvg-msg-lbl{text-align:right;}
-
-/* Typing indicator */
 .cvg-typing{display:flex;gap:4px;align-items:center;padding:9px 12px;background:white;border:1px solid #e8e8ef;border-radius:3px 12px 12px 12px;width:fit-content;}
 .cvg-typing span{width:6px;height:6px;border-radius:50%;background:#c0c0d0;animation:typingDot 1.2s ease infinite;}
 .cvg-typing span:nth-child(2){animation-delay:.2s;}
 .cvg-typing span:nth-child(3){animation-delay:.4s;}
 @keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
-
 .cvg-input-row{display:flex;gap:0;border-top:1px solid #e8e8ef;background:white;}
 .cvg-input{flex:1;border:none;outline:none;padding:11px 13px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:transparent;color:#1a1a2e;}
 .cvg-input::placeholder{color:#b0b0c0;}
 .cvg-send{width:36px;height:36px;margin:4px;border-radius:8px;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;}
 .cvg-send:hover{background:#00d070;}
 .cvg-send svg{width:14px;height:14px;}
-
-/* Email capture inside widget */
 .cvg-email-cap{padding:10px 14px 14px;background:#fafafa;border-top:1px solid #e8e8ef;}
 .cvg-email-label{font-size:11px;color:#6b6b80;margin-bottom:8px;line-height:1.4;}
 .cvg-email-row{display:flex;gap:6px;}
@@ -206,8 +184,6 @@ h2 em{font-style:normal;color:var(--green);}
 .cvg-email-input:focus{border-color:var(--green);}
 .cvg-email-btn{background:var(--green);color:#050a05;border:none;border-radius:7px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:background .2s;}
 .cvg-email-btn:hover{background:#00d070;}
-
-/* Powered by badge */
 .cvg-powered{text-align:center;padding:6px;font-size:9px;color:#b0b0c0;font-family:'DM Mono',monospace;background:white;border-top:1px solid #f0f0f5;}
 .cvg-powered span{color:#6c47ff;font-weight:500;}
 
@@ -442,7 +418,7 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
 .foot-links a:hover{color:var(--muted2);}
 .foot-copy{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
 
-/* ── MODAL ── */
+/* ── MODALS ── */
 .modal-ov{position:fixed;inset:0;background:rgba(6,6,8,.92);backdrop-filter:blur(12px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
 .modal-ov.open{opacity:1;pointer-events:all;}
 .modal{background:var(--card);border:1px solid var(--border-light);border-radius:20px;padding:44px;max-width:500px;width:90%;transform:translateY(20px);transition:transform .3s;position:relative;max-height:90vh;overflow-y:auto;}
@@ -549,7 +525,7 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   <div class="tester-wrap">
     <div class="tester-eyebrow">// Live demo</div>
     <div class="tester-heading">See Converge on <em style="color:var(--green);font-style:normal;">your</em> website</div>
-    <p class="tester-sub">Enter your URL. Aria scans your site and shows you exactly how she would close your visitors — starting with you.</p>
+    <p class="tester-sub">Enter your URL. Aria reads your site and opens with a line specific to your business — then closes.</p>
     <div class="tester-input-row">
       <input class="tester-input" id="testerUrl" type="url" placeholder="https://yourcompany.com" />
       <button class="tester-btn" id="testerBtn" onclick="runTester()">
@@ -560,10 +536,8 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
     <div class="tester-status" id="testerStatus"></div>
     <p class="tester-note">No signup needed. Takes about 10 seconds.</p>
 
-    <!-- BROWSER MOCKUP — shown after training -->
+    <!-- BROWSER MOCKUP -->
     <div id="browserMockup">
-
-      <!-- Chrome bar -->
       <div class="browser-chrome">
         <div class="browser-dots">
           <div class="browser-dot bd-red"></div>
@@ -580,10 +554,9 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
         </div>
       </div>
 
-      <!-- Website body: skeleton while loading, real screenshot once ready -->
       <div class="browser-body" id="browserBody" style="position:relative;">
 
-        <!-- Skeleton (visible while screenshot loads) -->
+        <!-- Skeleton -->
         <div id="browserSkeleton" style="position:absolute;inset:0;z-index:1;">
           <div class="fake-nav">
             <div class="fake-nav-logo"></div>
@@ -615,22 +588,20 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
           </div>
         </div>
 
-        <!-- Scan progress overlay on top of skeleton -->
-        <div id="scanOverlay" style="display:none;position:absolute;inset:0;background:rgba(13,13,18,.7);backdrop-filter:blur(3px);z-index:3;align-items:center;justify-content:center;flex-direction:column;gap:14px;">
-          <div id="scanOverlayText" style="font-family:'DM Mono',monospace;font-size:12px;color:#00e87a;letter-spacing:1.5px;">🔍 Scanning your site...</div>
-          <div style="width:220px;height:2px;background:#1e1e2a;border-radius:2px;overflow:hidden;">
-            <div id="scanOverlayBar" style="height:100%;width:0%;background:linear-gradient(to right,#00e87a,#00c4ff);border-radius:2px;transition:width .5s ease;"></div>
+        <!-- Scan overlay -->
+        <div id="scanOverlay" style="display:none;position:absolute;inset:0;background:rgba(13,13,18,.75);backdrop-filter:blur(3px);z-index:3;align-items:center;justify-content:center;flex-direction:column;gap:14px;">
+          <div id="scanOverlayText" style="font-family:'DM Mono',monospace;font-size:12px;color:#00e87a;letter-spacing:1.5px;text-align:center;padding:0 20px;">🔍 Loading your site...</div>
+          <div style="width:240px;height:2px;background:#1e1e2a;border-radius:2px;overflow:hidden;">
+            <div id="scanOverlayBar" style="height:100%;width:0%;background:linear-gradient(to right,#00e87a,#00c4ff);border-radius:2px;transition:width .6s ease;"></div>
           </div>
         </div>
 
-        <!-- Real screenshot — fades in once loaded -->
+        <!-- Real screenshot -->
         <img id="browserScreenshot" src="" alt=""
           style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0;transition:opacity .7s ease;z-index:2;pointer-events:none;" />
 
-        <!-- Converge widget overlay -->
+        <!-- Converge widget -->
         <div class="cvg-widget" id="cvgWidget">
-
-          <!-- Chat panel -->
           <div class="cvg-panel" id="cvgPanel">
             <div class="cvg-panel-head">
               <div class="cvg-head-av">🤖</div>
@@ -640,12 +611,7 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
               </div>
               <div class="cvg-head-brand">Converge</div>
             </div>
-
-            <div class="cvg-msgs" id="cvgMsgs">
-              <!-- Messages injected here -->
-            </div>
-
-            <!-- Email capture — shown after opener -->
+            <div class="cvg-msgs" id="cvgMsgs"></div>
             <div class="cvg-email-cap" id="cvgEmailCap" style="display:none;">
               <div class="cvg-email-label">Drop your email — I'll send your full setup in 2 minutes:</div>
               <div class="cvg-email-row">
@@ -653,7 +619,6 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
                 <button class="cvg-email-btn" onclick="submitWidgetEmail()">Send →</button>
               </div>
             </div>
-
             <div id="cvgInputArea" style="display:none;">
               <div class="cvg-input-row">
                 <input class="cvg-input" id="cvgUserInput" placeholder="Reply to Aria..." onkeydown="if(event.key==='Enter')sendWidgetMsg()" />
@@ -662,18 +627,14 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
                 </button>
               </div>
             </div>
-
             <div class="cvg-powered">Powered by <span>Converge</span></div>
           </div>
-
-          <!-- Launcher button -->
           <div class="cvg-launcher" id="cvgLauncher" onclick="toggleWidget()">
             <svg fill="none" viewBox="0 0 24 24" stroke="black" stroke-width="2"><path d="M8 12h.01M12 12h.01M16 12h.01M21 3H3a1 1 0 00-1 1v14a1 1 0 001 1h4l4 4 4-4h6a1 1 0 001-1V4a1 1 0 00-1-1z"/></svg>
           </div>
-
         </div>
-      </div><!-- /browser-body -->
-    </div><!-- /browserMockup -->
+      </div>
+    </div>
 
   </div>
 </div>
@@ -1042,7 +1003,6 @@ function toggleWidget(){
 }
 
 // ── WIDGET MESSAGING ──────────────────────────────────────────────────────
-// Conversation history for multi-turn
 let widgetHistory=[];
 let widgetDomain='';
 
@@ -1084,7 +1044,6 @@ async function sendWidgetMsg(){
   addWidgetMsg(text,false);
   widgetHistory.push({role:'user',content:text});
   showTyping();
-
   try{
     const res=await fetch('/api/chat',{
       method:'POST',
@@ -1096,18 +1055,17 @@ async function sendWidgetMsg(){
       })
     });
     const data=await res.json();
-    const reply=data.reply||"That's a great question. Let me connect you with the right information — what's the best email to reach you?";
+    const reply=data.reply||"That's a great question — what's the best email to reach you?";
     removeTyping();
     addWidgetMsg(reply,true);
     widgetHistory.push({role:'assistant',content:reply});
-    // If reply asks for email, show capture
     if(reply.toLowerCase().includes('email')&&document.getElementById('cvgEmailCap').style.display==='none'){
       setTimeout(()=>document.getElementById('cvgEmailCap').style.display='block',400);
       document.getElementById('cvgInputArea').style.display='none';
     }
   }catch(e){
     removeTyping();
-    addWidgetMsg("I'm having a quick connection issue — drop your email and I'll follow up directly.",true);
+    addWidgetMsg("Drop your email and I'll follow up with everything you need.",true);
     setTimeout(()=>document.getElementById('cvgEmailCap').style.display='block',400);
   }
 }
@@ -1119,7 +1077,7 @@ function submitWidgetEmail(){
   widgetHistory.push({role:'user',content:'My email is '+email});
   addWidgetMsg(email,false);
   setTimeout(()=>{
-    addWidgetMsg('Perfect — sending your personalised setup to that address now. You\'ll be live in under 10 minutes. 🚀',true);
+    addWidgetMsg('Perfect — sending your personalised setup now. You\'ll be live in under 10 minutes. 🚀',true);
   },700);
 }
 
@@ -1133,7 +1091,7 @@ async function runTester(){
   if(!url.startsWith('http'))url='https://'+url;
 
   btn.disabled=true;
-  btn.innerHTML='Scanning...';
+  btn.innerHTML='Reading your site...';
   status.textContent='';
 
   let domain='';
@@ -1142,112 +1100,130 @@ async function runTester(){
   widgetHistory=[];
   window._cvgRegisteredKey=null;
 
-  // Reset screenshot state
+  // Reset screenshot & skeleton
   const _ss=document.getElementById('browserScreenshot');
   const _sk=document.getElementById('browserSkeleton');
   if(_ss){_ss.style.opacity='0';_ss.src='';}
   if(_sk){_sk.style.opacity='1';}
 
-  // Update browser chrome & show mockup
+  // Show mockup immediately
   document.getElementById('browserUrl').innerHTML='<span class="url-domain">'+domain+'</span>';
   const mockup=document.getElementById('browserMockup');
   mockup.style.display='block';
   mockup.scrollIntoView({behavior:'smooth',block:'center'});
 
-  // Reset widget — force everything visible
+  // Full widget reset — panel stays closed during scan, widget frame visible
   document.getElementById('cvgMsgs').innerHTML='';
   document.getElementById('cvgEmailCap').style.display='none';
   document.getElementById('cvgInputArea').style.display='none';
-  document.getElementById('cvgPanel').style.display='block';
-  document.getElementById('cvgPanel').style.visibility='visible';
-  document.getElementById('cvgPanel').style.opacity='1';
+  document.getElementById('cvgPanel').style.cssText='display:block;visibility:visible;opacity:1;';
+  document.getElementById('cvgWidget').style.cssText='display:block;visibility:visible;opacity:1;';
   widgetOpen=true;
 
-  // Show scan overlay on browser body
+  // Show typing indicator in widget immediately so the panel looks alive
+  showTyping();
+
+  // Scan overlay with real animated steps — runs for ~10s
   const scanOverlay=document.getElementById('scanOverlay');
   const scanBar=document.getElementById('scanOverlayBar');
   const scanText=document.getElementById('scanOverlayText');
-  if(scanOverlay){scanOverlay.style.display='flex';}
-  if(scanBar){scanBar.style.width='0%';}
-  if(scanText){scanText.textContent='🔍 Scanning...';}
-  // Animate bar independently — visual only
-  let barPct=0;
-  const barTick=setInterval(()=>{
-    barPct=Math.min(barPct+(Math.random()*4+1),88);
-    if(scanBar) scanBar.style.width=barPct+'%';
-  },300);
+  if(scanOverlay)scanOverlay.style.display='flex';
+  if(scanBar)scanBar.style.width='0%';
 
-  // ── PHASE 1: Fast opener via /api/chat (1-2s) ────────────────────────────
-  showTyping();
-  let openerMsg='';
-  try{
-    const fastRes=await fetch('/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        messages:[{role:'user',content:'Start the conversation. Greet the visitor warmly, mention you are here to help them with '+domain+', and ask one short qualifying question. Max 2 sentences. No markdown.'}],
-        clientKey:'cvg_demo',
-        pageContext:{section:'Live demo for '+domain}
-      }),
-      signal:AbortSignal.timeout(8000)
-    });
-    if(fastRes.ok){
-      const fastData=await fastRes.json();
-      openerMsg=fastData.reply||'';
-    }
-  }catch(e){}
+  const scanSteps=[
+    {pct:8,  text:'🔍 Loading '+domain+'...',           ms:0},
+    {pct:22, text:'📄 Reading your pages...',           ms:1400},
+    {pct:38, text:'💰 Extracting pricing & offers...',  ms:3000},
+    {pct:54, text:'🎯 Mapping your key services...',    ms:4600},
+    {pct:70, text:'🧠 Understanding your customers...', ms:6200},
+    {pct:84, text:'✍️  Writing Aria\'s opening line...', ms:7800},
+    {pct:95, text:'⚡ Almost ready...',                  ms:9200},
+  ];
 
-  if(!openerMsg) openerMsg=`Hi, I'm Aria — the AI sales assistant for ${domain}. What brings you here today?`;
+  const stepTimers=[];
+  scanSteps.forEach(step=>{
+    const t=setTimeout(()=>{
+      if(scanBar)scanBar.style.width=step.pct+'%';
+      if(scanText)scanText.textContent=step.text;
+    },step.ms);
+    stepTimers.push(t);
+  });
 
-  removeTyping();
-  addWidgetMsg(openerMsg,true);
-  widgetHistory.push({role:'assistant',content:openerMsg});
-  setTimeout(()=>document.getElementById('cvgInputArea').style.display='block',300);
-  status.textContent='✓ Aria is live — try talking to her, or wait for her full training below';
-  btn.disabled=false;
-  btn.innerHTML='<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Train again';
-
-  // ── PHASE 2: Screenshot + deep scrape in background (5-10s) ─────────────
-  // These run in parallel after Aria is already talking.
-
-  // Screenshot via Microlink — no API key, free tier
-  fetch('https://api.microlink.io/?url='+encodeURIComponent(url)+'&screenshot=true&meta=false&embed=screenshot.url',{signal:AbortSignal.timeout(14000)})
+  // Screenshot fires in background — no await, completely non-blocking
+  const mlUrl='https://api.microlink.io/?url='+encodeURIComponent(url)+'&screenshot=true&meta=false';
+  const proxyUrl='https://api.allorigins.win/get?url='+encodeURIComponent(mlUrl);
+  fetch(proxyUrl,{signal:AbortSignal.timeout(22000)})
     .then(r=>r.json())
-    .then(mlData=>{
+    .then(proxyData=>{
+      const mlData=JSON.parse(proxyData.contents);
       const imgUrl=mlData?.data?.screenshot?.url;
-      if(!imgUrl) return;
+      if(!imgUrl)return;
       const img=document.getElementById('browserScreenshot');
       const sk=document.getElementById('browserSkeleton');
       if(img){
-        img.onload=()=>{
-          img.style.opacity='1';
-          if(sk) sk.style.opacity='0';
-          // Dismiss scan overlay once screenshot is visible
-          clearInterval(barTick);
-          if(scanBar) scanBar.style.width='100%';
-          setTimeout(()=>{if(scanOverlay) scanOverlay.style.display='none';},600);
-        };
+        img.onload=()=>{img.style.opacity='1';if(sk)sk.style.opacity='0';};
+        img.onerror=()=>{};
         img.src=imgUrl;
       }
     })
-    .catch(()=>{
-      // Screenshot failed — just hide the scan overlay cleanly
-      clearInterval(barTick);
-      if(scanOverlay) scanOverlay.style.display='none';
-    });
-
-  // Deep scrape via /api/register — upgrades follow-up replies with real context
-  fetch('/api/register',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({clientKey:'cvg_tester_'+Date.now(),siteUrl:url})
-  })
-    .then(r=>r.json())
-    .then(regData=>{
-      if(regData?.clientKey) window._cvgRegisteredKey=regData.clientKey;
-      status.textContent='✓ Aria is fully trained on '+domain+' — her replies now use real site data';
-    })
     .catch(()=>{});
+
+  // Register — scrapes the site and generates a real system prompt + greeting
+  // This is the only real async wait. Groq + scraping = ~8-14s on edge.
+  let regData=null;
+  try{
+    const regRes=await fetch('/api/register',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({clientKey:'cvg_tester_'+domain,siteUrl:url}),
+      signal:AbortSignal.timeout(22000)
+    });
+    regData=await regRes.json();
+  }catch(e){
+    // Register timed out or failed — fall through to fallback
+  }
+
+  // Clear scan animation
+  stepTimers.forEach(t=>clearTimeout(t));
+  if(scanBar)scanBar.style.width='100%';
+  if(scanText)scanText.textContent='✓ Aria has read '+domain;
+  setTimeout(()=>{if(scanOverlay)scanOverlay.style.display='none';},700);
+
+  if(regData?.clientKey)window._cvgRegisteredKey=regData.clientKey;
+
+  // Build opener — use the greeting generated from scraping their actual site
+  let openerMsg=regData?.config?.greeting||'';
+
+  // If register failed entirely, ask chat to improvise (domain name only — last resort)
+  if(!openerMsg){
+    try{
+      const fbRes=await fetch('/api/chat',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          messages:[{role:'user',content:'Write one warm opening line for a visitor on '+domain+'. Reference what the business likely does. End with one soft question. 2 sentences max. No markdown.'}],
+          clientKey:'cvg_demo',
+          pageContext:{section:'Live demo'}
+        }),
+        signal:AbortSignal.timeout(6000)
+      });
+      const fbData=await fbRes.json();
+      openerMsg=fbData.reply||'';
+    }catch(e){}
+  }
+
+  if(!openerMsg)openerMsg="I've just read through your site — what's the main thing you're trying to figure out today?";
+
+  // Remove typing indicator, deliver the real opener
+  removeTyping();
+  await new Promise(r=>setTimeout(r,400));
+  addWidgetMsg(openerMsg,true);
+  widgetHistory.push({role:'assistant',content:openerMsg});
+  document.getElementById('cvgInputArea').style.display='block';
+
+  status.textContent='✓ Aria has read '+domain+' — she\'s ready to close';
+  btn.disabled=false;
+  btn.innerHTML='<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Try another site';
 }
 
 document.getElementById('testerUrl').addEventListener('keydown',e=>{if(e.key==='Enter')runTester();});
