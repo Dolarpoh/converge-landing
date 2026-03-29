@@ -155,7 +155,7 @@ h2 em{font-style:normal;color:var(--green);}
 .fake-card-text.w60{width:60%;}
 
 /* Converge widget overlay */
-.cvg-widget{position:absolute;bottom:20px;right:20px;width:296px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.25));}
+.cvg-widget{position:absolute;bottom:20px;right:20px;width:296px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.25));z-index:10;}
 
 /* Widget launcher button (collapsed state) */
 .cvg-launcher{width:52px;height:52px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(0,232,122,.4);margin-left:auto;transition:transform .2s;}
@@ -1154,11 +1154,13 @@ async function runTester(){
   mockup.style.display='block';
   mockup.scrollIntoView({behavior:'smooth',block:'center'});
 
-  // Reset widget
+  // Reset widget — force everything visible
   document.getElementById('cvgMsgs').innerHTML='';
   document.getElementById('cvgEmailCap').style.display='none';
   document.getElementById('cvgInputArea').style.display='none';
   document.getElementById('cvgPanel').style.display='block';
+  document.getElementById('cvgPanel').style.visibility='visible';
+  document.getElementById('cvgPanel').style.opacity='1';
   widgetOpen=true;
 
   // Show scan overlay on browser body
@@ -1176,7 +1178,6 @@ async function runTester(){
   },300);
 
   // ── PHASE 1: Fast opener via /api/chat (1-2s) ────────────────────────────
-  // Show Aria immediately. Don't wait for scraping.
   showTyping();
   let openerMsg='';
   try{
@@ -1184,14 +1185,16 @@ async function runTester(){
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        messages:[{role:'user',content:'You are Aria, a friendly AI sales closer. Introduce yourself as the assistant for '+domain+' and ask one short qualifying question about what the visitor is looking for. 2 sentences max. No markdown. Sound human, not robotic.'}],
+        messages:[{role:'user',content:'Start the conversation. Greet the visitor warmly, mention you are here to help them with '+domain+', and ask one short qualifying question. Max 2 sentences. No markdown.'}],
         clientKey:'cvg_demo',
-        pageContext:{section:'Live demo'}
+        pageContext:{section:'Live demo for '+domain}
       }),
-      signal:AbortSignal.timeout(6000)
+      signal:AbortSignal.timeout(8000)
     });
-    const fastData=await fastRes.json();
-    openerMsg=fastData.reply||'';
+    if(fastRes.ok){
+      const fastData=await fastRes.json();
+      openerMsg=fastData.reply||'';
+    }
   }catch(e){}
 
   if(!openerMsg) openerMsg=`Hi, I'm Aria — the AI sales assistant for ${domain}. What brings you here today?`;
