@@ -1096,7 +1096,7 @@ async function sendWidgetMsg(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         messages:widgetHistory.slice(-10),
-        clientKey:'cvg_demo',
+        clientKey:window._cvgRegisteredKey||'cvg_demo',
         pageContext:{section:'Live Demo — '+widgetDomain}
       })
     });
@@ -1145,6 +1145,7 @@ async function runTester(){
   try{domain=new URL(url).hostname.replace('www.','');}catch{domain=url;}
   widgetDomain=domain;
   widgetHistory=[];
+  window._cvgRegisteredKey=null;
 
   // Update browser chrome
   document.getElementById('browserUrl').innerHTML='<span class="url-domain">'+domain+'</span>';
@@ -1164,26 +1165,48 @@ async function runTester(){
   // Show typing in widget immediately
   showTyping();
 
-  // Generate opener via /api/chat — same endpoint the real widget uses
+  // Step 1: hit /api/register — scrapes the real site, generates a config
+  // This gives us a greeting grounded in actual page content, not guesswork
   let openerMsg='';
+  let registeredKey='cvg_demo';
   try{
-    const res=await fetch('/api/chat',{
+    const regRes=await fetch('/api/register',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        messages:[{
-          role:'user',
-          content:'[DEMO] You are Aria, trained on '+domain+'. Write your very first greeting to a visitor on that site. Be specific about what '+domain+' likely sells (infer from the domain). Keep it to 2-3 sentences, end with one qualifying question, no markdown, sound human.'
-        }],
-        clientKey:'cvg_demo',
-        pageContext:{section:'Live demo — '+domain}
+        clientKey:'cvg_tester_'+Date.now(),
+        siteUrl:url
       })
     });
-    const data=await res.json();
-    openerMsg=data.reply||'';
+    const regData=await regRes.json();
+    if(regData.config){
+      // Use the greeting generated from real scraped content
+      if(regData.config.greeting) openerMsg=regData.config.greeting;
+      // Store key so follow-up messages use the trained config
+      if(regData.clientKey) window._cvgRegisteredKey=regData.clientKey;
+    }
   }catch(e){}
 
-  if(!openerMsg)openerMsg=`Hey — I'm Aria, ${domain}'s AI sales assistant. I noticed you're checking us out and I'd love to help you find exactly what you need. What brings you here today?`;
+  // Step 2: if register failed or returned no greeting, fall back to a
+  // /api/chat call — still better than pure domain guessing because it at
+  // least uses the full fallback system prompt
+  if(!openerMsg){
+    try{
+      const chatRes=await fetch('/api/chat',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          messages:[{role:'user',content:'Say hello and introduce yourself as the AI sales assistant for '+domain+'. Ask one qualifying question. 2 sentences max, no markdown.'}],
+          clientKey:'cvg_demo',
+          pageContext:{section:'Live demo'}
+        })
+      });
+      const chatData=await chatRes.json();
+      openerMsg=chatData.reply||'';
+    }catch(e){}
+  }
+
+  if(!openerMsg)openerMsg=`Hi! I'm Aria, the AI sales assistant for ${domain}. What brings you here today?`;
 
   removeTyping();
   addWidgetMsg(openerMsg,true);
