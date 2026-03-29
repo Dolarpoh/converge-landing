@@ -1134,139 +1134,117 @@ async function runTester(){
 
   btn.disabled=true;
   btn.innerHTML='Scanning...';
-  status.textContent='🔍 Training Aria on your site...';
+  status.textContent='';
 
   let domain='';
   try{domain=new URL(url).hostname.replace('www.','');}catch{domain=url;}
   widgetDomain=domain;
   widgetHistory=[];
   window._cvgRegisteredKey=null;
+
   // Reset screenshot state
-  const _img=document.getElementById('browserScreenshot');
+  const _ss=document.getElementById('browserScreenshot');
   const _sk=document.getElementById('browserSkeleton');
-  if(_img){_img.style.opacity='0';_img.src='';}
+  if(_ss){_ss.style.opacity='0';_ss.src='';}
   if(_sk){_sk.style.opacity='1';}
 
-  // Update browser chrome
+  // Update browser chrome & show mockup
   document.getElementById('browserUrl').innerHTML='<span class="url-domain">'+domain+'</span>';
-
-  // Show mockup immediately with loading state
   const mockup=document.getElementById('browserMockup');
   mockup.style.display='block';
   mockup.scrollIntoView({behavior:'smooth',block:'center'});
 
-  // Clear widget messages
+  // Reset widget
   document.getElementById('cvgMsgs').innerHTML='';
   document.getElementById('cvgEmailCap').style.display='none';
   document.getElementById('cvgInputArea').style.display='none';
   document.getElementById('cvgPanel').style.display='block';
   widgetOpen=true;
 
-  // Show scan overlay on browser body while loading
-  const scanOverlay = document.getElementById('scanOverlay');
-  const scanBar = document.getElementById('scanOverlayBar');
-  const scanText = document.getElementById('scanOverlayText');
-  if(scanOverlay){ scanOverlay.style.display='flex'; if(scanBar) scanBar.style.width='0%'; }
-  const scanSteps=[
-    {pct:15,text:'🔍 Fetching your pages...',ms:400},
-    {pct:35,text:'📄 Reading your content...',ms:1400},
-    {pct:58,text:'🧠 Training Aria...',ms:2600},
-    {pct:78,text:'🎨 Capturing screenshot...',ms:3800},
-    {pct:92,text:'✓ Almost ready...',ms:5000},
-  ];
-  let scanTimers=[];
-  scanSteps.forEach(s=>scanTimers.push(setTimeout(()=>{
-    if(scanBar) scanBar.style.width=s.pct+'%';
-    if(scanText) scanText.textContent=s.text;
-  },s.ms)));
+  // Show scan overlay on browser body
+  const scanOverlay=document.getElementById('scanOverlay');
+  const scanBar=document.getElementById('scanOverlayBar');
+  const scanText=document.getElementById('scanOverlayText');
+  if(scanOverlay){scanOverlay.style.display='flex';}
+  if(scanBar){scanBar.style.width='0%';}
+  if(scanText){scanText.textContent='🔍 Scanning...';}
+  // Animate bar independently — visual only
+  let barPct=0;
+  const barTick=setInterval(()=>{
+    barPct=Math.min(barPct+(Math.random()*4+1),88);
+    if(scanBar) scanBar.style.width=barPct+'%';
+  },300);
 
-  // Fetch screenshot from Microlink (free, no API key needed) in parallel
-  const screenshotPromise=(async()=>{
-    try{
-      const mlRes=await fetch('https://api.microlink.io/?url='+encodeURIComponent(url)+'&screenshot=true&meta=false&embed=screenshot.url',{signal:AbortSignal.timeout(12000)});
-      const mlData=await mlRes.json();
-      return mlData?.data?.screenshot?.url||null;
-    }catch{return null;}
-  })();
-
-  // Show typing in widget immediately
+  // ── PHASE 1: Fast opener via /api/chat (1-2s) ────────────────────────────
+  // Show Aria immediately. Don't wait for scraping.
   showTyping();
-
-  // Step 1: hit /api/register — scrapes the real site, generates a config
-  // This gives us a greeting grounded in actual page content, not guesswork
   let openerMsg='';
-  let registeredKey='cvg_demo';
   try{
-    const regRes=await fetch('/api/register',{
+    const fastRes=await fetch('/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        clientKey:'cvg_tester_'+Date.now(),
-        siteUrl:url
-      })
+        messages:[{role:'user',content:'You are Aria, a friendly AI sales closer. Introduce yourself as the assistant for '+domain+' and ask one short qualifying question about what the visitor is looking for. 2 sentences max. No markdown. Sound human, not robotic.'}],
+        clientKey:'cvg_demo',
+        pageContext:{section:'Live demo'}
+      }),
+      signal:AbortSignal.timeout(6000)
     });
-    const regData=await regRes.json();
-    if(regData.config){
-      // Use the greeting generated from real scraped content
-      if(regData.config.greeting) openerMsg=regData.config.greeting;
-      // Store key so follow-up messages use the trained config
-      if(regData.clientKey) window._cvgRegisteredKey=regData.clientKey;
-    }
+    const fastData=await fastRes.json();
+    openerMsg=fastData.reply||'';
   }catch(e){}
 
-  // Step 2: if register failed or returned no greeting, fall back to a
-  // /api/chat call — still better than pure domain guessing because it at
-  // least uses the full fallback system prompt
-  if(!openerMsg){
-    try{
-      const chatRes=await fetch('/api/chat',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          messages:[{role:'user',content:'Say hello and introduce yourself as the AI sales assistant for '+domain+'. Ask one qualifying question. 2 sentences max, no markdown.'}],
-          clientKey:'cvg_demo',
-          pageContext:{section:'Live demo'}
-        })
-      });
-      const chatData=await chatRes.json();
-      openerMsg=chatData.reply||'';
-    }catch(e){}
-  }
-
-  if(!openerMsg)openerMsg=`Hi! I'm Aria, the AI sales assistant for ${domain}. What brings you here today?`;
+  if(!openerMsg) openerMsg=`Hi, I'm Aria — the AI sales assistant for ${domain}. What brings you here today?`;
 
   removeTyping();
   addWidgetMsg(openerMsg,true);
   widgetHistory.push({role:'assistant',content:openerMsg});
-
-
-  // Resolve screenshot and swap in, hiding skeleton
-  screenshotPromise.then(imgUrl=>{
-    scanTimers.forEach(t=>clearTimeout(t));
-    if(scanBar) scanBar.style.width='100%';
-    if(scanText) scanText.textContent='✓ Done';
-    setTimeout(()=>{
-      if(scanOverlay) scanOverlay.style.display='none';
-      if(imgUrl){
-        const img=document.getElementById('browserScreenshot');
-        const skeleton=document.getElementById('browserSkeleton');
-        if(img){
-          img.onload=()=>{
-            img.style.opacity='1';
-            if(skeleton) skeleton.style.opacity='0';
-          };
-          img.src=imgUrl;
-        }
-      }
-    },400);
-  });
-
-  // Show input so they can reply
-  setTimeout(()=>document.getElementById('cvgInputArea').style.display='block',500);
-
-  status.textContent='✓ Aria is live on your site — try talking to her below';
+  setTimeout(()=>document.getElementById('cvgInputArea').style.display='block',300);
+  status.textContent='✓ Aria is live — try talking to her, or wait for her full training below';
   btn.disabled=false;
   btn.innerHTML='<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Train again';
+
+  // ── PHASE 2: Screenshot + deep scrape in background (5-10s) ─────────────
+  // These run in parallel after Aria is already talking.
+
+  // Screenshot via Microlink — no API key, free tier
+  fetch('https://api.microlink.io/?url='+encodeURIComponent(url)+'&screenshot=true&meta=false&embed=screenshot.url',{signal:AbortSignal.timeout(14000)})
+    .then(r=>r.json())
+    .then(mlData=>{
+      const imgUrl=mlData?.data?.screenshot?.url;
+      if(!imgUrl) return;
+      const img=document.getElementById('browserScreenshot');
+      const sk=document.getElementById('browserSkeleton');
+      if(img){
+        img.onload=()=>{
+          img.style.opacity='1';
+          if(sk) sk.style.opacity='0';
+          // Dismiss scan overlay once screenshot is visible
+          clearInterval(barTick);
+          if(scanBar) scanBar.style.width='100%';
+          setTimeout(()=>{if(scanOverlay) scanOverlay.style.display='none';},600);
+        };
+        img.src=imgUrl;
+      }
+    })
+    .catch(()=>{
+      // Screenshot failed — just hide the scan overlay cleanly
+      clearInterval(barTick);
+      if(scanOverlay) scanOverlay.style.display='none';
+    });
+
+  // Deep scrape via /api/register — upgrades follow-up replies with real context
+  fetch('/api/register',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({clientKey:'cvg_tester_'+Date.now(),siteUrl:url})
+  })
+    .then(r=>r.json())
+    .then(regData=>{
+      if(regData?.clientKey) window._cvgRegisteredKey=regData.clientKey;
+      status.textContent='✓ Aria is fully trained on '+domain+' — her replies now use real site data';
+    })
+    .catch(()=>{});
 }
 
 document.getElementById('testerUrl').addEventListener('keydown',e=>{if(e.key==='Enter')runTester();});
