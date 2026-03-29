@@ -580,57 +580,52 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
         </div>
       </div>
 
-      <!-- Fake website body -->
-      <div class="browser-body">
+      <!-- Website body: skeleton while loading, real screenshot once ready -->
+      <div class="browser-body" id="browserBody" style="position:relative;">
 
-        <!-- Fake site nav -->
-        <div class="fake-nav">
-          <div class="fake-nav-logo"></div>
-          <div class="fake-nav-links">
-            <div class="fake-nav-link" style="width:32px;"></div>
-            <div class="fake-nav-link" style="width:44px;"></div>
-            <div class="fake-nav-link" style="width:36px;"></div>
-            <div class="fake-nav-link" style="width:40px;"></div>
+        <!-- Skeleton (visible while screenshot loads) -->
+        <div id="browserSkeleton" style="position:absolute;inset:0;z-index:1;">
+          <div class="fake-nav">
+            <div class="fake-nav-logo"></div>
+            <div class="fake-nav-links">
+              <div class="fake-nav-link" style="width:32px;"></div>
+              <div class="fake-nav-link" style="width:44px;"></div>
+              <div class="fake-nav-link" style="width:36px;"></div>
+              <div class="fake-nav-link" style="width:40px;"></div>
+            </div>
+            <div class="fake-nav-cta"></div>
           </div>
-          <div class="fake-nav-cta"></div>
+          <div class="fake-hero">
+            <div class="fake-h1-line w70"></div>
+            <div class="fake-h1-line w50"></div>
+            <div style="margin-top:16px;">
+              <div class="fake-sub-line w80"></div>
+              <div class="fake-sub-line w60"></div>
+              <div class="fake-sub-line w45"></div>
+            </div>
+            <div class="fake-btns">
+              <div class="fake-btn fake-btn-p"></div>
+              <div class="fake-btn fake-btn-s"></div>
+            </div>
+          </div>
+          <div class="fake-features">
+            <div class="fake-card"><div class="fake-card-icon"></div><div class="fake-card-title"></div><div class="fake-card-text"></div><div class="fake-card-text w60"></div></div>
+            <div class="fake-card"><div class="fake-card-icon" style="background:#fef3e2;"></div><div class="fake-card-title"></div><div class="fake-card-text"></div><div class="fake-card-text w60"></div></div>
+            <div class="fake-card"><div class="fake-card-icon" style="background:#e8f8ef;"></div><div class="fake-card-title"></div><div class="fake-card-text"></div><div class="fake-card-text w60"></div></div>
+          </div>
         </div>
 
-        <!-- Fake hero -->
-        <div class="fake-hero">
-          <div class="fake-h1-line w70"></div>
-          <div class="fake-h1-line w50"></div>
-          <div style="margin-top:16px;">
-            <div class="fake-sub-line w80"></div>
-            <div class="fake-sub-line w60"></div>
-            <div class="fake-sub-line w45"></div>
-          </div>
-          <div class="fake-btns">
-            <div class="fake-btn fake-btn-p"></div>
-            <div class="fake-btn fake-btn-s"></div>
+        <!-- Scan progress overlay on top of skeleton -->
+        <div id="scanOverlay" style="display:none;position:absolute;inset:0;background:rgba(13,13,18,.7);backdrop-filter:blur(3px);z-index:3;align-items:center;justify-content:center;flex-direction:column;gap:14px;">
+          <div id="scanOverlayText" style="font-family:'DM Mono',monospace;font-size:12px;color:#00e87a;letter-spacing:1.5px;">🔍 Scanning your site...</div>
+          <div style="width:220px;height:2px;background:#1e1e2a;border-radius:2px;overflow:hidden;">
+            <div id="scanOverlayBar" style="height:100%;width:0%;background:linear-gradient(to right,#00e87a,#00c4ff);border-radius:2px;transition:width .5s ease;"></div>
           </div>
         </div>
 
-        <!-- Fake feature cards -->
-        <div class="fake-features">
-          <div class="fake-card">
-            <div class="fake-card-icon"></div>
-            <div class="fake-card-title"></div>
-            <div class="fake-card-text"></div>
-            <div class="fake-card-text w60"></div>
-          </div>
-          <div class="fake-card">
-            <div class="fake-card-icon" style="background:#fef3e2;"></div>
-            <div class="fake-card-title"></div>
-            <div class="fake-card-text"></div>
-            <div class="fake-card-text w60"></div>
-          </div>
-          <div class="fake-card">
-            <div class="fake-card-icon" style="background:#e8f8ef;"></div>
-            <div class="fake-card-title"></div>
-            <div class="fake-card-text"></div>
-            <div class="fake-card-text w60"></div>
-          </div>
-        </div>
+        <!-- Real screenshot — fades in once loaded -->
+        <img id="browserScreenshot" src="" alt=""
+          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0;transition:opacity .7s ease;z-index:2;pointer-events:none;" />
 
         <!-- Converge widget overlay -->
         <div class="cvg-widget" id="cvgWidget">
@@ -1146,6 +1141,11 @@ async function runTester(){
   widgetDomain=domain;
   widgetHistory=[];
   window._cvgRegisteredKey=null;
+  // Reset screenshot state
+  const _img=document.getElementById('browserScreenshot');
+  const _sk=document.getElementById('browserSkeleton');
+  if(_img){_img.style.opacity='0';_img.src='';}
+  if(_sk){_sk.style.opacity='1';}
 
   // Update browser chrome
   document.getElementById('browserUrl').innerHTML='<span class="url-domain">'+domain+'</span>';
@@ -1161,6 +1161,33 @@ async function runTester(){
   document.getElementById('cvgInputArea').style.display='none';
   document.getElementById('cvgPanel').style.display='block';
   widgetOpen=true;
+
+  // Show scan overlay on browser body while loading
+  const scanOverlay = document.getElementById('scanOverlay');
+  const scanBar = document.getElementById('scanOverlayBar');
+  const scanText = document.getElementById('scanOverlayText');
+  if(scanOverlay){ scanOverlay.style.display='flex'; if(scanBar) scanBar.style.width='0%'; }
+  const scanSteps=[
+    {pct:15,text:'🔍 Fetching your pages...',ms:400},
+    {pct:35,text:'📄 Reading your content...',ms:1400},
+    {pct:58,text:'🧠 Training Aria...',ms:2600},
+    {pct:78,text:'🎨 Capturing screenshot...',ms:3800},
+    {pct:92,text:'✓ Almost ready...',ms:5000},
+  ];
+  let scanTimers=[];
+  scanSteps.forEach(s=>scanTimers.push(setTimeout(()=>{
+    if(scanBar) scanBar.style.width=s.pct+'%';
+    if(scanText) scanText.textContent=s.text;
+  },s.ms)));
+
+  // Fetch screenshot from Microlink (free, no API key needed) in parallel
+  const screenshotPromise=(async()=>{
+    try{
+      const mlRes=await fetch('https://api.microlink.io/?url='+encodeURIComponent(url)+'&screenshot=true&meta=false&embed=screenshot.url',{signal:AbortSignal.timeout(12000)});
+      const mlData=await mlRes.json();
+      return mlData?.data?.screenshot?.url||null;
+    }catch{return null;}
+  })();
 
   // Show typing in widget immediately
   showTyping();
@@ -1211,6 +1238,28 @@ async function runTester(){
   removeTyping();
   addWidgetMsg(openerMsg,true);
   widgetHistory.push({role:'assistant',content:openerMsg});
+
+
+  // Resolve screenshot and swap in, hiding skeleton
+  screenshotPromise.then(imgUrl=>{
+    scanTimers.forEach(t=>clearTimeout(t));
+    if(scanBar) scanBar.style.width='100%';
+    if(scanText) scanText.textContent='✓ Done';
+    setTimeout(()=>{
+      if(scanOverlay) scanOverlay.style.display='none';
+      if(imgUrl){
+        const img=document.getElementById('browserScreenshot');
+        const skeleton=document.getElementById('browserSkeleton');
+        if(img){
+          img.onload=()=>{
+            img.style.opacity='1';
+            if(skeleton) skeleton.style.opacity='0';
+          };
+          img.src=imgUrl;
+        }
+      }
+    },400);
+  });
 
   // Show input so they can reply
   setTimeout(()=>document.getElementById('cvgInputArea').style.display='block',500);
