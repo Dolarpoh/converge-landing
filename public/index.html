@@ -548,20 +548,138 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
 </div>
 
 <!-- LIVE TESTER -->
-<div class="tester-strip" id="try" style="padding-top:80px">
-  <div class="tester-wrap">
-    <div class="tester-eyebrow">// Live demo</div>
-    <div class="tester-heading">See Converge on <em style="color:var(--green);font-style:normal;">your</em> website</div>
-    <p class="tester-sub">Enter your URL. Aria scans your site and shows you exactly how she would close your visitors — starting with you.</p>
-    <div class="tester-input-row">
-      <input class="tester-input" id="testerUrl" type="url" placeholder="https://yourcompany.com" />
-      <button class="tester-btn" id="testerBtn" onclick="runTester()">
-        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        Meet Your Closer
-      </button>
-    </div>
-    <div class="tester-status" id="testerStatus"></div>
-    <p class="tester-note">No signup needed. Takes about 10 seconds.</p>
+async function runTester(){
+  const urlInput=document.getElementById('testerUrl');
+  const btn=document.getElementById('testerBtn');
+  const status=document.getElementById('testerStatus');
+  let url=urlInput.value.trim();
+  if(!url){status.textContent='Enter your site URL first.';return;}
+  if(!url.startsWith('http'))url='https://'+url;
+
+  btn.disabled=true;btn.innerHTML='Reading your site...';status.textContent='';
+
+  let domain='';
+  try{domain=new URL(url).hostname.replace('www.','');}catch{domain=url;}
+  widgetDomain=domain;widgetHistory=[];window._cvgRegisteredKey=null;
+
+  const _ss=document.getElementById('browserScreenshot');
+  const _sk=document.getElementById('browserSkeleton');
+  if(_ss){_ss.style.opacity='0';_ss.src='';}
+  if(_sk){_sk.style.opacity='1';}
+
+  document.getElementById('browserUrl').innerHTML='<span class="url-domain">'+domain+'</span>';
+  const mockup=document.getElementById('browserMockup');
+  mockup.style.display='block';
+  mockup.scrollIntoView({behavior:'smooth',block:'center'});
+
+  document.getElementById('cvgMsgs').innerHTML='';
+  document.getElementById('cvgEmailCap').style.display='none';
+  document.getElementById('cvgInputArea').style.display='none';
+  document.getElementById('cvgPanel').style.cssText='display:block;visibility:visible;opacity:1;';
+  document.getElementById('cvgWidget').style.cssText='display:block;visibility:visible;opacity:1;';
+  widgetOpen=true;
+  showTyping();
+
+  const scanOverlay=document.getElementById('scanOverlay');
+  const scanBar=document.getElementById('scanOverlayBar');
+  const scanText=document.getElementById('scanOverlayText');
+  if(scanOverlay)scanOverlay.style.display='flex';
+  if(scanBar)scanBar.style.width='0%';
+
+  const scanSteps=[
+    {pct:8,  text:'🔍 Loading '+domain+'...',           ms:0},
+    {pct:22, text:'📄 Reading your pages...',           ms:1400},
+    {pct:38, text:'💰 Extracting pricing & offers...',  ms:3000},
+    {pct:54, text:'🎯 Mapping your key services...',    ms:4600},
+    {pct:70, text:'🧠 Understanding your customers...', ms:6200},
+    {pct:84, text:'✍️  Writing Aria\'s opening line...', ms:7800},
+    {pct:95, text:'⚡ Almost ready...',                  ms:9200},
+  ];
+  const stepTimers=[];
+  scanSteps.forEach(step=>{
+    const t=setTimeout(()=>{
+      if(scanBar)scanBar.style.width=step.pct+'%';
+      if(scanText)scanText.textContent=step.text;
+    },step.ms);
+    stepTimers.push(t);
+  });
+
+  // Screenshot — background, non-blocking
+  (async()=>{
+    try{
+      const mlUrl='https://api.microlink.io/?url='+encodeURIComponent(url)+'&screenshot=true&meta=false';
+      const proxyUrl='https://api.allorigins.win/get?url='+encodeURIComponent(mlUrl);
+      const r=await fetch(proxyUrl,{signal:AbortSignal.timeout(22000)});
+      const proxyData=await r.json();
+      const mlData=JSON.parse(proxyData.contents);
+      const imgUrl=mlData?.data?.screenshot?.url;
+      if(!imgUrl)return;
+      const img=document.getElementById('browserScreenshot');
+      const sk=document.getElementById('browserSkeleton');
+      if(img){img.onload=()=>{img.style.opacity='1';if(sk)sk.style.opacity='0';};img.src=imgUrl;}
+    }catch(e){}
+  })();
+
+  // Register — scrapes site + generates real greeting + saves config
+  const clientKey='cvg_tester_'+domain;
+  let regData=null;
+  try{
+    const regRes=await fetch('/api/register',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({clientKey:clientKey,siteUrl:url}),
+      signal:AbortSignal.timeout(25000)
+    });
+    regData=await regRes.json();
+  }catch(e){}
+
+  stepTimers.forEach(t=>clearTimeout(t));
+  if(scanBar)scanBar.style.width='100%';
+  if(scanText)scanText.textContent='✓ Aria has read '+domain;
+  setTimeout(()=>{if(scanOverlay)scanOverlay.style.display='none';},700);
+
+  // KEY FIX: use the clientKey we sent — config is now saved under this key
+  // /api/chat looks it up from clients.json automatically
+  window._cvgRegisteredKey=clientKey;
+
+  // Use the greeting the AI wrote after reading their actual site
+  let openerMsg=regData?.config?.greeting||'';
+
+  // Fallback: ask chat with the registered key (site context is now loaded)
+  if(!openerMsg){
+    try{
+      const fbRes=await fetch('/api/chat',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          messages:[{role:'user',content:'Greet this visitor. You have just read their website. Write one warm opening line that references what this business actually does. End with one soft qualifying question. 2 sentences max. No markdown.'}],
+          clientKey:clientKey,
+          pageContext:{section:'Live demo — '+domain}
+        }),
+        signal:AbortSignal.timeout(8000)
+      });
+      const fbData=await fbRes.json();
+      openerMsg=fbData.reply||'';
+    }catch(e){}
+  }
+
+  if(!openerMsg)openerMsg="I've just read through your site — what's the main thing you're trying to figure out today?";
+
+  removeTyping();
+  await new Promise(r=>setTimeout(r,400));
+  addWidgetMsg(openerMsg,true);
+  widgetHistory.push({role:'assistant',content:openerMsg});
+  document.getElementById('cvgInputArea').style.display='block';
+
+  status.textContent='✓ Aria has read '+domain+' — she\'s ready to close';
+  btn.disabled=false;
+  btn.innerHTML='<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Try another site';
+}
+```
+
+Also update the `greeting` instruction inside your `api/register.js` `metaPrompt` — find the line that describes the `greeting` field and change it to:
+```
+"greeting": "ONE warm opening line (not 'Hi I'm Aria') that references something specific this business actually sells or does — based on what you just read. Sounds like a knowledgeable friend, not a bot. Ends with one soft qualifying question. Under 2 sentences. Never say 'How can I help' or 'What brings you here today'."
 
     <!-- BROWSER MOCKUP — shown after training -->
     <div id="browserMockup">
