@@ -2,7 +2,8 @@
   'use strict';
 
   const scriptTag = document.currentScript ||
-    document.querySelector('script[src*="widget.js"]');
+  document.querySelector('script[src*="converge-landing-ecru"]') ||
+  document.querySelector('script[data-key]');
 
   const CLIENT_KEY    = scriptTag?.dataset?.key || 'cvg_demo';
   const SITE_URL      = window.location.origin;
