@@ -1,6 +1,7 @@
 // api/register.js — Vercel Edge Function
 // Called by widget.js on first load for any unknown key.
-// Scrapes the customer's site, generates a system prompt, saves to clients.json via GitHub API.
+// If the key already exists in clients.json, returns it immediately.
+// Only scrapes + generates if the key is unknown.
 //
 // Required env vars in Vercel:
 //   GROQ_API_KEY       — for prompt generation
@@ -50,18 +51,27 @@ export default async function handler(req) {
   const baseUrl = `${parsedUrl.protocol}//${parsedUrl.hostname}`;
 
   try {
-    // 1. Scrape the site
+    // ── CHECK IF KEY ALREADY EXISTS ─────────────────────────────────────────
+    // If it does, return it immediately — never scrape or overwrite.
+    const existingConfig = await getExistingConfig(clientKey);
+    if (existingConfig) {
+      return new Response(JSON.stringify({
+        success: true,
+        config: getPublicConfig(existingConfig),
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders() },
+      });
+    }
+
+    // ── NEW KEY — scrape, generate, save ────────────────────────────────────
     const siteContent = await scrapeSite(baseUrl);
-
-    // 2. Generate system prompt via Groq
-    const config = await generateConfig(clientKey, baseUrl, siteContent);
-
-    // 3. Save to clients.json via GitHub API
-    await saveClientConfig(clientKey, config);
+    const generatedConfig = await generateConfig(clientKey, baseUrl, siteContent);
+    await saveClientConfig(clientKey, generatedConfig);
 
     return new Response(JSON.stringify({
       success: true,
-      config: getPublicConfig(config),
+      config: getPublicConfig(generatedConfig),
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', ...corsHeaders() },
@@ -69,7 +79,6 @@ export default async function handler(req) {
 
   } catch (err) {
     console.error('Register error:', err);
-    // Return a generic fallback so the widget still works
     return new Response(JSON.stringify({
       success: false,
       config: {
@@ -81,6 +90,35 @@ export default async function handler(req) {
       status: 200,
       headers: { 'Content-Type': 'application/json', ...corsHeaders() },
     });
+  }
+}
+
+// ─── FETCH EXISTING CONFIG FROM GITHUB ───────────────────────────────────────
+async function getExistingConfig(clientKey) {
+  const token  = process.env.GITHUB_TOKEN;
+  const repo   = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || 'main';
+  const path   = 'public/clients.json';
+
+  if (!token || !repo) return null;
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      }
+    );
+    if (!res.ok) return null;
+    const file = await res.json();
+    const data = JSON.parse(atob(file.content.replace(/\n/g, '')));
+    return data[clientKey] || null;
+  } catch {
+    return null;
   }
 }
 
@@ -106,7 +144,6 @@ async function scrapeSite(baseUrl) {
         combined += `\n\n--- Page: ${baseUrl}${path || '/'} ---\n${text.slice(0, MAX_CHARS_PER_PAGE)}`;
       }
     } catch {
-      // Skip pages that time out or fail
       continue;
     }
   }
@@ -114,7 +151,6 @@ async function scrapeSite(baseUrl) {
   return combined.slice(0, MAX_TOTAL_CHARS);
 }
 
-// Strip HTML tags and collapse whitespace
 function extractText(html) {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, '')
@@ -168,15 +204,12 @@ Return ONLY valid JSON (no markdown, no explanation) with this exact structure:
 
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content?.trim() || '';
-
-  // Strip any accidental markdown fences
   const cleaned = raw.replace(/```json|```/g, '').trim();
 
   let parsed;
   try {
     parsed = JSON.parse(cleaned);
   } catch {
-    // If JSON parse fails, return a sensible fallback
     parsed = {
       agentName: 'Aria',
       agentRole: 'Sales Assistant',
@@ -187,7 +220,6 @@ Return ONLY valid JSON (no markdown, no explanation) with this exact structure:
     };
   }
 
-  // Always store the source URL
   parsed.siteUrl = siteUrl;
   parsed.generatedAt = new Date().toISOString();
 
@@ -197,9 +229,9 @@ Return ONLY valid JSON (no markdown, no explanation) with this exact structure:
 // ─── GITHUB STORAGE ──────────────────────────────────────────────────────────
 async function saveClientConfig(clientKey, config) {
   const token  = process.env.GITHUB_TOKEN;
-  const repo   = process.env.GITHUB_REPO;   // e.g. "yourname/converge"
+  const repo   = process.env.GITHUB_REPO;
   const branch = process.env.GITHUB_BRANCH || 'main';
-  const path   = 'clients.json';
+  const path   = 'public/clients.json';
 
   if (!token || !repo) {
     console.warn('GitHub env vars not set — skipping save');
@@ -214,7 +246,6 @@ async function saveClientConfig(clientKey, config) {
     'Content-Type': 'application/json',
   };
 
-  // Fetch current file (need its SHA to update)
   let currentData = {};
   let sha;
   try {
@@ -228,7 +259,9 @@ async function saveClientConfig(clientKey, config) {
     // File doesn't exist yet — will be created
   }
 
-  // Merge new client in
+  // Only write if key doesn't already exist (double safety check)
+  if (currentData[clientKey]) return;
+
   currentData[clientKey] = config;
 
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(currentData, null, 2))));
@@ -247,10 +280,10 @@ async function saveClientConfig(clientKey, config) {
 
 function getPublicConfig(config) {
   return {
-    agentName:   config.agentName,
-    agentRole:   config.agentRole,
-    brandColor:  config.brandColor,
-    greeting:    config.greeting,
+    agentName:    config.agentName,
+    agentRole:    config.agentRole,
+    brandColor:   config.brandColor,
+    greeting:     config.greeting,
     quickReplies: config.quickReplies,
   };
 }
