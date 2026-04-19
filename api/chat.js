@@ -12,7 +12,6 @@ export const config = { runtime: 'edge' };
 const ALLOWED_ORIGIN = '*';
 
 // ─── FALLBACK CONFIG ─────────────────────────────────────────────────────────
-// Used when clientKey is not in clients.json, or clients.json can't be fetched.
 const FALLBACK = {
   agentName: 'Aria',
   agentRole: 'AI Sales Closer',
@@ -25,7 +24,7 @@ Never invent prices or features. Be warm, direct, and human.`,
 // ─── LOAD CLIENTS ────────────────────────────────────────────────────────────
 let clientsCache = null;
 let cacheTime = 0;
-const CACHE_TTL = 60_000; // 60 seconds — short enough to pick up new registrations quickly
+const CACHE_TTL = 60_000;
 
 async function getClients() {
   const now = Date.now();
@@ -54,10 +53,7 @@ async function getClients() {
 // ─── HANDLER ─────────────────────────────────────────────────────────────────
 export default async function handler(req) {
   if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: corsHeaders(),
-    });
+    return new Response(null, { status: 204, headers: corsHeaders() });
   }
 
   if (req.method !== 'POST') {
@@ -80,15 +76,24 @@ export default async function handler(req) {
     return new Response('API key not configured', { status: 500 });
   }
 
-  // Resolve client — check clients.json first, fall back to FALLBACK
+  // Resolve client config
   const clients = await getClients();
   const client  = clients[clientKey] || FALLBACK;
   const systemPrompt = client.systemPrompt || FALLBACK.systemPrompt;
 
-  // Inject page context
-  const pageNote = pageContext?.section
-    ? `\n\n[The visitor is currently viewing: "${pageContext.section}". Use this to make your response more relevant.]`
-    : '';
+  // ── Page context injection ──────────────────────────────────────────────
+  // We tell the AI exactly where the visitor IS right now.
+  // We do NOT tell it where they went after a suggestion — the AI can't know that.
+  // The note is phrased as a confirmed present-tense fact so the AI uses it
+  // naturally ("since you're on the cart page…") rather than hallucinating
+  // navigation ("you're now on the Hair page" after suggesting they go there).
+  let pageNote = '';
+  if (pageContext?.section) {
+    pageNote = `\n\n[CURRENT PAGE: The visitor is right now on: "${pageContext.section}". ` +
+      `Use this to make your response relevant to where they actually are. ` +
+      `Do NOT reference any page they have not yet confirmed they are on — ` +
+      `you only know their current page from this context tag, not from anything you suggested.]`;
+  }
 
   try {
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -141,17 +146,17 @@ function fallbackResponse(headers) {
 
 function getPublicConfig(client) {
   return {
-    agentName:   client.agentName   || FALLBACK.agentName,
-    agentRole:   client.agentRole   || FALLBACK.agentRole,
-    brandColor:  client.brandColor  || '#6C47FF',
-    greeting:    client.greeting,
+    agentName:    client.agentName   || FALLBACK.agentName,
+    agentRole:    client.agentRole   || FALLBACK.agentRole,
+    brandColor:   client.brandColor  || '#6C47FF',
+    greeting:     client.greeting,
     quickReplies: client.quickReplies,
   };
 }
 
 function corsHeaders() {
   return {
-    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+    'Access-Control-Allow-Origin':  ALLOWED_ORIGIN,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
