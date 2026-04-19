@@ -1,31 +1,34 @@
 (function () {
   'use strict';
 
-  const scriptTag = document.currentScript ||
-  document.querySelector('script[src*="converge-landing-ecru"]') ||
-  document.querySelector('script[data-key]');
+  const scriptTag =
+    document.currentScript ||
+    document.querySelector('script[src*="converge-landing-ecru"]') ||
+    document.querySelector('script[data-key]');
 
   const CLIENT_KEY    = scriptTag?.dataset?.key || 'cvg_demo';
   const SITE_URL      = window.location.origin;
   const CHAT_ENDPOINT = 'https://converge-landing-ecru.vercel.app/api/chat';
   const REG_ENDPOINT  = 'https://converge-landing-ecru.vercel.app/api/register';
+
   // ─── STATE ────────────────────────────────────────────────────────────────
   let isOpen = false;
   let isTyping = false;
-  let isRegistered = false;
   let conversationHistory = [];
 
   let CONFIG = {
-    agentName:   'Aria',
-    agentRole:   'Sales Assistant',
-    brandColor:  scriptTag?.dataset?.color || '#6C47FF',
-    greeting:    null,
+    agentName:    'Aria',
+    agentRole:    'Sales Assistant',
+    brandColor:   scriptTag?.dataset?.color || '#6C47FF',
+    greeting:     null,
     quickReplies: ['Tell me more', 'How does this work?', 'Pricing?', 'I have a question'],
   };
 
   // ─── REGISTRATION ─────────────────────────────────────────────────────────
-  // Called once on load. If the key is unknown, the backend scrapes the site
-  // and generates a custom config. Subsequent visits use the cached config.
+  // Register fires before the widget is rendered. Once we have the config
+  // (or have timed out) we build the DOM with the correct values already in
+  // CONFIG, then call showGreeting(). This eliminates the race where buildWidget
+  // hard-codes "Aria" into the DOM before applyConfig() can correct it.
   async function register() {
     try {
       const res = await fetch(REG_ENDPOINT, {
@@ -34,64 +37,77 @@
         body: JSON.stringify({ clientKey: CLIENT_KEY, siteUrl: SITE_URL }),
       });
       const data = await res.json();
-      if (data.config) applyConfig(data.config);
+      if (data.config) applyConfig(data.config); // mutates CONFIG in-place
     } catch {
-      // Registration failed silently — widget still works with defaults
-    } finally {
-      isRegistered = true;
-      // Now show the greeting (delayed until we have the right config)
-      showGreeting();
+      // Falls back to defaults — widget still works
     }
   }
 
+  // Mutates CONFIG. Called before DOM build (from register) or after
+  // (from chat responses that return a config object).
   function applyConfig(cfg) {
-    if (cfg.brandColor)   { CONFIG.brandColor = cfg.brandColor; applyStyles(cfg.brandColor); }
-    if (cfg.agentName)    {
-      CONFIG.agentName = cfg.agentName;
-      const nameEl   = document.getElementById('cvg-header-name');
-      const avatarEl = document.getElementById('cvg-avatar-letter');
-      const subEl    = document.getElementById('cvg-header-sub');
-      if (nameEl)   nameEl.textContent   = cfg.agentName;
-      if (avatarEl) avatarEl.textContent = cfg.agentName[0];
-      if (subEl)    subEl.textContent    = (cfg.agentRole || CONFIG.agentRole) + ' · Active now';
-      CONFIG.agentRole = cfg.agentRole || CONFIG.agentRole;
-    }
+    if (cfg.brandColor)   CONFIG.brandColor   = cfg.brandColor;
+    if (cfg.agentName)    CONFIG.agentName    = cfg.agentName;
+    if (cfg.agentRole)    CONFIG.agentRole    = cfg.agentRole;
     if (cfg.greeting)     CONFIG.greeting     = cfg.greeting;
     if (cfg.quickReplies) CONFIG.quickReplies = cfg.quickReplies;
-  }
 
-  function showGreeting() {
-    const greeting = CONFIG.greeting ||
-      `Hi! I'm ${CONFIG.agentName} — what brings you here today?`;
-    addMessage('ai', greeting);
-    showQuickReplies(CONFIG.quickReplies);
-    showUnread();
+    // If the DOM is already built, patch it live (e.g. config returned mid-chat)
+    const nameEl   = document.getElementById('cvg-header-name');
+    const avatarEl = document.getElementById('cvg-avatar-letter');
+    const subEl    = document.getElementById('cvg-header-sub');
+    if (nameEl)   nameEl.textContent   = CONFIG.agentName;
+    if (avatarEl) avatarEl.textContent = CONFIG.agentName[0];
+    if (subEl)    subEl.textContent    = CONFIG.agentRole + ' · Active now';
+
+    // Re-apply colour tokens if colour changed after build
+    if (cfg.brandColor && styleEl) applyStyles(cfg.brandColor);
   }
 
   // ─── PAGE CONTEXT ─────────────────────────────────────────────────────────
   function getPageContext() {
     const hash = window.location.hash?.replace('#', '') || '';
     const labels = {
-      compare: 'Comparison vs Alternatives', pricing: 'Pricing', faq: 'FAQ',
-      showcase: 'Product Demo', for: "Who It's For",
-      shop: 'Shop', cart: 'Cart', product: 'Product Page',
+      compare:  'Comparison vs Alternatives',
+      pricing:  'Pricing',
+      faq:      'FAQ',
+      showcase: 'Product Demo',
+      for:      "Who It's For",
+      shop:     'Shop',
+      cart:     'Cart',
+      product:  'Product Page',
     };
     if (hash && labels[hash]) return { section: labels[hash] };
-    if (window.__cvgActiveSection) return { section: labels[window.__cvgActiveSection] || window.__cvgActiveSection };
+    if (window.__cvgActiveSection)
+      return { section: labels[window.__cvgActiveSection] || window.__cvgActiveSection };
     const path = window.location.pathname;
     if (path.includes('/shop'))    return { section: 'Shop' };
     if (path.includes('/cart'))    return { section: 'Cart' };
     if (path.includes('/product')) return { section: 'Product Page' };
     if (path.includes('/contact')) return { section: 'Contact Page' };
+    if (path.includes('/hair'))    return { section: 'Hair & Wigs category page' };
+    if (path.includes('/women'))   return { section: "Women's category page" };
+    if (path.includes('/men'))     return { section: "Men's category page" };
+    if (path.includes('/jewellery') || path.includes('/jewelry'))
+      return { section: 'Jewellery category page' };
+    if (path.includes('/accessories')) return { section: 'Accessories category page' };
+    if (path.includes('/kids') || path.includes('/girls') || path.includes('/boys'))
+      return { section: "Kids' category page" };
+    if (path.includes('/home'))    return { section: 'Homeware category page' };
     return { section: 'Homepage' };
   }
 
   function initSectionObserver() {
     const ids = ['compare', 'pricing', 'faq', 'showcase', 'for', 'shop'];
     const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting && ids.includes(e.target.id)) window.__cvgActiveSection = e.target.id; });
+      entries.forEach(e => {
+        if (e.isIntersecting && ids.includes(e.target.id))
+          window.__cvgActiveSection = e.target.id;
+      });
     }, { threshold: 0.3 });
-    document.querySelectorAll('[id]').forEach(el => { if (ids.includes(el.id)) obs.observe(el); });
+    document.querySelectorAll('[id]').forEach(el => {
+      if (ids.includes(el.id)) obs.observe(el);
+    });
   }
 
   // ─── STYLES ───────────────────────────────────────────────────────────────
@@ -153,6 +169,8 @@
   }
 
   // ─── BUILD DOM ────────────────────────────────────────────────────────────
+  // Called AFTER register() resolves so CONFIG already holds the correct
+  // agentName / agentRole / brandColor for this client. No more "Aria" flash.
   function buildWidget() {
     const font = document.createElement('link');
     font.rel = 'stylesheet';
@@ -218,28 +236,31 @@
         document.getElementById('cvg-input').value.trim() === '' || isTyping;
     });
 
-    // Show typing indicator while we register/scrape
-    showTypingIndicator();
+    showGreeting();
+  }
 
-    // Register fires immediately — widget greets once it resolves
-    register();
+  function showGreeting() {
+    const greeting = CONFIG.greeting ||
+      `Hi! I'm ${CONFIG.agentName} — what brings you here today?`;
+    addMessage('ai', greeting);
+    showQuickReplies(CONFIG.quickReplies);
+    showUnread();
   }
 
   // ─── WIDGET TOGGLE ────────────────────────────────────────────────────────
   function toggleWidget() {
     isOpen = !isOpen;
     document.getElementById('cvg-root').classList.toggle('open', isOpen);
-    if (isOpen) { hideUnread(); setTimeout(() => document.getElementById('cvg-input').focus(), 300); }
+    if (isOpen) {
+      hideUnread();
+      setTimeout(() => document.getElementById('cvg-input').focus(), 300);
+    }
   }
 
   function showUnread() { const el = document.getElementById('cvg-unread'); el.textContent = '1'; el.classList.add('show'); }
   function hideUnread() { document.getElementById('cvg-unread').classList.remove('show'); }
 
   // ─── MESSAGES ─────────────────────────────────────────────────────────────
-  function showTypingIndicator() {
-    document.getElementById('cvg-typing').classList.add('show');
-  }
-
   function addMessage(role, text) {
     const msgs   = document.getElementById('cvg-messages');
     const typing = document.getElementById('cvg-typing');
@@ -267,7 +288,8 @@
   function hideTyping() {
     isTyping = false;
     document.getElementById('cvg-typing').classList.remove('show');
-    document.getElementById('cvg-send').disabled = document.getElementById('cvg-input').value.trim() === '';
+    document.getElementById('cvg-send').disabled =
+      document.getElementById('cvg-input').value.trim() === '';
   }
 
   // ─── QUICK REPLIES ────────────────────────────────────────────────────────
@@ -303,8 +325,8 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: conversationHistory.slice(-16),
-          clientKey: CLIENT_KEY,
+          messages:    conversationHistory.slice(-16),
+          clientKey:   CLIENT_KEY,
           pageContext: getPageContext(),
         }),
       });
@@ -324,10 +346,16 @@
   }
 
   // ─── INIT ─────────────────────────────────────────────────────────────────
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', buildWidget);
-  } else {
-    buildWidget();
+  // Register first, build widget after — guarantees correct name on first render.
+  async function init() {
+    await register();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', buildWidget);
+    } else {
+      buildWidget();
+    }
   }
+
+  init();
 
 })();
