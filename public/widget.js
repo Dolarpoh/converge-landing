@@ -1,13 +1,14 @@
 (function () {
   'use strict';
 
+  // document.currentScript is null for async scripts by the time this runs.
+  // Query by src or data-key attribute instead — works reliably on all sites.
   const scriptTag =
-    document.currentScript ||
     document.querySelector('script[src*="converge-landing-ecru"]') ||
     document.querySelector('script[data-key]');
 
-  const CLIENT_KEY    = scriptTag?.dataset?.key || 'cvg_demo';
-  const SITE_URL      = window.location.origin;
+  const CLIENT_KEY  = scriptTag?.dataset?.key   || 'cvg_demo';
+  const SITE_URL    = window.location.origin;
   const CHAT_ENDPOINT = 'https://converge-landing-ecru.vercel.app/api/chat';
   const REG_ENDPOINT  = 'https://converge-landing-ecru.vercel.app/api/register';
 
@@ -25,10 +26,6 @@
   };
 
   // ─── REGISTRATION ─────────────────────────────────────────────────────────
-  // Register fires before the widget is rendered. Once we have the config
-  // (or have timed out) we build the DOM with the correct values already in
-  // CONFIG, then call showGreeting(). This eliminates the race where buildWidget
-  // hard-codes "Aria" into the DOM before applyConfig() can correct it.
   async function register() {
     try {
       const res = await fetch(REG_ENDPOINT, {
@@ -37,14 +34,12 @@
         body: JSON.stringify({ clientKey: CLIENT_KEY, siteUrl: SITE_URL }),
       });
       const data = await res.json();
-      if (data.config) applyConfig(data.config); // mutates CONFIG in-place
+      if (data.config) applyConfig(data.config);
     } catch {
       // Falls back to defaults — widget still works
     }
   }
 
-  // Mutates CONFIG. Called before DOM build (from register) or after
-  // (from chat responses that return a config object).
   function applyConfig(cfg) {
     if (cfg.brandColor)   CONFIG.brandColor   = cfg.brandColor;
     if (cfg.agentName)    CONFIG.agentName    = cfg.agentName;
@@ -52,62 +47,35 @@
     if (cfg.greeting)     CONFIG.greeting     = cfg.greeting;
     if (cfg.quickReplies) CONFIG.quickReplies = cfg.quickReplies;
 
-    // If the DOM is already built, patch it live (e.g. config returned mid-chat)
     const nameEl   = document.getElementById('cvg-header-name');
     const avatarEl = document.getElementById('cvg-avatar-letter');
     const subEl    = document.getElementById('cvg-header-sub');
     if (nameEl)   nameEl.textContent   = CONFIG.agentName;
     if (avatarEl) avatarEl.textContent = CONFIG.agentName[0];
     if (subEl)    subEl.textContent    = CONFIG.agentRole + ' · Active now';
-
-    // Re-apply colour tokens if colour changed after build
     if (cfg.brandColor && styleEl) applyStyles(cfg.brandColor);
   }
 
   // ─── PAGE CONTEXT ─────────────────────────────────────────────────────────
   function getPageContext() {
-    const hash = window.location.hash?.replace('#', '') || '';
-    const labels = {
-      compare:  'Comparison vs Alternatives',
-      pricing:  'Pricing',
-      faq:      'FAQ',
-      showcase: 'Product Demo',
-      for:      "Who It's For",
-      shop:     'Shop',
-      cart:     'Cart',
-      product:  'Product Page',
-    };
-    if (hash && labels[hash]) return { section: labels[hash] };
-    if (window.__cvgActiveSection)
-      return { section: labels[window.__cvgActiveSection] || window.__cvgActiveSection };
     const path = window.location.pathname;
-    if (path.includes('/shop'))    return { section: 'Shop' };
-    if (path.includes('/cart'))    return { section: 'Cart' };
-    if (path.includes('/product')) return { section: 'Product Page' };
-    if (path.includes('/contact')) return { section: 'Contact Page' };
-    if (path.includes('/hair'))    return { section: 'Hair & Wigs category page' };
-    if (path.includes('/women'))   return { section: "Women's category page" };
-    if (path.includes('/men'))     return { section: "Men's category page" };
-    if (path.includes('/jewellery') || path.includes('/jewelry'))
-      return { section: 'Jewellery category page' };
-    if (path.includes('/accessories')) return { section: 'Accessories category page' };
-    if (path.includes('/kids') || path.includes('/girls') || path.includes('/boys'))
-      return { section: "Kids' category page" };
-    if (path.includes('/home'))    return { section: 'Homeware category page' };
+    if (path.includes('/cart'))        return { section: 'Cart' };
+    if (path.includes('/checkout'))    return { section: 'Checkout' };
+    if (path.includes('/product-category/hair'))        return { section: 'Hair & Wigs category' };
+    if (path.includes('/product-category/women'))       return { section: "Women's category" };
+    if (path.includes('/product-category/men'))         return { section: "Men's category" };
+    if (path.includes('/product-category/jewellery'))   return { section: 'Jewellery category' };
+    if (path.includes('/product-category/accessories')) return { section: 'Accessories category' };
+    if (path.includes('/product-category/baby-girls'))  return { section: "Girls' category" };
+    if (path.includes('/product-category/boys'))        return { section: "Boys' category" };
+    if (path.includes('/product-category/dolls'))       return { section: 'Dolls category' };
+    if (path.includes('/product-category/home'))        return { section: 'Home category' };
+    if (path.includes('/product-category/eye-glasses')) return { section: 'Eye-glasses category' };
+    if (path.includes('/product/'))    return { section: 'Product page' };
+    if (path.includes('/shop'))        return { section: 'Shop' };
+    if (path.includes('/contact'))     return { section: 'Contact page' };
+    if (path.includes('/about'))       return { section: 'About page' };
     return { section: 'Homepage' };
-  }
-
-  function initSectionObserver() {
-    const ids = ['compare', 'pricing', 'faq', 'showcase', 'for', 'shop'];
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting && ids.includes(e.target.id))
-          window.__cvgActiveSection = e.target.id;
-      });
-    }, { threshold: 0.3 });
-    document.querySelectorAll('[id]').forEach(el => {
-      if (ids.includes(el.id)) obs.observe(el);
-    });
   }
 
   // ─── STYLES ───────────────────────────────────────────────────────────────
@@ -169,8 +137,6 @@
   }
 
   // ─── BUILD DOM ────────────────────────────────────────────────────────────
-  // Called AFTER register() resolves so CONFIG already holds the correct
-  // agentName / agentRole / brandColor for this client. No more "Aria" flash.
   function buildWidget() {
     const font = document.createElement('link');
     font.rel = 'stylesheet';
@@ -224,7 +190,6 @@
       </button>
     `;
     document.body.appendChild(root);
-    initSectionObserver();
 
     document.getElementById('cvg-launcher').addEventListener('click', toggleWidget);
     document.getElementById('cvg-send').addEventListener('click', sendMessage);
@@ -325,7 +290,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages:    conversationHistory.slice(-16),
+          messages:    conversationHistory.slice(-6),
           clientKey:   CLIENT_KEY,
           pageContext: getPageContext(),
         }),
@@ -346,7 +311,8 @@
   }
 
   // ─── INIT ─────────────────────────────────────────────────────────────────
-  // Register first, build widget after — guarantees correct name on first render.
+  // Await register() before building the DOM so CONFIG is correct on first render.
+  // This is what prevents "Aria" flashing before "Amara" loads.
   async function init() {
     await register();
     if (document.readyState === 'loading') {
