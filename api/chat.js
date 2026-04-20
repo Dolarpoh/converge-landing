@@ -106,7 +106,7 @@ export default async function handler(req) {
         model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: systemPrompt + pageNote },
-          ...messages.slice(-16),
+          ...messages.slice(-6),
         ],
         max_tokens: 280,
         temperature: 0.72,
