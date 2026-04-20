@@ -1,13 +1,13 @@
 // api/register.js — Vercel Edge Function
-// Called by widget.js on first load for any unknown key.
-// If the key already exists in clients.json, returns it immediately.
-// Only scrapes + generates if the key is unknown.
+// Called by widget.js on first load.
+// Always returns the latest config from clients.json for known keys.
+// Only scrapes + generates if the key is truly unknown.
 //
 // Required env vars in Vercel:
-//   GROQ_API_KEY       — for prompt generation
-//   GITHUB_TOKEN       — personal access token with repo write access
-//   GITHUB_REPO        — e.g. "yourname/converge"
-//   GITHUB_BRANCH      — e.g. "main"
+//   GROQ_API_KEY
+//   GITHUB_TOKEN
+//   GITHUB_REPO
+//   GITHUB_BRANCH
 
 export const config = { runtime: 'edge' };
 
@@ -19,10 +19,7 @@ const MAX_TOTAL_CHARS = 20000;
 
 export default async function handler(req) {
   if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: corsHeaders(),
-    });
+    return new Response(null, { status: 204, headers: corsHeaders() });
   }
 
   if (req.method !== 'POST') {
@@ -40,7 +37,6 @@ export default async function handler(req) {
     return new Response('Missing clientKey or siteUrl', { status: 400 });
   }
 
-  // Basic URL validation
   let parsedUrl;
   try {
     parsedUrl = new URL(siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`);
@@ -51,13 +47,16 @@ export default async function handler(req) {
   const baseUrl = `${parsedUrl.protocol}//${parsedUrl.hostname}`;
 
   try {
-    // ── CHECK IF KEY ALREADY EXISTS ─────────────────────────────────────────
-    // If it does, return it immediately — never scrape or overwrite.
-    const existingConfig = await getExistingConfig(clientKey);
-    if (existingConfig) {
+    // ── ALWAYS read the latest clients.json first ──────────────────────────
+    // This means edits to clients.json take effect immediately on next load.
+    // The old behaviour (early return on existing key) was preventing updates.
+    const allClients = await getAllClients();
+    
+    if (allClients[clientKey]) {
+      // Key exists — return the CURRENT value from clients.json, not a cached copy
       return new Response(JSON.stringify({
         success: true,
-        config: getPublicConfig(existingConfig),
+        config: getPublicConfig(allClients[clientKey]),
       }), {
         status: 200,
         headers: { 'Content-Type': 'application/json', ...corsHeaders() },
@@ -67,7 +66,7 @@ export default async function handler(req) {
     // ── NEW KEY — scrape, generate, save ────────────────────────────────────
     const siteContent = await scrapeSite(baseUrl);
     const generatedConfig = await generateConfig(clientKey, baseUrl, siteContent);
-    await saveClientConfig(clientKey, generatedConfig);
+    await saveClientConfig(clientKey, generatedConfig, allClients);
 
     return new Response(JSON.stringify({
       success: true,
@@ -93,18 +92,19 @@ export default async function handler(req) {
   }
 }
 
-// ─── FETCH EXISTING CONFIG FROM GITHUB ───────────────────────────────────────
-async function getExistingConfig(clientKey) {
+// ─── FETCH ALL CLIENTS FROM GITHUB ───────────────────────────────────────────
+// Returns the full clients.json object. Always fetches fresh — no in-memory
+// cache here so edits to the file are always reflected on next widget load.
+async function getAllClients() {
   const token  = process.env.GITHUB_TOKEN;
   const repo   = process.env.GITHUB_REPO;
   const branch = process.env.GITHUB_BRANCH || 'main';
-  const path   = 'public/clients.json';
 
-  if (!token || !repo) return null;
+  if (!token || !repo) return {};
 
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`,
+      `https://api.github.com/repos/${repo}/contents/public/clients.json?ref=${branch}`,
       {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -113,12 +113,11 @@ async function getExistingConfig(clientKey) {
         },
       }
     );
-    if (!res.ok) return null;
+    if (!res.ok) return {};
     const file = await res.json();
-    const data = JSON.parse(atob(file.content.replace(/\n/g, '')));
-    return data[clientKey] || null;
+    return JSON.parse(atob(file.content.replace(/\n/g, '')));
   } catch {
-    return null;
+    return {};
   }
 }
 
@@ -227,7 +226,8 @@ Return ONLY valid JSON (no markdown, no explanation) with this exact structure:
 }
 
 // ─── GITHUB STORAGE ──────────────────────────────────────────────────────────
-async function saveClientConfig(clientKey, config) {
+// Receives the already-fetched allClients object to avoid a second API call.
+async function saveClientConfig(clientKey, config, allClients = {}) {
   const token  = process.env.GITHUB_TOKEN;
   const repo   = process.env.GITHUB_REPO;
   const branch = process.env.GITHUB_BRANCH || 'main';
@@ -246,25 +246,23 @@ async function saveClientConfig(clientKey, config) {
     'Content-Type': 'application/json',
   };
 
-  let currentData = {};
   let sha;
   try {
     const getRes = await fetch(`${apiBase}?ref=${branch}`, { headers });
     if (getRes.ok) {
       const file = await getRes.json();
       sha = file.sha;
-      currentData = JSON.parse(atob(file.content.replace(/\n/g, '')));
     }
   } catch {
     // File doesn't exist yet — will be created
   }
 
-  // Only write if key doesn't already exist (double safety check)
-  if (currentData[clientKey]) return;
+  // Only write if key doesn't already exist
+  if (allClients[clientKey]) return;
 
-  currentData[clientKey] = config;
+  allClients[clientKey] = config;
 
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(currentData, null, 2))));
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(allClients, null, 2))));
 
   await fetch(apiBase, {
     method: 'PUT',
@@ -290,7 +288,7 @@ function getPublicConfig(config) {
 
 function corsHeaders() {
   return {
-    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+    'Access-Control-Allow-Origin':  ALLOWED_ORIGIN,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
