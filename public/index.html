@@ -3,531 +3,903 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Converge — AI Sales Closer for Websites</title>
+<title>Converge — AI Sales Closer for High-Ticket Businesses</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --black: #040610;
-  --deep: #070b18;
-  --card: #0b1022;
-  --border: #151e38;
-  --border-light: #1e2d52;
-  --green: #38bdf8;
-  --green-glow: rgba(56,189,248,0.12);
-  --green-glow-s: rgba(56,189,248,0.35);
-  --white: #e8eef8;
-  --muted: #5a6480;
-  --muted2: #7e90b8;
-  --purple: #6080e0;
-  --purple-glow: rgba(96,128,224,0.15);
-  --gold: #f59e0b;
-  --gold-glow: rgba(245,158,11,0.1);
-  --navy-core: #0f1e4a;
-  --navy-glow: rgba(30,60,140,0.6);
-  --navy-bright: #1a3a8f;
+  --ink:     #0a0a08;
+  --ink-mid: #1c1c18;
+  --ink-soft:#2e2e28;
+  --paper:   #f5f2ec;
+  --paper-warm:#ede9df;
+  --rule:    #d4cfc4;
+  --rule-strong: #b8b2a4;
+  --gold:    #c8922a;
+  --gold-dim:rgba(200,146,42,0.15);
+  --gold-mid:rgba(200,146,42,0.35);
+  --off:     #7a7568;
+  --off-light:#9e9890;
+  --signal:  #1a3a28;
+  --signal-bright: #2d6645;
+  --warm-red:#8b2e2e;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.45;}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:18px 52px;background:linear-gradient(to bottom,rgba(6,6,8,.97) 0%,transparent 100%);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.04);transition:padding .3s;}
-nav.scrolled{padding:12px 52px;background:rgba(6,6,8,.98);}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:21px;letter-spacing:-.5px;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:9px;}
-.logo-dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 12px var(--green);animation:pulse 2s ease infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
-.nav-links{display:flex;gap:28px;align-items:center;}
-.nav-links a{color:var(--muted2);text-decoration:none;font-size:14px;font-weight:400;transition:color .2s;}
-.nav-links a:hover{color:var(--white);}
-.nav-cta{background:var(--green);color:var(--black) !important;padding:9px 22px;border-radius:6px;font-size:14px !important;font-weight:600 !important;text-decoration:none;transition:all .2s;}
-.nav-cta:hover{background:#60d4ff;box-shadow:0 0 24px var(--green-glow-s);}
-.nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
-.nav-burger span{width:22px;height:2px;background:var(--white);border-radius:2px;transition:all .3s;}
-.nav-burger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
-.nav-burger.open span:nth-child(2){opacity:0;}
-.nav-burger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
-.nav-mobile{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(6,6,8,.98);backdrop-filter:blur(20px);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:32px;}
-.nav-mobile.open{display:flex;}
-.nav-mobile a{font-family:'Syne',sans-serif;font-weight:700;font-size:28px;color:var(--white);text-decoration:none;transition:color .2s;}
-.nav-mobile a:hover{color:var(--green);}
-.nav-mobile .nav-cta{font-size:18px;padding:14px 36px;border-radius:10px;}
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 48px 80px;position:relative;overflow:hidden;text-align:center;}
-.hero-glow{position:absolute;width:1000px;height:1000px;border-radius:50%;background:radial-gradient(circle,rgba(30,70,200,.10) 0%,rgba(15,30,90,.06) 40%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-62%);pointer-events:none;}
-.hero-glow2{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.07) 0%,transparent 70%);top:60%;left:20%;pointer-events:none;}
-.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);padding:6px 16px;border-radius:100px;font-family:'DM Mono',monospace;font-size:11px;color:var(--green);letter-spacing:1px;text-transform:uppercase;margin-bottom:28px;animation:fu .8s ease both;}
-.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
-h1{font-family:'Syne',sans-serif;font-size:clamp(44px,7vw,86px);font-weight:800;line-height:1.0;letter-spacing:-3px;max-width:940px;animation:fu .8s .1s ease both;}
-h1 em{font-style:normal;color:var(--green);}
-.hero-sub{font-size:clamp(16px,2vw,19px);color:var(--muted2);max-width:560px;margin:24px auto 0;font-weight:300;line-height:1.7;animation:fu .8s .2s ease both;}
-.hero-actions{display:flex;gap:14px;margin-top:40px;justify-content:center;animation:fu .8s .3s ease both;flex-wrap:wrap;}
-.btn-p{background:var(--green);color:var(--black);padding:14px 32px;border-radius:8px;border:none;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;}
-.btn-p:hover{background:#60c8ff;box-shadow:0 0 40px rgba(56,189,248,.4);transform:translateY(-1px);}
-.btn-s{background:transparent;color:var(--white);padding:14px 32px;border-radius:8px;border:1px solid var(--border-light);font-size:15px;font-weight:400;cursor:pointer;text-decoration:none;transition:all .2s;font-family:'DM Sans',sans-serif;}
-.btn-s:hover{border-color:var(--muted2);background:rgba(255,255,255,.04);}
-.hero-stats{display:flex;gap:52px;margin-top:64px;justify-content:center;animation:fu .8s .4s ease both;flex-wrap:wrap;}
-.stat{text-align:center;}
-.stat-num{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;}
-.stat-num span{color:var(--green);}
-.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-family:'DM Mono',monospace;}
-@keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.trust-bar{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--deep);padding:26px 48px;}
-.trust-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:36px;justify-content:center;flex-wrap:wrap;}
-.trust-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap;}
-.trust-logos{display:flex;gap:32px;align-items:center;flex-wrap:wrap;justify-content:center;}
-.trust-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--muted);opacity:.45;transition:opacity .2s;}
-.trust-logo:hover{opacity:.9;}
-section{padding:100px 48px;}
-.sec-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;}
-h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(34px,4vw,52px);letter-spacing:-2px;line-height:1.05;}
-h2 em{font-style:normal;color:var(--green);}
-.sec-sub{font-size:17px;color:var(--muted2);max-width:520px;margin-top:16px;line-height:1.7;font-weight:300;}
-.w1100{max-width:1100px;margin:0 auto;}
-.tester-strip{padding:0 48px 80px;display:flex;justify-content:center;}
-.tester-wrap{width:100%;max-width:960px;background:var(--deep);border:1px solid var(--border);border-radius:20px;padding:48px;text-align:center;position:relative;overflow:hidden;}
-.tester-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--green) 40%,var(--purple) 60%,transparent);}
-.tester-eyebrow{font-family:'DM Mono',monospace;font-size:11px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
-.tester-heading{font-family:'Syne',sans-serif;font-weight:800;font-size:28px;letter-spacing:-1px;margin-bottom:10px;}
-.tester-sub{font-size:15px;color:var(--muted2);margin-bottom:32px;line-height:1.6;}
-.tester-input-row{display:flex;gap:12px;max-width:560px;margin:0 auto;}
-.tester-input{flex:1;background:var(--card);border:1px solid var(--border-light);border-radius:10px;padding:13px 18px;font-size:15px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;}
-.tester-input:focus{border-color:var(--green);}
-.tester-input::placeholder{color:var(--muted);}
-.tester-btn{background:var(--green);color:var(--black);border:none;border-radius:10px;padding:13px 24px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:8px;}
-.tester-btn:hover{background:#60d4ff;box-shadow:0 0 30px var(--green-glow-s);}
-.tester-btn:disabled{opacity:.5;cursor:not-allowed;}
-.tester-note{font-size:12px;color:var(--muted);margin-top:16px;font-family:'DM Mono',monospace;}
-.tester-status{margin-top:20px;font-size:13px;color:var(--green);font-family:'DM Mono',monospace;min-height:20px;transition:opacity .3s;}
-#browserMockup{display:none;margin-top:32px;border-radius:12px;overflow:hidden;border:1px solid var(--border-light);box-shadow:0 24px 80px rgba(0,0,0,.6);text-align:left;position:relative;}
-.browser-chrome{background:#0d1428;padding:10px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
-.browser-dots{display:flex;gap:6px;flex-shrink:0;}
-.browser-dot{width:12px;height:12px;border-radius:50%;}
-.bd-red{background:#ff5f57;}.bd-yellow{background:#ffbd2e;}.bd-green{background:#28c840;}
-.browser-bar{flex:1;background:#070e28;border:1px solid var(--border);border-radius:6px;padding:6px 12px;display:flex;align-items:center;gap:8px;min-width:0;}
-.browser-lock{color:var(--muted);font-size:11px;flex-shrink:0;}
-.browser-url{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.browser-url .url-domain{color:var(--white);}
-.browser-actions{display:flex;gap:8px;flex-shrink:0;}
-.browser-action{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;}
-.browser-body{background:#f8f8fc;position:relative;overflow:hidden;min-height:420px;}
-.fake-nav{background:white;border-bottom:1px solid #e8e8ef;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
-.fake-nav-logo{width:80px;height:12px;background:#d0d0dc;border-radius:3px;}
-.fake-nav-links{display:flex;gap:16px;}
-.fake-nav-link{height:8px;border-radius:2px;background:#e0e0ea;}
-.fake-nav-cta{height:28px;width:80px;background:#e8e0ff;border-radius:5px;}
-.fake-hero{padding:40px 24px 32px;background:white;}
-.fake-h1-line{height:18px;border-radius:4px;background:#c8c8d8;margin-bottom:12px;}
-.fake-h1-line.w70{width:70%;}.fake-h1-line.w50{width:50%;}
-.fake-sub-line{height:8px;border-radius:2px;background:#e0e0ea;margin-bottom:8px;}
-.fake-sub-line.w80{width:80%;}.fake-sub-line.w60{width:60%;}.fake-sub-line.w45{width:45%;}
-.fake-btns{display:flex;gap:10px;margin-top:20px;}
-.fake-btn{height:36px;border-radius:7px;}
-.fake-btn-p{width:120px;background:#2a4abf;}.fake-btn-s{width:100px;background:#e8e8f0;}
-.fake-features{padding:24px;background:#f4f4f9;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.fake-card{background:white;border-radius:8px;padding:16px;border:1px solid #e8e8ef;}
-.fake-card-icon{width:28px;height:28px;border-radius:6px;background:#ede8ff;margin-bottom:10px;}
-.fake-card-title{height:9px;width:70%;background:#c8c8d8;border-radius:2px;margin-bottom:8px;}
-.fake-card-text{height:6px;background:#e8e8f0;border-radius:2px;margin-bottom:5px;}
-.fake-card-text.w60{width:60%;}
-.cvg-widget{position:absolute;bottom:20px;right:20px;width:296px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.25));z-index:10;}
-.cvg-launcher{width:52px;height:52px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(56,189,248,.4);margin-left:auto;transition:transform .2s;}
-.cvg-launcher:hover{transform:scale(1.08);}
-.cvg-launcher svg{width:22px;height:22px;}
-.cvg-panel{background:white;border-radius:16px;overflow:hidden;border:1px solid #e8e8ef;margin-bottom:10px;transform-origin:bottom right;animation:widgetPop .35s cubic-bezier(.34,1.56,.64,1) both;}
-@keyframes widgetPop{from{opacity:0;transform:scale(.85) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.cvg-panel-head{background:linear-gradient(135deg,#070e28 0%,#0d1a3a 100%);padding:14px 16px;display:flex;align-items:center;gap:10px;}
-.cvg-head-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--green),#93d8ff);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-.cvg-head-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:white;}
-.cvg-head-status{font-size:10px;color:var(--green);display:flex;align-items:center;gap:4px;margin-top:2px;}
-.cvg-status-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
-.cvg-head-brand{margin-left:auto;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;color:var(--green);opacity:.7;letter-spacing:-.3px;}
-.cvg-msgs{padding:14px;display:flex;flex-direction:column;gap:8px;min-height:120px;max-height:200px;overflow-y:auto;background:#fafafa;}
-.cvg-msgs::-webkit-scrollbar{width:3px;}
-.cvg-msgs::-webkit-scrollbar-thumb{background:#e0e0ea;border-radius:2px;}
-.cvg-msg{max-width:90%;font-size:12.5px;line-height:1.5;}
-.cvg-msg-ai .cvg-msg-b{background:white;border:1px solid #e8e8ef;border-radius:3px 12px 12px 12px;padding:9px 12px;color:#0d1a38;}
-.cvg-msg-user{align-self:flex-end;}
-.cvg-msg-user .cvg-msg-b{background:var(--green);color:#03091a;border-radius:12px 3px 12px 12px;padding:9px 12px;font-weight:500;}
-.cvg-msg-lbl{font-size:9px;color:#9090a8;margin-top:3px;padding:0 3px;font-family:'DM Mono',monospace;}
-.cvg-msg-user .cvg-msg-lbl{text-align:right;}
-.cvg-typing{display:flex;gap:4px;align-items:center;padding:9px 12px;background:white;border:1px solid #e8e8ef;border-radius:3px 12px 12px 12px;width:fit-content;}
-.cvg-typing span{width:6px;height:6px;border-radius:50%;background:#c0c0d0;animation:typingDot 1.2s ease infinite;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Instrument Sans',sans-serif;
+  font-weight:400;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* Grain texture overlay */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
+  opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 60px;
+  background:rgba(245,242,236,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid transparent;
+  transition:border-color .4s, padding .3s;
+}
+nav.scrolled{border-bottom-color:var(--rule);padding:14px 60px;}
+.logo{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:600;font-size:22px;letter-spacing:-.2px;
+  color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;gap:10px;
+}
+.logo-mark{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 0 3px var(--gold-dim);
+  animation:heartbeat 2.8s ease infinite;
+}
+@keyframes heartbeat{
+  0%,100%{box-shadow:0 0 0 3px var(--gold-dim);}
+  50%{box-shadow:0 0 0 6px transparent;}
+}
+.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links a{
+  color:var(--off);text-decoration:none;
+  font-size:13px;font-weight:500;letter-spacing:.03em;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--ink);}
+.nav-pill{
+  background:var(--ink);color:var(--paper);
+  padding:8px 22px;font-size:13px;font-weight:500;
+  letter-spacing:.04em;text-decoration:none;
+  border:none;cursor:pointer;font-family:inherit;
+  transition:background .2s,transform .15s;
+}
+.nav-pill:hover{background:var(--ink-soft);transform:translateY(-1px);}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.burger span{width:20px;height:1.5px;background:var(--ink);display:block;transition:all .3s;}
+.burger.open span:nth-child(1){transform:rotate(45deg) translate(4px,5px);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-5px);}
+.mob-nav{
+  display:none;position:fixed;inset:0;
+  background:var(--paper);z-index:190;
+  flex-direction:column;align-items:center;justify-content:center;gap:40px;
+}
+.mob-nav.open{display:flex;}
+.mob-nav a{
+  font-family:'Cormorant Garamond',serif;
+  font-size:38px;font-weight:300;color:var(--ink);
+  text-decoration:none;letter-spacing:-.5px;
+  transition:color .2s;
+}
+.mob-nav a:hover{color:var(--gold);}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding:120px 60px 80px;
+  position:relative;
+  overflow:hidden;
+  gap:80px;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  top:0;right:0;
+  width:55%;height:100%;
+  background:var(--paper-warm);
+  border-left:1px solid var(--rule);
+}
+.hero-left{position:relative;z-index:1;}
+.hero-right{position:relative;z-index:1;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--gold);text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:32px;
+}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);}
+h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(50px,5.5vw,76px);
+  font-weight:300;line-height:1.0;
+  letter-spacing:-2px;
+  color:var(--ink);
+  margin-bottom:32px;
+}
+h1 em{font-style:italic;color:var(--gold);}
+h1 strong{font-weight:600;}
+.hero-body{
+  font-size:16px;color:var(--off);
+  line-height:1.75;max-width:440px;
+  margin-bottom:48px;
+}
+.cta-group{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+.btn-primary{
+  background:var(--ink);color:var(--paper);
+  padding:14px 32px;font-size:14px;font-weight:500;
+  letter-spacing:.04em;text-decoration:none;border:none;cursor:pointer;
+  font-family:inherit;transition:all .2s;display:inline-block;
+}
+.btn-primary:hover{background:var(--ink-soft);transform:translateY(-1px);}
+.btn-ghost{
+  color:var(--ink);font-size:14px;font-weight:400;
+  text-decoration:none;letter-spacing:.02em;
+  border-bottom:1px solid var(--rule-strong);
+  padding-bottom:2px;transition:border-color .2s,color .2s;
+  display:inline-block;
+}
+.btn-ghost:hover{color:var(--gold);border-color:var(--gold);}
+
+/* Hero right — stat cards */
+.hero-stats{display:flex;flex-direction:column;gap:20px;}
+.stat-card{
+  background:var(--paper);border:1px solid var(--rule);
+  padding:28px 32px;
+  position:relative;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:3px;height:100%;background:var(--gold);
+}
+.stat-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:44px;font-weight:300;letter-spacing:-2px;
+  color:var(--ink);line-height:1;margin-bottom:6px;
+}
+.stat-label{font-size:12px;color:var(--off);font-family:'DM Mono',monospace;letter-spacing:.5px;}
+.stat-source{font-size:10px;color:var(--off-light);font-family:'DM Mono',monospace;margin-top:4px;}
+.stat-source a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+
+/* ── RULE DIVIDER ── */
+.rule-section{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+}
+.rule-cell{
+  padding:20px 32px;
+  border-right:1px solid var(--rule);
+  display:flex;align-items:center;gap:12px;
+}
+.rule-cell:last-child{border-right:none;}
+.rule-cell-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:300;color:var(--gold);
+}
+.rule-cell-text{font-size:12px;color:var(--off);line-height:1.4;}
+
+/* ── SECTIONS ── */
+.section{padding:100px 60px;}
+.section-alt{background:var(--ink);color:var(--paper);}
+.section-warm{background:var(--paper-warm);}
+.w{max-width:1140px;margin:0 auto;}
+.label{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--gold);text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:20px;display:flex;align-items:center;gap:10px;
+}
+.label::after{content:'';flex:0 0 32px;height:1px;background:var(--gold);}
+.section-alt .label{color:rgba(200,146,42,.7);}
+.section-alt .label::after{background:rgba(200,146,42,.4);}
+h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,4vw,58px);
+  font-weight:300;letter-spacing:-2px;line-height:1.05;
+  margin-bottom:16px;
+}
+h2 em{font-style:italic;color:var(--gold);}
+.section-alt h2{color:var(--paper);}
+.section-alt h2 em{color:rgba(200,146,42,.8);}
+.sec-sub{
+  font-size:16px;color:var(--off);
+  max-width:520px;line-height:1.7;
+}
+.section-alt .sec-sub{color:rgba(200,200,188,.6);}
+
+/* ── DEMO TESTER ── */
+.tester-band{
+  background:var(--ink);
+  padding:80px 60px;
+  border-top:1px solid var(--rule-strong);
+  border-bottom:1px solid var(--rule-strong);
+}
+.tester-inner{max-width:900px;margin:0 auto;text-align:center;}
+.tester-label{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:rgba(200,146,42,.8);text-transform:uppercase;letter-spacing:2.5px;
+  margin-bottom:20px;
+}
+.tester-headline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,3.5vw,50px);font-weight:300;
+  letter-spacing:-1.5px;color:var(--paper);
+  margin-bottom:12px;
+}
+.tester-headline em{font-style:italic;color:rgba(200,146,42,.85);}
+.tester-sub{
+  font-size:15px;color:rgba(200,200,188,.55);
+  margin-bottom:40px;line-height:1.65;
+}
+.tester-row{
+  display:flex;gap:0;max-width:600px;margin:0 auto;
+  border:1px solid rgba(255,255,255,.1);
+}
+.tester-input{
+  flex:1;background:rgba(255,255,255,.04);
+  border:none;outline:none;
+  padding:14px 20px;font-size:15px;
+  color:var(--paper);font-family:inherit;
+}
+.tester-input::placeholder{color:rgba(255,255,255,.25);}
+.tester-go{
+  background:var(--gold);color:var(--ink);
+  border:none;padding:14px 28px;
+  font-size:13px;font-weight:600;
+  letter-spacing:.06em;font-family:inherit;
+  cursor:pointer;white-space:nowrap;
+  transition:background .2s;
+  text-transform:uppercase;
+}
+.tester-go:hover{background:#daa035;}
+.tester-go:disabled{opacity:.4;cursor:not-allowed;}
+.tester-status{
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:rgba(200,146,42,.8);margin-top:16px;min-height:18px;
+}
+.tester-note{font-size:12px;color:rgba(255,255,255,.2);margin-top:10px;font-family:'DM Mono',monospace;}
+
+/* Browser mockup */
+#browserMockup{
+  display:none;margin-top:48px;
+  border:1px solid rgba(255,255,255,.08);
+  text-align:left;position:relative;
+  overflow:hidden;
+}
+.bc{
+  background:#111;padding:10px 14px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.bdots{display:flex;gap:6px;}
+.bd{width:11px;height:11px;border-radius:50%;}
+.bd-r{background:#ff5f57;}.bd-y{background:#ffbd2e;}.bd-g{background:#28c840;}
+.bbar{
+  flex:1;background:rgba(255,255,255,.05);
+  border-radius:4px;padding:5px 12px;
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:rgba(255,255,255,.3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.bbody{background:#f4f4f0;min-height:380px;position:relative;overflow:hidden;}
+/* skeleton site */
+.sk-nav{background:#fff;border-bottom:1px solid #e8e8e8;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
+.sk-logo{width:70px;height:10px;background:#ccc;border-radius:2px;}
+.sk-links{display:flex;gap:14px;}
+.sk-link{height:7px;border-radius:2px;background:#ddd;}
+.sk-hero{padding:32px 20px 24px;background:#fff;}
+.sk-h{height:16px;border-radius:3px;background:#c4c4c4;margin-bottom:10px;}
+.sk-h.w65{width:65%;}.sk-h.w45{width:45%;}
+.sk-p{height:7px;border-radius:2px;background:#ddd;margin-bottom:7px;}
+.sk-p.w80{width:80%;}.sk-p.w60{width:60%;}
+.sk-btns{display:flex;gap:10px;margin-top:16px;}
+.sk-btn{height:32px;border-radius:3px;}
+.sk-btn-p{width:110px;background:#333;}.sk-btn-s{width:90px;background:#e8e8e8;}
+.sk-grid{padding:20px;background:#f9f9f7;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.sk-card{background:#fff;border:1px solid #e8e8e8;border-radius:4px;padding:14px;}
+.sk-icon{width:24px;height:24px;border-radius:4px;background:#e8e4ff;margin-bottom:8px;}
+.sk-ct{height:8px;width:65%;background:#ccc;border-radius:2px;margin-bottom:6px;}
+.sk-cd{height:6px;background:#ddd;border-radius:2px;margin-bottom:4px;}
+.sk-cd.w55{width:55%;}
+/* scan overlay */
+.scan-ov{
+  display:none;position:absolute;inset:0;
+  background:rgba(10,10,8,.8);backdrop-filter:blur(4px);
+  z-index:3;align-items:center;justify-content:center;
+  flex-direction:column;gap:14px;
+}
+.scan-txt{
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:rgba(200,146,42,.9);letter-spacing:1px;
+  text-align:center;padding:0 20px;
+}
+.scan-prog-wrap{width:220px;height:1px;background:rgba(255,255,255,.1);}
+.scan-prog-inner{height:100%;width:0%;background:var(--gold);transition:width .5s ease;}
+/* screenshot */
+.shot-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:top;
+  opacity:0;transition:opacity .7s;z-index:2;pointer-events:none;
+}
+/* widget overlay */
+.cvg-w{
+  position:absolute;bottom:16px;right:16px;
+  width:280px;z-index:10;
+  filter:drop-shadow(0 4px 20px rgba(0,0,0,.2));
+}
+.cvg-launcher-btn{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;margin-left:auto;
+  box-shadow:0 4px 16px rgba(200,146,42,.4);
+  transition:transform .2s;
+}
+.cvg-launcher-btn:hover{transform:scale(1.08);}
+.cvg-panel{
+  background:#fff;border-radius:12px;
+  border:1px solid #e8e8e8;margin-bottom:8px;
+  overflow:hidden;transform-origin:bottom right;
+  animation:pop .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes pop{from{opacity:0;transform:scale(.85) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.cvg-hd{
+  background:var(--ink);padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+}
+.cvg-av{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:600;color:var(--ink);
+  flex-shrink:0;
+}
+.cvg-nm{font-size:12px;font-weight:600;color:#fff;font-family:'Instrument Sans',sans-serif;}
+.cvg-st{font-size:9px;color:rgba(200,146,42,.8);font-family:'DM Mono',monospace;margin-top:1px;display:flex;align-items:center;gap:4px;}
+.cvg-std{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:heartbeat 2s infinite;}
+.cvg-brand{margin-left:auto;font-size:9px;color:rgba(200,146,42,.5);font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;}
+.cvg-msgs{padding:12px;display:flex;flex-direction:column;gap:7px;min-height:100px;max-height:160px;overflow-y:auto;background:#fafaf9;}
+.cvg-msg{max-width:90%;font-size:11.5px;line-height:1.5;font-family:'Instrument Sans',sans-serif;}
+.cvg-msg-ai .cvg-msg-b{background:#fff;border:1px solid #e8e8e4;border-radius:2px 10px 10px 10px;padding:8px 10px;color:#1a1a18;}
+.cvg-msg-u{align-self:flex-end;}
+.cvg-msg-u .cvg-msg-b{background:var(--ink);color:#f5f2ec;border-radius:10px 2px 10px 10px;padding:8px 10px;font-weight:500;}
+.cvg-msg-lbl{font-size:8px;color:#aaa;margin-top:3px;padding:0 2px;font-family:'DM Mono',monospace;}
+.cvg-msg-u .cvg-msg-lbl{text-align:right;}
+.cvg-typing{display:flex;gap:4px;align-items:center;padding:8px 10px;background:#fff;border:1px solid #e8e8e4;border-radius:2px 10px 10px 10px;width:fit-content;}
+.cvg-typing span{width:5px;height:5px;border-radius:50%;background:#c8c8c4;animation:tb 1.2s ease infinite;}
 .cvg-typing span:nth-child(2){animation-delay:.2s;}
 .cvg-typing span:nth-child(3){animation-delay:.4s;}
-@keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
-.cvg-input-row{display:flex;gap:0;border-top:1px solid #e8e8ef;background:white;}
-.cvg-input{flex:1;border:none;outline:none;padding:11px 13px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:transparent;color:#0d1a38;}
-.cvg-input::placeholder{color:#b0b0c0;}
-.cvg-send{width:36px;height:36px;margin:4px;border-radius:8px;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;}
-.cvg-send:hover{background:#38bdf8;}
-.cvg-send svg{width:14px;height:14px;}
-.cvg-email-cap{padding:10px 14px 14px;background:#fafafa;border-top:1px solid #e8e8ef;}
-.cvg-email-label{font-size:11px;color:#6b6b80;margin-bottom:8px;line-height:1.4;}
-.cvg-email-row{display:flex;gap:6px;}
-.cvg-email-input{flex:1;background:white;border:1px solid #e0e0ea;border-radius:7px;padding:8px 10px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;color:#0d1a38;transition:border-color .2s;}
-.cvg-email-input:focus{border-color:var(--green);}
-.cvg-email-btn{background:var(--green);color:#03091a;border:none;border-radius:7px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:background .2s;}
-.cvg-email-btn:hover{background:#38bdf8;}
-.cvg-powered{text-align:center;padding:6px;font-size:9px;color:#b0b0c0;font-family:'DM Mono',monospace;background:white;border-top:1px solid #f0f0f5;}
-.cvg-powered span{color:#38bdf8;font-weight:500;}
-.convo-section{background:var(--deep);}
-.convo-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:64px;align-items:start;}
-.convo-tabs{display:flex;flex-direction:column;gap:4px;}
-.convo-tab{padding:20px 24px;border-radius:12px;border:1px solid transparent;cursor:pointer;transition:all .25s;}
-.convo-tab.active{background:var(--card);border-color:rgba(56,189,248,.2);}
-.convo-tab:hover:not(.active){background:rgba(255,255,255,.02);border-color:var(--border);}
-.ct-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;}
-.ct-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--white);margin-bottom:4px;}
-.ct-desc{font-size:13px;color:var(--muted2);line-height:1.5;}
-.convo-preview{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:sticky;top:100px;}
-.convo-ph{background:var(--deep);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;}
-.convo-ph-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green),#93d8ff);display:flex;align-items:center;justify-content:center;font-size:14px;}
-.convo-ph-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;}
-.convo-ph-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px;margin-top:1px;}
-.convo-msgs{padding:20px;display:flex;flex-direction:column;gap:10px;min-height:320px;}
-.cm{max-width:85%;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;}
-.cm.show{opacity:1;transform:translateY(0);}
-.cm-ai .cm-b{background:var(--deep);border:1px solid var(--border);border-radius:4px 14px 14px 14px;padding:10px 14px;font-size:13.5px;color:#d8d8e8;line-height:1.55;}
-.cm-u{align-self:flex-end;}
-.cm-u .cm-b{background:var(--green);color:var(--black);border-radius:14px 4px 14px 14px;padding:10px 14px;font-size:13.5px;font-weight:500;line-height:1.55;}
-.cm-label{font-size:10px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;padding:0 4px;}
-.cm-u .cm-label{text-align:right;}
-.convo-outcome{margin:0 20px 20px;background:var(--green-glow);border:1px solid rgba(56,189,248,.2);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .4s ease;}
-.convo-outcome.show{opacity:1;}
-.co-icon{font-size:18px;}.co-text{font-size:13px;color:var(--green);font-family:'DM Mono',monospace;}
-.for-section{background:var(--black);}
-.for-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px;}
-.for-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px;position:relative;overflow:hidden;transition:all .3s;cursor:default;}
-.for-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transition:opacity .3s;opacity:0;}
-.for-card:hover{transform:translateY(-4px);border-color:var(--border-light);}
-.for-card:hover::before{opacity:1;}
-.for-card.fc-saas::before{background:linear-gradient(to right,transparent,var(--green),transparent);}
-.for-card.fc-service::before{background:linear-gradient(to right,transparent,#f59e0b,transparent);}
-.for-card.fc-agency::before{background:linear-gradient(to right,transparent,var(--purple),transparent);}
-.for-icon{font-size:32px;margin-bottom:20px;}
-.for-eyebrow{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;}
-.fc-saas .for-eyebrow{color:var(--green);}.fc-service .for-eyebrow{color:#f59e0b;}.fc-agency .for-eyebrow{color:var(--purple);}
-.for-title{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.5px;margin-bottom:12px;color:var(--white);}
-.for-desc{font-size:14px;color:var(--muted2);line-height:1.7;margin-bottom:24px;}
-.for-wins{display:flex;flex-direction:column;gap:8px;}
-.fw{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted2);}
-.fw-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:7px;}
-.fc-saas .fw-dot{background:var(--green);}.fc-service .fw-dot{background:#f59e0b;}.fc-agency .fw-dot{background:var(--purple);}
-.for-quote{margin-top:24px;padding-top:20px;border-top:1px solid var(--border);font-size:13px;color:var(--muted2);font-style:italic;line-height:1.6;}
-.for-quote::before{content:'"';font-size:22px;line-height:0;vertical-align:-8px;margin-right:2px;font-family:'Syne',sans-serif;font-style:normal;}
-.fc-saas .for-quote::before{color:var(--green);}.fc-service .for-quote::before{color:#f59e0b;}.fc-agency .for-quote::before{color:var(--purple);}
-.how-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:64px;position:relative;}
-.how-grid::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:linear-gradient(to right,transparent,var(--border-light) 20%,var(--border-light) 80%,transparent);}
-.how-step{padding:0 16px;text-align:center;position:relative;}
-.step-num{width:56px;height:56px;border-radius:50%;background:var(--card);border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 20px;position:relative;z-index:1;transition:all .3s;}
-.how-step:hover .step-num{background:var(--green-glow);border-color:var(--green);box-shadow:0 0 20px var(--green-glow);}
-.step-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--white);margin-bottom:8px;}
-.step-desc{font-size:13px;color:var(--muted2);line-height:1.6;}
-.feat-section{background:var(--deep);}
-.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:64px;border-radius:16px;overflow:hidden;}
-.feat-card{background:var(--card);padding:34px 30px;transition:all .3s;position:relative;overflow:hidden;}
-.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--green),transparent);opacity:0;transition:opacity .3s;}
-.feat-card:hover::before{opacity:1;}
-.feat-card:hover{background:#13131c;}
-.feat-icon{width:44px;height:44px;border-radius:10px;background:var(--green-glow);border:1px solid rgba(56,189,248,.2);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:18px;}
-.feat-title{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--white);margin-bottom:10px;}
-.feat-desc{font-size:14px;color:var(--muted2);line-height:1.7;}
-.roi-section{background:linear-gradient(180deg,var(--black) 0%,#060c18 50%,var(--black) 100%);position:relative;}
-.roi-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.04) 0%,transparent 70%);pointer-events:none;}
-.roi-inner{max-width:900px;margin:0 auto;position:relative;}
-.roi-card{background:var(--card);border:1px solid var(--border-light);border-radius:20px;padding:48px;margin-top:64px;position:relative;overflow:hidden;}
-.roi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold) 40%,var(--green) 60%,transparent);}
-.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
-.roi-input-g label{display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);margin-bottom:10px;}
-.roi-vd{font-size:14px;color:var(--white);font-weight:500;}
-.roi-slider{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border-light);outline:none;cursor:pointer;}
-.roi-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 10px rgba(245,158,11,.4);}
-.roi-results{text-align:center;}
-.roi-main{font-family:'Syne',sans-serif;font-weight:800;font-size:58px;letter-spacing:-3px;color:var(--gold);line-height:1;text-shadow:0 0 40px rgba(245,158,11,.3);}
-.roi-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:8px;}
-.roi-bk{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px;}
-.roi-bi{background:var(--deep);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
-.roi-bv{font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--white);}
-.roi-bl{font-size:11px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace;}
-.roi-disc{font-size:11px;color:var(--muted);margin-top:20px;text-align:center;font-style:italic;}
-.comp-section{background:var(--deep);}
-.comp-wrap{overflow-x:auto;margin-top:64px;}
-.comp-table{width:100%;min-width:780px;border-collapse:collapse;border-radius:16px;overflow:hidden;border:1px solid var(--border);}
-.comp-table th{background:var(--card);padding:18px 22px;text-align:left;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);font-weight:400;letter-spacing:.5px;border-bottom:1px solid var(--border);}
-.comp-table th.hl{background:linear-gradient(135deg,#0d1428,#0a1830);color:var(--green);border-bottom:2px solid var(--green);position:relative;}
-.comp-table th.hl::after{content:'';position:absolute;inset:0;background:var(--green-glow);animation:compPulse 3s ease infinite;}
-@keyframes compPulse{0%,100%{opacity:.5}50%{opacity:1}}
-.comp-table td{padding:14px 22px;border-bottom:1px solid var(--border);font-size:14px;color:var(--muted2);background:var(--deep);vertical-align:middle;}
-.comp-table td.fn{color:var(--white);background:var(--card);}
-.comp-table td.hl{background:rgba(56,189,248,.04);border-left:1px solid rgba(56,189,248,.18);border-right:1px solid rgba(56,189,248,.18);}
-.comp-table tr:last-child td{border-bottom:none;}
-.comp-table tr:last-child td.hl{border-bottom:2px solid var(--green);}
-.cy{color:var(--green);}.cn{color:var(--muted);}.cp{color:#fbbf24;font-size:13px;}
-.comp-badge{display:inline-flex;background:var(--green-glow);border:1px solid rgba(56,189,248,.2);color:var(--green);padding:2px 8px;border-radius:4px;font-size:11px;font-family:'DM Mono',monospace;margin-left:6px;}
-.price-note-small{display:block;font-size:11px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace;line-height:1.4;}
-.ob-section{background:var(--black);}
-.ob-steps{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:64px;align-items:start;}
-.ob-list{display:flex;flex-direction:column;gap:4px;}
-.ob-item{display:flex;gap:20px;padding:24px;border-radius:12px;border:1px solid transparent;cursor:pointer;transition:all .3s;align-items:flex-start;}
-.ob-item.active,.ob-item:hover{background:var(--card);border-color:var(--border-light);}
-.ob-item.active{border-color:rgba(56,189,248,.2);}
-.ob-num{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);transition:all .3s;}
-.ob-item.active .ob-num{background:var(--green-glow);color:var(--green);border:1px solid rgba(56,189,248,.3);}
-.ob-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--white);margin-bottom:6px;}
-.ob-desc{font-size:14px;color:var(--muted2);line-height:1.6;}
-.ob-preview{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:sticky;top:100px;}
-.ob-tab-bar{background:var(--deep);border-bottom:1px solid var(--border);padding:14px 20px;}
-.ob-content{padding:28px;min-height:360px;}
-.code-block{background:#050d22;border:1px solid var(--border);border-radius:10px;padding:24px;font-family:'DM Mono',monospace;font-size:13px;line-height:1.8;position:relative;margin-bottom:16px;}
-.code-copy{position:absolute;top:14px;right:14px;background:var(--border);border:none;color:var(--muted2);padding:5px 12px;border-radius:5px;font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;transition:all .2s;}
-.code-copy:hover{background:var(--green-glow);color:var(--green);}
-.cc{color:#4a4a60;}.ct{color:#6080e0;}.ca{color:#38bdf8;}.cv{color:var(--green);}
-.dash-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
-.dash-title{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;}
-.dash-badge{background:var(--green-glow);color:var(--green);border:1px solid rgba(56,189,248,.2);padding:4px 12px;border-radius:100px;font-size:11px;font-family:'DM Mono',monospace;}
-.dash-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
-.dash-m{background:var(--deep);border:1px solid var(--border);border-radius:10px;padding:16px;}
-.dm-v{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:var(--white);}
-.dm-v.g{color:var(--green);}
-.dm-l{font-size:11px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace;}
-.dm-c{font-size:12px;color:var(--green);margin-top:6px;}
-.dash-chart-wrap{background:var(--deep);border:1px solid var(--border);border-radius:10px;padding:16px;}
-.chart-bars{display:flex;align-items:flex-end;gap:8px;height:80px;}
-.chart-bar{flex:1;border-radius:4px 4px 0 0;background:var(--border-light);transition:all .3s;}
-.chart-bar.hi{background:var(--green);box-shadow:0 0 12px var(--green-glow);}
-.scan-progress{height:2px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden;}
-.scan-bar{height:100%;width:0%;background:linear-gradient(to right,var(--green),#93d8ff);border-radius:2px;transition:width .1s linear;}
-.scan-findings{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
-.scan-finding{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;opacity:0;transform:translateX(-8px);transition:all .3s;}
-.scan-finding.appear{opacity:1;transform:translateX(0);}
-.scan-finding-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
-.price-section{background:linear-gradient(180deg,var(--deep) 0%,#060e22 50%,var(--deep) 100%);position:relative;}
-.price-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(30,70,200,.07) 0%,transparent 70%);pointer-events:none;}
-.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:64px;position:relative;}
-.price-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px 26px;position:relative;transition:all .3s;}
-.price-card:hover{transform:translateY(-4px);border-color:var(--border-light);}
-.price-card.feat{border-color:rgba(56,189,248,.5);background:linear-gradient(135deg,#0d1428 0%,#0a1830 100%);box-shadow:0 0 60px rgba(30,70,180,.12),0 20px 60px rgba(0,0,0,.4);}
-.price-card.feat:hover{transform:translateY(-8px);box-shadow:0 0 80px rgba(56,189,248,.18),0 30px 80px rgba(0,0,0,.5);}
-.price-card.feat::before{content:'MOST POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--green);color:var(--black);padding:4px 16px;border-radius:100px;font-size:10px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:1px;white-space:nowrap;}
-.price-card.feat::after{content:'';position:absolute;inset:0;border-radius:16px;background:linear-gradient(135deg,rgba(56,189,248,.03),transparent);pointer-events:none;}
-.price-name{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;margin-bottom:5px;}
-.price-tag{font-size:13px;color:var(--muted2);margin-bottom:14px;}
-.price-num{font-family:'Syne',sans-serif;font-weight:800;font-size:36px;letter-spacing:-2px;}
-.price-num sup{font-size:17px;vertical-align:top;margin-top:7px;font-weight:600;}
-.price-per{font-size:12px;color:var(--muted2);margin-bottom:8px;}
-.price-note{font-size:11px;color:var(--green);margin-bottom:18px;padding:7px 10px;background:var(--green-glow);border-radius:6px;font-family:'DM Mono',monospace;line-height:1.5;min-height:40px;display:flex;align-items:center;}
-.price-div{height:1px;background:var(--border);margin-bottom:18px;}
-.price-feats{display:flex;flex-direction:column;gap:9px;}
-.pf{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--muted2);}
-.pfc{color:var(--green);flex-shrink:0;font-size:13px;margin-top:1px;}
-.pf.dim{color:var(--muted);opacity:.6;}
-.pf.dim .pfc{color:var(--muted);}
-.price-cta{width:100%;margin-top:22px;padding:12px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;border:none;font-family:'DM Sans',sans-serif;}
-.price-cta.pf-green{background:var(--green);color:var(--black);font-weight:600;}
-.price-cta.pf-green:hover{background:#60d4ff;box-shadow:0 0 30px var(--green-glow-s);}
-.price-cta.pf-out{background:transparent;color:var(--white);border:1px solid var(--border-light);}
-.price-cta.pf-out:hover{border-color:var(--muted2);background:rgba(255,255,255,.04);}
-.proof-section{background:linear-gradient(180deg,var(--black) 0%,#060e20 50%,var(--black) 100%);position:relative;}
-.proof-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(30,70,180,.08) 0%,transparent 70%);pointer-events:none;}
-.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px;position:relative;}
-.proof-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all .3s;}
-.proof-card:hover{border-color:rgba(56,189,248,.3);transform:translateY(-2px);box-shadow:0 8px 32px rgba(30,70,180,.12);}
-.proof-stars{color:#fbbf24;font-size:13px;margin-bottom:16px;letter-spacing:2px;}
-.proof-text{font-size:15px;color:#c8c8e0;line-height:1.7;margin-bottom:20px;}
-.proof-text::before{content:'"';color:var(--purple);font-size:32px;line-height:0;vertical-align:-12px;margin-right:2px;font-family:'Syne',sans-serif;}
-.proof-author{display:flex;align-items:center;gap:12px;}
-.proof-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;}
-.proof-name{font-weight:500;font-size:14px;color:var(--white);}
-.proof-role{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
-.proof-metric{display:inline-flex;align-items:center;gap:6px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2);padding:4px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:11px;color:#7dd3fc;margin-top:16px;}
-.proof-counter{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;color:var(--purple);letter-spacing:-1px;margin-bottom:4px;}
-.faq-section{background:var(--deep);}
-.faq-inner{max-width:820px;margin:0 auto;}
-.faq-list{margin-top:64px;display:flex;flex-direction:column;gap:2px;}
-.faq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s;}
-.faq-item.open{border-color:rgba(56,189,248,.25);}
-.faq-q{padding:22px 28px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;user-select:none;}
-.faq-qt{font-family:'Syne',sans-serif;font-weight:600;font-size:16px;color:var(--white);line-height:1.4;}
-.faq-ic{width:28px;height:28px;border-radius:50%;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted2);font-size:18px;transition:all .3s;}
-.faq-item.open .faq-ic{border-color:var(--green);color:var(--green);transform:rotate(45deg);}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease;}
-.faq-item.open .faq-a{max-height:600px;}
-.faq-ai{padding:18px 28px 22px;font-size:15px;color:var(--muted2);line-height:1.8;border-top:1px solid var(--border);}
-.faq-ai strong{color:var(--white);}
-.fpill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;font-family:'DM Mono',monospace;font-size:12px;margin:8px 0 4px;}
-.fpill.r{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.2);color:#ff8099;}
-.fpill.g{background:var(--green-glow);border:1px solid rgba(56,189,248,.2);color:var(--green);}
-.cta-section{text-align:center;padding:120px 48px;background:var(--black);position:relative;overflow:hidden;}
-.cta-glow{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.12) 0%,rgba(56,189,248,.04) 40%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:ctaPulse 4s ease infinite;}
-.cta-glow2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(30,70,200,.08) 0%,transparent 70%);top:50%;left:30%;transform:translate(-50%,-50%);pointer-events:none;}
-@keyframes ctaPulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.05)}}
-.cta-section h2,.cta-section .sec-sub{position:relative;}
-.cta-section h2{font-size:clamp(40px,5vw,64px);}
-footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
-.foot-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
-.foot-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;}
-.foot-links{display:flex;gap:28px;}
-.foot-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;}
-.foot-links a:hover{color:var(--muted2);}
-.foot-copy{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
-.modal-ov{position:fixed;inset:0;background:rgba(6,6,8,.92);backdrop-filter:blur(12px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
-.modal-ov.open{opacity:1;pointer-events:all;}
-.modal{background:var(--card);border:1px solid var(--border-light);border-radius:20px;padding:44px;max-width:500px;width:90%;transform:translateY(20px);transition:transform .3s;position:relative;max-height:90vh;overflow-y:auto;}
-.modal-ov.open .modal{transform:translateY(0);}
-.modal-close{position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted2);font-size:22px;cursor:pointer;transition:color .2s;line-height:1;}
-.modal-close:hover{color:var(--white);}
-.modal h3{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;letter-spacing:-1px;margin-bottom:8px;}
-.modal-sub{font-size:15px;color:var(--muted2);margin-bottom:28px;}
-.fg{margin-bottom:14px;}
-.fl{display:block;font-size:12px;color:var(--muted2);margin-bottom:6px;font-family:'DM Mono',monospace;}
-.fi{width:100%;background:var(--deep);border:1px solid var(--border-light);border-radius:8px;padding:11px 16px;color:var(--white);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;}
-.fi:focus{border-color:var(--green);}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.fsub{width:100%;background:var(--green);color:var(--black);border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:all .2s;font-family:'DM Sans',sans-serif;}
-.fsub:hover{background:#60d4ff;box-shadow:0 0 30px var(--green-glow-s);}
-.fdisc{font-size:12px;color:var(--muted);text-align:center;margin-top:12px;}
-.exit-modal-ov{position:fixed;inset:0;background:rgba(6,6,8,.92);backdrop-filter:blur(12px);z-index:1001;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
-.exit-modal-ov.open{opacity:1;pointer-events:all;}
-.exit-modal{background:var(--card);border:1px solid var(--border-light);border-radius:20px;padding:44px;max-width:480px;width:90%;transform:translateY(20px);transition:transform .3s;position:relative;}
-.exit-modal-ov.open .exit-modal{transform:translateY(0);}
-.exit-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:#ff6b6b;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;}
-.exit-headline{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;letter-spacing:-1px;line-height:1.15;margin-bottom:12px;color:var(--white);}
-.exit-sub{font-size:14px;color:var(--muted2);line-height:1.6;margin-bottom:24px;}
-::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px;}
-@media(max-width:1000px){
-  nav{padding:16px 20px;}.nav-links{display:none;}.nav-burger{display:flex;}
-  section{padding:64px 20px;}.hero{padding:100px 20px 60px;}
-  .tester-strip{padding:0 20px 60px;}.tester-input-row{flex-direction:column;}
-  .convo-layout{grid-template-columns:1fr;}.for-grid{grid-template-columns:1fr;}
-  .how-grid{grid-template-columns:1fr 1fr;gap:24px;}.how-grid::before{display:none;}
-  .feat-grid{grid-template-columns:1fr;}.ob-steps{grid-template-columns:1fr;}.price-grid{grid-template-columns:1fr 1fr;}
-  .proof-grid{grid-template-columns:1fr;}.roi-grid{grid-template-columns:1fr;gap:32px;}
-  .foot-inner{flex-direction:column;gap:20px;text-align:center;}.fr{grid-template-columns:1fr;}
-  .dash-metrics{grid-template-columns:1fr 1fr;}.fake-features{grid-template-columns:1fr 1fr;}.cvg-widget{width:260px;}
+@keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+.cvg-inp-row{display:flex;border-top:1px solid #eee;background:#fff;}
+.cvg-inp{flex:1;border:none;outline:none;padding:9px 10px;font-size:11px;font-family:'Instrument Sans',sans-serif;color:#1a1a18;}
+.cvg-snd{width:32px;height:32px;margin:3px;background:var(--ink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.cvg-snd svg{width:12px;height:12px;}
+.cvg-pw{text-align:center;padding:4px;font-size:8px;color:#c0c0b8;font-family:'DM Mono',monospace;background:#fff;border-top:1px solid #f0f0ec;}
+
+/* ── WHO IT'S FOR ── */
+.for-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--rule);
+  margin-top:64px;
 }
-@media(max-width:600px){.price-grid{grid-template-columns:1fr;}h1{letter-spacing:-2px;}.cvg-widget{width:230px;bottom:12px;right:12px;}}
+.for-card{
+  background:var(--paper);padding:40px 36px;
+  transition:background .3s;
+}
+.for-card:hover{background:#fff;}
+.for-cat{
+  font-family:'DM Mono',monospace;font-size:9px;
+  text-transform:uppercase;letter-spacing:2px;
+  color:var(--gold);margin-bottom:20px;
+}
+.for-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:300;letter-spacing:-.5px;
+  line-height:1.2;margin-bottom:16px;color:var(--ink);
+}
+.for-desc{font-size:14px;color:var(--off);line-height:1.7;margin-bottom:24px;}
+.for-points{display:flex;flex-direction:column;gap:10px;}
+.fp{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--off);}
+.fp::before{
+  content:'';width:4px;height:4px;border-radius:50%;
+  background:var(--gold);flex-shrink:0;margin-top:7px;
+}
+
+/* ── HOW IT WORKS ── */
+.how-track{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:0;margin-top:64px;
+  border:1px solid rgba(255,255,255,.07);
+  position:relative;
+}
+.how-step{
+  padding:32px 24px;
+  border-right:1px solid rgba(255,255,255,.06);
+  position:relative;
+}
+.how-step:last-child{border-right:none;}
+.how-n{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:rgba(200,146,42,.5);letter-spacing:1px;margin-bottom:16px;
+}
+.how-icon{font-size:24px;margin-bottom:14px;}
+.how-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:300;color:var(--paper);
+  margin-bottom:8px;letter-spacing:-.3px;
+}
+.how-desc{font-size:12.5px;color:rgba(200,200,188,.5);line-height:1.6;}
+
+/* ── PROBLEM/SOLUTION ── */
+.ps-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:48px;margin-top:64px;
+}
+.ps-col-head{
+  font-family:'DM Mono',monospace;font-size:10px;
+  text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:24px;padding-bottom:12px;
+  border-bottom:1px solid var(--rule);
+}
+.ps-col-head.problem{color:var(--warm-red);}
+.ps-col-head.solution{color:var(--signal-bright);}
+.ps-items{display:flex;flex-direction:column;gap:20px;}
+.ps-item{
+  padding:20px 24px;
+  border:1px solid var(--rule);
+  position:relative;
+}
+.ps-item.problem-item{border-left:3px solid var(--warm-red);}
+.ps-item.solution-item{border-left:3px solid var(--signal-bright);}
+.ps-item-title{
+  font-weight:600;font-size:14px;color:var(--ink);
+  margin-bottom:6px;
+}
+.ps-item-desc{font-size:13px;color:var(--off);line-height:1.6;}
+.ps-item-note{
+  font-family:'DM Mono',monospace;font-size:10px;
+  margin-top:8px;
+}
+.ps-item.problem-item .ps-item-note{color:var(--warm-red);}
+.ps-item.solution-item .ps-item-note{color:var(--signal-bright);}
+
+/* ── SETUP ── */
+.setup-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:64px;margin-top:64px;align-items:start;
+}
+.setup-steps{display:flex;flex-direction:column;gap:4px;}
+.setup-step{
+  display:flex;gap:20px;
+  padding:20px;cursor:pointer;
+  border:1px solid transparent;
+  transition:all .25s;
+}
+.setup-step.active,.setup-step:hover{
+  background:var(--paper-warm);
+  border-color:var(--rule);
+}
+.setup-step.active{border-color:var(--rule-strong);}
+.step-num-box{
+  width:28px;height:28px;flex-shrink:0;
+  border:1px solid var(--rule-strong);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:var(--off);transition:all .25s;
+}
+.setup-step.active .step-num-box{
+  background:var(--ink);color:var(--paper);border-color:var(--ink);
+}
+.step-title{font-weight:600;font-size:15px;color:var(--ink);margin-bottom:5px;}
+.step-desc{font-size:13px;color:var(--off);line-height:1.6;}
+.setup-preview{
+  border:1px solid var(--rule);background:var(--paper);
+  position:sticky;top:100px;overflow:hidden;
+}
+.preview-tab{
+  background:var(--paper-warm);border-bottom:1px solid var(--rule);
+  padding:12px 18px;
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;
+}
+.preview-body{padding:24px;min-height:300px;}
+.code-wrap{
+  background:#1a1a18;border:1px solid rgba(255,255,255,.07);
+  padding:20px;font-family:'DM Mono',monospace;
+  font-size:12px;line-height:1.8;position:relative;
+  margin-bottom:14px;
+}
+.cp-btn{
+  position:absolute;top:12px;right:12px;
+  background:rgba(255,255,255,.07);border:none;
+  color:rgba(255,255,255,.4);padding:4px 10px;
+  font-size:10px;cursor:pointer;font-family:'DM Mono',monospace;
+  transition:all .2s;
+}
+.cp-btn:hover{background:rgba(200,146,42,.15);color:var(--gold);}
+.cc{color:#555;}.ct{color:#7a90c0;}.ca{color:#7ab8c8;}.cv{color:#7abf90;}
+
+/* ── PRICING ── */
+.price-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--rule);
+  margin-top:64px;
+}
+.price-card{
+  background:var(--paper);padding:36px 32px;
+  transition:background .3s;
+  position:relative;
+}
+.price-card:hover{background:#fff;}
+.price-card.featured{background:var(--ink);}
+.price-card.featured:hover{background:var(--ink-mid);}
+.price-card.featured::before{
+  content:'RECOMMENDED';
+  position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:var(--ink);
+  padding:4px 16px;
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:1.5px;font-weight:500;
+}
+.price-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:300;
+  color:var(--ink);margin-bottom:4px;
+}
+.featured .price-name{color:var(--paper);}
+.price-tag{font-size:12px;color:var(--off);margin-bottom:20px;}
+.featured .price-tag{color:rgba(200,200,188,.5);}
+.price-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:52px;font-weight:300;
+  letter-spacing:-3px;color:var(--ink);
+  line-height:1;
+}
+.price-num sup{font-size:22px;vertical-align:top;margin-top:10px;font-weight:300;}
+.featured .price-num{color:var(--gold);}
+.price-per{font-size:12px;color:var(--off);margin-bottom:24px;}
+.featured .price-per{color:rgba(200,200,188,.4);}
+.price-div{height:1px;background:var(--rule);margin-bottom:22px;}
+.featured .price-div{background:rgba(255,255,255,.08);}
+.price-list{display:flex;flex-direction:column;gap:9px;margin-bottom:28px;}
+.pi{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--off);}
+.featured .pi{color:rgba(200,200,188,.6);}
+.pi-check{color:var(--signal-bright);flex-shrink:0;margin-top:1px;}
+.featured .pi-check{color:rgba(200,146,42,.8);}
+.price-cta-btn{
+  width:100%;padding:12px;text-align:center;
+  font-size:13px;font-weight:500;letter-spacing:.04em;
+  cursor:pointer;border:1px solid var(--ink);
+  background:transparent;color:var(--ink);
+  font-family:inherit;transition:all .2s;
+}
+.price-cta-btn:hover{background:var(--ink);color:var(--paper);}
+.featured .price-cta-btn{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+.featured .price-cta-btn:hover{background:#daa035;border-color:#daa035;}
+
+/* ── FAQ ── */
+.faq-wrap{max-width:760px;margin:0 auto;}
+.faq-list{margin-top:64px;display:flex;flex-direction:column;gap:2px;}
+.faq-item{border:1px solid var(--rule);overflow:hidden;}
+.faq-item.open{border-color:var(--rule-strong);}
+.faq-q{
+  padding:20px 24px;cursor:pointer;
+  display:flex;justify-content:space-between;
+  align-items:center;gap:16px;user-select:none;
+  transition:background .2s;
+}
+.faq-q:hover{background:var(--paper-warm);}
+.faq-qt{font-weight:500;font-size:15px;color:var(--ink);line-height:1.4;}
+.faq-ic{
+  width:24px;height:24px;flex-shrink:0;
+  border:1px solid var(--rule-strong);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:var(--off);
+  transition:all .25s;
+}
+.faq-item.open .faq-ic{border-color:var(--gold);color:var(--gold);transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+.faq-item.open .faq-a{max-height:400px;}
+.faq-ai{
+  padding:16px 24px 22px;font-size:14px;
+  color:var(--off);line-height:1.75;
+  border-top:1px solid var(--rule);
+}
+.faq-ai strong{color:var(--ink);}
+
+/* ── CTA FINAL ── */
+.cta-final{
+  background:var(--ink);text-align:center;
+  padding:120px 60px;
+  position:relative;overflow:hidden;
+}
+.cta-final::before{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,146,42,.06) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.cta-final h2{color:var(--paper);}
+.cta-final h2 em{color:rgba(200,146,42,.8);}
+.cta-final .sec-sub{color:rgba(200,200,188,.45);margin:20px auto 44px;text-align:center;}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--paper-warm);
+  border-top:1px solid var(--rule);
+  padding:36px 60px;
+}
+.foot-inner{
+  max-width:1140px;margin:0 auto;
+  display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:16px;
+}
+.foot-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:300;color:var(--ink);
+}
+.foot-links{display:flex;gap:24px;}
+.foot-links a{
+  font-size:12px;color:var(--off);text-decoration:none;
+  font-family:'DM Mono',monospace;letter-spacing:.3px;
+  transition:color .2s;
+}
+.foot-links a:hover{color:var(--ink);}
+.foot-copy{font-family:'DM Mono',monospace;font-size:11px;color:var(--off-light);}
+
+/* ── MODAL ── */
+.modal-ov{
+  position:fixed;inset:0;
+  background:rgba(10,10,8,.85);backdrop-filter:blur(8px);
+  z-index:1000;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.modal-ov.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--paper);
+  border:1px solid var(--rule-strong);
+  padding:48px;max-width:480px;width:90%;
+  transform:translateY(16px);transition:transform .25s;
+  position:relative;max-height:90vh;overflow-y:auto;
+}
+.modal-ov.open .modal{transform:translateY(0);}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  background:none;border:none;color:var(--off);
+  font-size:20px;cursor:pointer;transition:color .2s;
+  line-height:1;
+}
+.modal-close:hover{color:var(--ink);}
+.modal-eyebrow{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--gold);text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:16px;
+}
+.modal h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px;font-weight:300;letter-spacing:-1px;
+  margin-bottom:8px;
+}
+.modal-sub{font-size:14px;color:var(--off);margin-bottom:28px;line-height:1.6;}
+.fg{margin-bottom:14px;}
+.fl{
+  display:block;font-size:11px;color:var(--off);
+  margin-bottom:5px;font-family:'DM Mono',monospace;
+  letter-spacing:.3px;
+}
+.fi{
+  width:100%;background:var(--paper-warm);
+  border:1px solid var(--rule);
+  padding:10px 14px;color:var(--ink);
+  font-size:14px;font-family:inherit;outline:none;
+  transition:border-color .2s;
+}
+.fi:focus{border-color:var(--rule-strong);}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fsub{
+  width:100%;background:var(--ink);color:var(--paper);
+  border:none;padding:14px;font-size:14px;font-weight:500;
+  letter-spacing:.04em;cursor:pointer;margin-top:8px;
+  font-family:inherit;transition:background .2s;
+}
+.fsub:hover{background:var(--ink-soft);}
+.fdisc{font-size:11px;color:var(--off-light);text-align:center;margin-top:10px;font-family:'DM Mono',monospace;}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+.rv.in{opacity:1;transform:translateY(0);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){
+  nav{padding:16px 24px;}
+  nav.scrolled{padding:12px 24px;}
+  .nav-links{display:none;}.burger{display:flex;}
+  .hero{grid-template-columns:1fr;padding:100px 24px 60px;}
+  .hero::before{display:none;}
+  .hero-right{display:none;}
+  .rule-section{grid-template-columns:1fr 1fr;}
+  .rule-cell{border-bottom:1px solid var(--rule);}
+  .rule-cell:nth-child(2n){border-right:none;}
+  .section{padding:64px 24px;}
+  .tester-band{padding:60px 24px;}
+  .tester-row{flex-direction:column;}
+  .tester-go{padding:14px;}
+  .for-grid{grid-template-columns:1fr;}
+  .how-track{grid-template-columns:1fr 1fr;}
+  .how-step:nth-child(2n){border-right:none;}
+  .how-step{border-bottom:1px solid rgba(255,255,255,.06);}
+  .ps-grid{grid-template-columns:1fr;}
+  .setup-grid{grid-template-columns:1fr;}
+  .price-grid{grid-template-columns:1fr;}
+  .cta-final{padding:80px 24px;}
+  footer{padding:32px 24px;}
+  .foot-inner{flex-direction:column;text-align:center;gap:16px;}
+  .fr2{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  h1{letter-spacing:-1.5px;}
+  .hero{padding:90px 20px 60px;}
+}
 </style>
 </head>
 <body>
 
-<nav id="mainNav">
-  <a href="#" class="logo"><span class="logo-dot"></span>Converge</a>
+<nav id="nav">
+  <a href="#" class="logo"><span class="logo-mark"></span>Converge</a>
   <div class="nav-links">
-    <a href="#showcase">See it in action</a>
+    <a href="#demo">Try it live</a>
     <a href="#for">Who it's for</a>
-    <a href="#compare">vs. Alternatives</a>
     <a href="#pricing">Pricing</a>
     <a href="#faq">FAQ</a>
-    <a href="#" class="nav-cta" onclick="openModal();return false;">Start Free</a>
+    <button class="nav-pill" onclick="openModal()">Get Started</button>
   </div>
-  <div class="nav-burger" id="navBurger" onclick="toggleMobileNav()"><span></span><span></span><span></span></div>
+  <button class="burger" id="burger" onclick="toggleBurger()"><span></span><span></span><span></span></button>
 </nav>
 
-<div class="nav-mobile" id="navMobile">
-  <a href="#showcase" onclick="closeMobileNav()">See it in action</a>
-  <a href="#for" onclick="closeMobileNav()">Who it's for</a>
-  <a href="#compare" onclick="closeMobileNav()">vs. Alternatives</a>
-  <a href="#pricing" onclick="closeMobileNav()">Pricing</a>
-  <a href="#faq" onclick="closeMobileNav()">FAQ</a>
-  <a href="#" class="nav-cta" onclick="closeMobileNav();openModal();return false;">Start Free →</a>
+<div class="mob-nav" id="mobNav">
+  <a href="#demo" onclick="closeBurger()">Try it live</a>
+  <a href="#for" onclick="closeBurger()">Who it's for</a>
+  <a href="#pricing" onclick="closeBurger()">Pricing</a>
+  <a href="#faq" onclick="closeBurger()">FAQ</a>
+  <button class="nav-pill" style="font-size:18px;padding:14px 40px;" onclick="closeBurger();openModal()">Get Started</button>
 </div>
 
+<!-- HERO -->
 <section class="hero">
-  <div class="hero-glow"></div><div class="hero-glow2"></div>
-  <div class="badge"><span class="badge-dot"></span>AI Sales Closer · Now in beta</div>
-  <h1>Your website is losing<br>sales <em>every night</em> you sleep</h1>
-  <p class="hero-sub">Converge engages every visitor, qualifies leads, handles objections, and drives them to a decision. 24 hours a day, 365 days a year.</p>
-  <div class="hero-actions">
-    <a href="#" class="btn-p" onclick="openModal();return false;">
-      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-      Start Free. No Card Needed.
-    </a>
-    <a href="#try" class="btn-s">Try it on your site ↓</a>
+  <div class="hero-left">
+    <div class="eyebrow">AI Sales Closer &mdash; Now in beta</div>
+    <h1>Your site loses sales<br>every night you <em>sleep.</em><br><strong>Not anymore.</strong></h1>
+    <p class="hero-body">High-intent buyers browse at 11pm. Your contact form makes them wait until morning. By then they've moved on. Converge closes them in real time, while you're offline.</p>
+    <div class="cta-group">
+      <button class="btn-primary" onclick="openModal()">Start your free pilot</button>
+      <a href="#demo" class="btn-ghost">See it on your site</a>
+    </div>
   </div>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-num"><span>3.2</span>×</div><div class="stat-label">Avg. conversion lift</div></div>
-    <div class="stat"><div class="stat-num"><span>62</span>%</div><div class="stat-label">Sales happen after 5pm</div></div>
-    <div class="stat"><div class="stat-num"><span>95</span>%</div><div class="stat-label">Visitors leave without buying</div></div>
-    <div class="stat"><div class="stat-num">24<span>/7</span></div><div class="stat-label">Never off the clock</div></div>
+  <div class="hero-right">
+    <div class="hero-stats">
+      <div class="stat-card rv">
+        <div class="stat-num">62%</div>
+        <div class="stat-label">Of B2B purchase decisions involve after-hours research</div>
+        <div class="stat-source"><a href="https://www.forrester.com/" target="_blank" rel="noopener">Forrester B2B Buyer Study</a></div>
+      </div>
+      <div class="stat-card rv" style="transition-delay:.1s">
+        <div class="stat-num">5 min</div>
+        <div class="stat-label">Response window before lead qualification drops 80%</div>
+        <div class="stat-source"><a href="https://hbr.org/" target="_blank" rel="noopener">Harvard Business Review</a></div>
+      </div>
+      <div class="stat-card rv" style="transition-delay:.2s">
+        <div class="stat-num">21x</div>
+        <div class="stat-label">More likely to qualify a lead contacted within 5 minutes vs. 30</div>
+        <div class="stat-source"><a href="https://www.insidesales.com/" target="_blank" rel="noopener">MIT / InsideSales Research</a></div>
+      </div>
+    </div>
   </div>
 </section>
 
-<div class="trust-bar">
-  <div class="trust-inner">
-    <div class="trust-label">Integrates with</div>
-    <div class="trust-logos">
-      <div class="trust-logo">HubSpot</div><div class="trust-logo">Salesforce</div><div class="trust-logo">Calendly</div><div class="trust-logo">Shopify</div><div class="trust-logo">Stripe</div><div class="trust-logo">Pipedrive</div><div class="trust-logo">Slack</div><div class="trust-logo">Webflow</div>
-    </div>
+<!-- RULE STRIP -->
+<div class="rule-section">
+  <div class="rule-cell">
+    <div class="rule-cell-num">~2%</div>
+    <div class="rule-cell-text">Average website conversion rate. The other 98% leave.</div>
+  </div>
+  <div class="rule-cell">
+    <div class="rule-cell-num">24/7</div>
+    <div class="rule-cell-text">Converge closes visitors at any hour with no human needed.</div>
+  </div>
+  <div class="rule-cell">
+    <div class="rule-cell-num">10 min</div>
+    <div class="rule-cell-text">From signup to live on your website. One script tag.</div>
+  </div>
+  <div class="rule-cell">
+    <div class="rule-cell-num">Free</div>
+    <div class="rule-cell-text">7-day pilot on the Growth plan. No card required.</div>
   </div>
 </div>
 
-<div class="tester-strip" id="try" style="padding-top:80px">
-  <div class="tester-wrap">
-    <div class="tester-eyebrow">// Live demo</div>
-    <div class="tester-heading">See Converge on <em style="color:var(--green);font-style:normal;">your</em> website</div>
-    <p class="tester-sub">Enter your URL. Aria reads your site and opens with a line specific to your business — then closes.</p>
-    <div class="tester-input-row">
+<!-- LIVE DEMO TESTER -->
+<div class="tester-band" id="demo">
+  <div class="tester-inner">
+    <div class="tester-label">// Live demo</div>
+    <div class="tester-headline">Watch it close you<br>as a <em>customer</em></div>
+    <p class="tester-sub">Enter your URL. Converge reads your site and opens with a line specific to your business. Don't take our word for it — meet your closer.</p>
+    <div class="tester-row">
       <input class="tester-input" id="testerUrl" type="url" placeholder="https://yourcompany.com" />
-      <button class="tester-btn" id="testerBtn" onclick="runTester()">
-        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        Meet Your Closer
-      </button>
+      <button class="tester-go" id="testerBtn" onclick="runTester()">MEET YOUR CLOSER</button>
     </div>
     <div class="tester-status" id="testerStatus"></div>
-    <p class="tester-note">No signup needed. Takes about 10 seconds.</p>
+    <p class="tester-note">No signup. Takes about 10 seconds.</p>
     <div id="browserMockup">
-      <div class="browser-chrome">
-        <div class="browser-dots"><div class="browser-dot bd-red"></div><div class="browser-dot bd-yellow"></div><div class="browser-dot bd-green"></div></div>
-        <div class="browser-bar"><div class="browser-lock">🔒</div><div class="browser-url" id="browserUrl"><span class="url-domain">yourcompany.com</span></div></div>
-        <div class="browser-actions"><div class="browser-action">←</div><div class="browser-action">↻</div></div>
+      <div class="bc">
+        <div class="bdots"><div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div></div>
+        <div class="bbar" id="bbarUrl">yourcompany.com</div>
       </div>
-      <div class="browser-body" id="browserBody" style="position:relative;">
-        <div id="browserSkeleton" style="position:absolute;inset:0;z-index:1;">
-          <div class="fake-nav">
-            <div class="fake-nav-logo"></div>
-            <div class="fake-nav-links"><div class="fake-nav-link" style="width:32px;"></div><div class="fake-nav-link" style="width:44px;"></div><div class="fake-nav-link" style="width:36px;"></div><div class="fake-nav-link" style="width:40px;"></div></div>
-            <div class="fake-nav-cta"></div>
+      <div class="bbody" id="bbody">
+        <div id="bskel" style="position:absolute;inset:0;z-index:1;">
+          <div class="sk-nav">
+            <div class="sk-logo"></div>
+            <div class="sk-links"><div class="sk-link" style="width:30px;"></div><div class="sk-link" style="width:40px;"></div><div class="sk-link" style="width:34px;"></div></div>
           </div>
-          <div class="fake-hero">
-            <div class="fake-h1-line w70"></div><div class="fake-h1-line w50"></div>
-            <div style="margin-top:16px;"><div class="fake-sub-line w80"></div><div class="fake-sub-line w60"></div><div class="fake-sub-line w45"></div></div>
-            <div class="fake-btns"><div class="fake-btn fake-btn-p"></div><div class="fake-btn fake-btn-s"></div></div>
+          <div class="sk-hero">
+            <div class="sk-h w65"></div><div class="sk-h w45"></div>
+            <div style="margin-top:12px;"><div class="sk-p w80"></div><div class="sk-p w60"></div></div>
+            <div class="sk-btns"><div class="sk-btn sk-btn-p"></div><div class="sk-btn sk-btn-s"></div></div>
           </div>
-          <div class="fake-features">
-            <div class="fake-card"><div class="fake-card-icon"></div><div class="fake-card-title"></div><div class="fake-card-text"></div><div class="fake-card-text w60"></div></div>
-            <div class="fake-card"><div class="fake-card-icon" style="background:#fef3e2;"></div><div class="fake-card-title"></div><div class="fake-card-text"></div><div class="fake-card-text w60"></div></div>
-            <div class="fake-card"><div class="fake-card-icon" style="background:#e8f8ef;"></div><div class="fake-card-title"></div><div class="fake-card-text"></div><div class="fake-card-text w60"></div></div>
+          <div class="sk-grid">
+            <div class="sk-card"><div class="sk-icon"></div><div class="sk-ct"></div><div class="sk-cd"></div><div class="sk-cd w55"></div></div>
+            <div class="sk-card"><div class="sk-icon" style="background:#e8f3e8;"></div><div class="sk-ct"></div><div class="sk-cd"></div><div class="sk-cd w55"></div></div>
+            <div class="sk-card"><div class="sk-icon" style="background:#fef0e0;"></div><div class="sk-ct"></div><div class="sk-cd"></div><div class="sk-cd w55"></div></div>
           </div>
         </div>
-        <div id="scanOverlay" style="display:none;position:absolute;inset:0;background:rgba(7,11,24,.8);backdrop-filter:blur(3px);z-index:3;align-items:center;justify-content:center;flex-direction:column;gap:14px;">
-          <div id="scanOverlayText" style="font-family:'DM Mono',monospace;font-size:12px;color:#38bdf8;letter-spacing:1.5px;text-align:center;padding:0 20px;">🔍 Loading your site...</div>
-          <div style="width:240px;height:2px;background:#151e38;border-radius:2px;overflow:hidden;"><div id="scanOverlayBar" style="height:100%;width:0%;background:linear-gradient(to right,#38bdf8,#93d8ff);border-radius:2px;transition:width .6s ease;"></div></div>
+        <div class="scan-ov" id="scanOv">
+          <div class="scan-txt" id="scanTxt">Reading your site...</div>
+          <div class="scan-prog-wrap"><div class="scan-prog-inner" id="scanBar"></div></div>
         </div>
-        <img id="browserScreenshot" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0;transition:opacity .7s ease;z-index:2;pointer-events:none;" />
-        <div class="cvg-widget" id="cvgWidget">
+        <img class="shot-img" id="shotImg" src="" alt="" />
+        <div class="cvg-w" id="cvgW">
           <div class="cvg-panel" id="cvgPanel">
-            <div class="cvg-panel-head">
-              <div class="cvg-head-av">🤖</div>
-              <div><div class="cvg-head-name">Aria</div><div class="cvg-head-status"><div class="cvg-status-dot"></div>Active now</div></div>
-              <div class="cvg-head-brand">Converge</div>
+            <div class="cvg-hd">
+              <div class="cvg-av">A</div>
+              <div><div class="cvg-nm">Aria</div><div class="cvg-st"><div class="cvg-std"></div>Active now</div></div>
+              <div class="cvg-brand">CONVERGE</div>
             </div>
             <div class="cvg-msgs" id="cvgMsgs"></div>
-            <div class="cvg-email-cap" id="cvgEmailCap" style="display:none;">
-              <div class="cvg-email-label">Drop your email — I'll send your full setup in 2 minutes:</div>
-              <div class="cvg-email-row">
-                <input class="cvg-email-input" id="cvgEmail" type="email" placeholder="you@company.com" />
-                <button class="cvg-email-btn" onclick="submitWidgetEmail()">Send →</button>
+            <div id="cvgInput" style="display:none;">
+              <div class="cvg-inp-row">
+                <input class="cvg-inp" id="cvgUserInput" placeholder="Reply..." onkeydown="if(event.key==='Enter')sendWidget()"/>
+                <button class="cvg-snd" onclick="sendWidget()"><svg fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg></button>
               </div>
             </div>
-            <div id="cvgInputArea" style="display:none;">
-              <div class="cvg-input-row">
-                <input class="cvg-input" id="cvgUserInput" placeholder="Reply to Aria..." onkeydown="if(event.key==='Enter')sendWidgetMsg()" />
-                <button class="cvg-send" onclick="sendWidgetMsg()"><svg fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg></button>
-              </div>
-            </div>
-            <div class="cvg-powered">Powered by <span>Converge</span></div>
+            <div class="cvg-pw">Powered by Converge</div>
           </div>
-          <div class="cvg-launcher" id="cvgLauncher" onclick="toggleWidget()">
-            <svg fill="none" viewBox="0 0 24 24" stroke="black" stroke-width="2"><path d="M8 12h.01M12 12h.01M16 12h.01M21 3H3a1 1 0 00-1 1v14a1 1 0 001 1h4l4 4 4-4h6a1 1 0 001-1V4a1 1 0 00-1-1z"/></svg>
+          <div class="cvg-launcher-btn" onclick="toggleCvg()">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#0a0a08" stroke-width="2"><path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"/></svg>
           </div>
         </div>
       </div>
@@ -535,325 +907,474 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:48px;}
   </div>
 </div>
 
-<section class="convo-section" id="showcase">
-  <div class="w1100">
-    <div class="sec-label">// See it in action</div>
-    <h2>Real conversations that<br><em>actually close deals</em></h2>
-    <p class="sec-sub">This is what happens when a visitor lands on your site at 11pm and your best salesperson is already waiting.</p>
-    <div class="convo-layout">
-      <div class="convo-tabs" id="convoTabs">
-        <div class="convo-tab active" onclick="switchConvo(0,this)"><div class="ct-label">Scenario 01</div><div class="ct-title">Plan confusion to decision</div><div class="ct-desc">Visitor doesn't know which plan to pick. Converge qualifies and recommends in seconds.</div></div>
-        <div class="convo-tab" onclick="switchConvo(1,this)"><div class="ct-label">Scenario 02</div><div class="ct-title">Price objection to recovered sale</div><div class="ct-desc">Visitor says it looks expensive. Converge reframes the value and wins the sale.</div></div>
-        <div class="convo-tab" onclick="switchConvo(2,this)"><div class="ct-label">Scenario 03</div><div class="ct-title">Midnight inquiry to booked call</div><div class="ct-desc">11pm. Visitor is a $15k real estate lead. No human available. Converge qualifies and books.</div></div>
-        <div class="convo-tab" onclick="switchConvo(3,this)"><div class="ct-label">Scenario 04</div><div class="ct-title">Competitor comparison to closed deal</div><div class="ct-desc">Visitor is evaluating Intercom. Converge handles the comparison and converts.</div></div>
-      </div>
-      <div class="convo-preview" id="convoPreview">
-        <div class="convo-ph">
-          <div class="convo-ph-av">🤖</div>
-          <div><div class="convo-ph-name" id="convoPHName">Aria · AI Sales Closer</div><div class="convo-ph-status"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;display:inline-block;"></span><span id="convoPHStatus">Active now</span></div></div>
-        </div>
-        <div class="convo-msgs" id="convoMsgs"></div>
-        <div class="convo-outcome" id="convoOutcome"><div class="co-icon" id="coIcon">✓</div><div class="co-text" id="coText">Growth plan trial started</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="for-section" id="for">
-  <div class="w1100">
-    <div class="sec-label">// Built for you</div>
-    <h2>One platform.<br><em>Three types of business.</em></h2>
-    <p class="sec-sub">Converge adapts to your sales context — SaaS trials, high-ticket services, or agency retainers.</p>
+<!-- WHO IT'S FOR -->
+<section class="section" id="for">
+  <div class="w">
+    <div class="label">Who it's for</div>
+    <h2>Built for businesses where<br>a missed enquiry <em>costs real money</em></h2>
+    <p class="sec-sub">Converge earns its keep where one lost lead represents a four-figure or five-figure opportunity.</p>
     <div class="for-grid">
-      <div class="for-card fc-saas"><div class="for-icon">🚀</div><div class="for-eyebrow">SaaS & Software</div><div class="for-title">Turn free users into<br>paying customers</div><div class="for-desc">High traffic, complex pricing, feature comparisons. Converge guides visitors from curious to committed, qualifying leads, comparing plans, and starting trials — autonomously.</div><div class="for-wins"><div class="fw"><div class="fw-dot"></div>Guides plan selection based on team size and use case</div><div class="fw"><div class="fw-dot"></div>A/B tests conversation flows to find what converts</div><div class="fw"><div class="fw-dot"></div>Syncs every lead into HubSpot or Salesforce automatically</div></div><div class="for-quote">Our trial-to-paid rate went from 18% to 41% in six weeks.</div></div>
-      <div class="for-card fc-service"><div class="for-icon">🌙</div><div class="for-eyebrow">High-Ticket Services</div><div class="for-title">Never miss another<br>$10k client at midnight</div><div class="for-desc">Real estate, legal, aesthetics, financial services. Your team stops responding at 5pm. Your highest-intent leads are browsing at 11pm. Converge qualifies them and books calls while you sleep.</div><div class="for-wins"><div class="fw"><div class="fw-dot"></div>Handles 10 to 15 standard objections without human help</div><div class="fw"><div class="fw-dot"></div>Books calls directly into your calendar at any time of day</div><div class="fw"><div class="fw-dot"></div>Turns old contact forms into live conversations instantly</div></div><div class="for-quote">We booked a $22k client at 1:30am. That alone paid for a year.</div></div>
-      <div class="for-card fc-agency"><div class="for-icon">🎯</div><div class="for-eyebrow">Agencies & Consultancies</div><div class="for-title">Close retainers while<br>you're on client calls</div><div class="for-desc">New business conversations get dropped when you're heads-down. Converge keeps the pipeline warm, qualifying inbound leads, explaining your services, and booking discovery calls on your behalf.</div><div class="for-wins"><div class="fw"><div class="fw-dot"></div>Trained on your services, case studies, and positioning</div><div class="fw"><div class="fw-dot"></div>White-label option — your brand, your AI persona</div><div class="fw"><div class="fw-dot"></div>Resell to your own clients as an add-on revenue stream</div></div><div class="for-quote">We resell Converge to our clients. It's our highest-margin product now.</div></div>
-    </div>
-  </div>
-</section>
-
-<section id="how" style="background:var(--deep)">
-  <div class="w1100">
-    <div class="sec-label">// Process</div>
-    <h2>From hello to <em>closed</em><br>in one conversation</h2>
-    <p class="sec-sub">A proven sales methodology, running automatically on every visit.</p>
-    <div class="how-grid">
-      <div class="how-step"><div class="step-num">👋</div><div class="step-title">Engage</div><div class="step-desc">Context-aware openers based on page, source, and time of day. No cold starts.</div></div>
-      <div class="how-step"><div class="step-num">🎯</div><div class="step-title">Qualify</div><div class="step-desc">Smart questions identify intent, company size, and urgency without feeling like a form.</div></div>
-      <div class="how-step"><div class="step-num">💡</div><div class="step-title">Recommend</div><div class="step-desc">Matches visitors to the right product, plan, or service based on what they've actually shared.</div></div>
-      <div class="how-step"><div class="step-num">🛡️</div><div class="step-title">Handle objections</div><div class="step-desc">Price, timing, and competitor objections resolved in real time with human-quality responses.</div></div>
-      <div class="how-step"><div class="step-num">🚀</div><div class="step-title">Convert</div><div class="step-desc">Books demos, starts trials, or guides to checkout. Escalates hot leads to humans with full context.</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="feat-section" id="features">
-  <div class="w1100">
-    <div class="sec-label">// Capabilities</div>
-    <h2>Everything your best rep knows.<br><em>Infinitely scalable.</em></h2>
-    <div class="feat-grid">
-      <div class="feat-card"><div class="feat-icon">🧠</div><div class="feat-title">Intent Detection</div><div class="feat-desc">Reads scroll depth, hover patterns, and exit intent to trigger the right message at the right moment.</div></div>
-      <div class="feat-card"><div class="feat-icon">🎭</div><div class="feat-title">Persona Training</div><div class="feat-desc">Your AI adopts your brand voice, product knowledge, and sales playbook. Sounds like your best rep.</div></div>
-      <div class="feat-card"><div class="feat-icon">📅</div><div class="feat-title">Demo Booking</div><div class="feat-desc">Books qualified demos directly into Calendly, HubSpot, or your calendar. No friction, no lag.</div></div>
-      <div class="feat-card"><div class="feat-icon">🔀</div><div class="feat-title">A/B Conversation Testing</div><div class="feat-desc">Run multiple flows simultaneously. Converge learns what converts best and auto-optimizes over time.</div></div>
-      <div class="feat-card"><div class="feat-icon">🔗</div><div class="feat-title">CRM Sync</div><div class="feat-desc">Every conversation, lead score, and note flows into Salesforce, HubSpot, or Pipedrive automatically.</div></div>
-      <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">Revenue Attribution</div><div class="feat-desc">See which conversations led to closed deals. Closed-loop reporting from first message to closed invoice.</div></div>
-      <div class="feat-card"><div class="feat-icon">🌍</div><div class="feat-title">Multilingual</div><div class="feat-desc">Auto-detects visitor language and responds natively across 40+ languages with no extra config.</div></div>
-      <div class="feat-card"><div class="feat-icon">🤝</div><div class="feat-title">Human Handoff</div><div class="feat-desc">Knows when a deal needs a human. Routes hot leads with full conversation context attached.</div></div>
-      <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">One-Line Install</div><div class="feat-desc">A single script tag. No complex integrations, no developer dependency. Live in 10 minutes.</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="roi-section" id="roi">
-  <div class="roi-inner">
-    <div class="sec-label">// ROI Calculator</div>
-    <h2>See what you're leaving<br>on the <em>table tonight</em></h2>
-    <p class="sec-sub">Adjust the sliders to estimate what Converge adds to your monthly revenue.</p>
-    <div class="roi-card">
-      <div class="roi-grid">
-        <div style="display:flex;flex-direction:column;gap:28px;">
-          <div class="roi-input-g"><label><span>Monthly website visitors</span><span class="roi-vd" id="vDisp">10,000</span></label><input type="range" class="roi-slider" id="vSlide" min="500" max="100000" step="500" value="10000" oninput="calcROI()"></div>
-          <div class="roi-input-g"><label><span>Current conversion rate</span><span class="roi-vd" id="cDisp">2.0%</span></label><input type="range" class="roi-slider" id="cSlide" min="0.5" max="10" step="0.5" value="2" oninput="calcROI()"></div>
-          <div class="roi-input-g"><label><span>Average order / deal value</span><span class="roi-vd" id="aDisp">$500</span></label><input type="range" class="roi-slider" id="aSlide" min="50" max="10000" step="50" value="500" oninput="calcROI()"></div>
-          <div style="background:var(--deep);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px 16px;"><div style="font-size:11px;color:var(--muted2);font-family:'DM Mono',monospace;margin-bottom:6px;">Converge avg. lift (400+ customers)</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--gold);">+3.2x conversions</div></div>
+      <div class="for-card rv">
+        <div class="for-cat">High-Ticket Services</div>
+        <div class="for-title">Your best clients<br>browse at midnight</div>
+        <div class="for-desc">Immigration lawyers, cosmetic clinics, financial advisors, real estate professionals. Your clients research after hours. A contact form makes them wait. Converge books the call while the intent is live.</div>
+        <div class="for-points">
+          <div class="fp">Handles enquiries 24/7, no human required</div>
+          <div class="fp">Books directly into your calendar automatically</div>
+          <div class="fp">Qualifies intent before your team picks up the phone</div>
         </div>
-        <div class="roi-results">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;">Additional monthly revenue</div>
-          <div class="roi-main" id="roiMain">$96,000</div>
-          <div class="roi-label">per month with Converge</div>
-          <div class="roi-bk">
-            <div class="roi-bi"><div class="roi-bv" id="roiCurr">$10k</div><div class="roi-bl">Current revenue</div></div>
-            <div class="roi-bi"><div class="roi-bv" id="roiNew">$106k</div><div class="roi-bl">With Converge</div></div>
-            <div class="roi-bi"><div class="roi-bv" id="roiLeads">320</div><div class="roi-bl">New conversions</div></div>
-            <div class="roi-bi"><div class="roi-bv" id="roiROI">192x</div><div class="roi-bl">Return on cost</div></div>
+      </div>
+      <div class="for-card rv" style="transition-delay:.1s">
+        <div class="for-cat">SaaS &amp; Software</div>
+        <div class="for-title">Turn trial traffic<br>into paying customers</div>
+        <div class="for-desc">Someone lands on your pricing page at 9pm comparing you to a competitor. Without a live closer, they leave. Converge answers the comparison and drives them to start a trial.</div>
+        <div class="for-points">
+          <div class="fp">Handles pricing and competitor questions in real time</div>
+          <div class="fp">Guides visitors from pricing page to trial signup</div>
+          <div class="fp">Syncs qualified leads to your CRM automatically</div>
+        </div>
+      </div>
+      <div class="for-card rv" style="transition-delay:.2s">
+        <div class="for-cat">Agencies &amp; Consultancies</div>
+        <div class="for-title">Close retainers while<br>you're on client calls</div>
+        <div class="for-desc">Inbound enquiries arrive when you're heads-down. Converge qualifies them, explains your services, and books a discovery call so no lead goes cold while you're doing the actual work.</div>
+        <div class="for-points">
+          <div class="fp">Trained on your services, positioning, and pricing</div>
+          <div class="fp">White-label option — your brand, your persona</div>
+          <div class="fp">Resell to clients as an add-on revenue stream</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section section-alt">
+  <div class="w">
+    <div class="label">How it works</div>
+    <h2>From first message<br>to <em>booked deal</em></h2>
+    <p class="sec-sub">A proven sales methodology running automatically on every visit.</p>
+    <div class="how-track">
+      <div class="how-step rv">
+        <div class="how-n">01</div>
+        <div class="how-icon">👋</div>
+        <div class="how-title">Engage</div>
+        <div class="how-desc">Context-aware opener based on which page the visitor is on. Never a generic "How can I help?"</div>
+      </div>
+      <div class="how-step rv" style="transition-delay:.08s">
+        <div class="how-n">02</div>
+        <div class="how-icon">🎯</div>
+        <div class="how-title">Qualify</div>
+        <div class="how-desc">Smart questions surface intent, urgency, and fit without feeling like a form.</div>
+      </div>
+      <div class="how-step rv" style="transition-delay:.16s">
+        <div class="how-n">03</div>
+        <div class="how-icon">💡</div>
+        <div class="how-title">Recommend</div>
+        <div class="how-desc">Matches the visitor to the right service based on what they've actually said.</div>
+      </div>
+      <div class="how-step rv" style="transition-delay:.24s">
+        <div class="how-n">04</div>
+        <div class="how-icon">🛡</div>
+        <div class="how-title">Handle objections</div>
+        <div class="how-desc">Price, timing, and trust objections resolved in real time — like your best rep would.</div>
+      </div>
+      <div class="how-step rv" style="transition-delay:.32s">
+        <div class="how-n">05</div>
+        <div class="how-icon">📅</div>
+        <div class="how-title">Book</div>
+        <div class="how-desc">Books the call or drives to checkout. Escalates hot leads with full context attached.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM / SOLUTION -->
+<section class="section section-warm">
+  <div class="w">
+    <div class="label">The problem</div>
+    <h2>What happens when<br><em>nobody answers</em></h2>
+    <p class="sec-sub">The gap between a visitor arriving and someone responding is where revenue disappears.</p>
+    <div class="ps-grid">
+      <div>
+        <div class="ps-col-head problem">Without Converge</div>
+        <div class="ps-items">
+          <div class="ps-item problem-item rv">
+            <div class="ps-item-title">The contact form graveyard</div>
+            <div class="ps-item-desc">Collects an email and makes the visitor wait hours or days. By then they've moved on or talked themselves out of it.</div>
+            <div class="ps-item-note">Average response time for web enquiries: 42 hours — Harvard Business Review</div>
           </div>
-          <p class="roi-disc">Estimates based on median customer data. Results vary.</p>
+          <div class="ps-item problem-item rv" style="transition-delay:.08s">
+            <div class="ps-item-title">The 5pm cliff</div>
+            <div class="ps-item-desc">Your team stops at 5pm. High-intent leads arrive at 7pm, 10pm, 1am. No one there to answer the question that would have closed them.</div>
+            <div class="ps-item-note">62% of B2B purchase decisions involve after-hours research — Forrester</div>
+          </div>
+          <div class="ps-item problem-item rv" style="transition-delay:.16s">
+            <div class="ps-item-title">The unanswered objection</div>
+            <div class="ps-item-desc">A visitor has one question about pricing or fit. If it goes unanswered, they find the answer on a competitor's site and don't come back.</div>
+            <div class="ps-item-note">Leads contacted within 5 minutes are 21x more likely to qualify — MIT/InsideSales</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="ps-col-head solution">With Converge</div>
+        <div class="ps-items">
+          <div class="ps-item solution-item rv">
+            <div class="ps-item-title">Always open</div>
+            <div class="ps-item-desc">A visitor arrives at any hour. Converge opens with a relevant message, qualifies their need, and drives to a next step: call, booking, or checkout.</div>
+            <div class="ps-item-note">Available 24/7. No agent required.</div>
+          </div>
+          <div class="ps-item solution-item rv" style="transition-delay:.08s">
+            <div class="ps-item-title">Inquiry-based closing</div>
+            <div class="ps-item-desc">When a visitor describes a problem, Converge treats it as the reason they've arrived and immediately qualifies and converts. It doesn't empathise. It closes.</div>
+            <div class="ps-item-note">Tuned to your specific business, offers, and objections.</div>
+          </div>
+          <div class="ps-item solution-item rv" style="transition-delay:.16s">
+            <div class="ps-item-title">Page-context awareness</div>
+            <div class="ps-item-desc">Converge knows which page a visitor is on — pricing, product, cart, contact — and adjusts its message accordingly. Context-aware on every visit.</div>
+            <div class="ps-item-note">Page context injected automatically. No configuration needed.</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="comp-section" id="compare">
-  <div class="w1100">
-    <div class="sec-label">// vs. Alternatives</div>
-    <h2>Built for revenue.<br><em>They were built for support.</em></h2>
-    <p class="sec-sub">Traditional chat tools wait for someone to ask a question. Converge starts conversations and closes deals.</p>
-    <div class="comp-wrap">
-      <table class="comp-table">
-        <thead><tr>
-          <th style="width:24%">Capability</th>
-          <th class="hl"><div style="display:flex;align-items:center;gap:8px;position:relative;z-index:1;"><span class="logo-dot" style="width:7px;height:7px;flex-shrink:0;animation:pulse 2s infinite"></span>Converge</div></th>
-          <th>Intercom</th><th>Drift (Salesloft)</th><th>Zendesk</th>
-        </tr></thead>
-        <tbody>
-          <tr><td class="fn">Core purpose</td><td class="hl"><span class="cy">✓</span><span class="comp-badge">Revenue generation</span></td><td><span class="cp">~ Support + some sales</span></td><td><span class="cp">~ Enterprise pipeline</span></td><td><span class="cn">✕ Support ticketing</span></td></tr>
-          <tr><td class="fn">AI objection handling</td><td class="hl"><span class="cy">✓ Full</span></td><td><span class="cn">✕</span></td><td><span class="cp">~ Basic</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">Proactive sales conversations</td><td class="hl"><span class="cy">✓</span></td><td><span class="cp">~ Reactive only</span></td><td><span class="cy">✓</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">Revenue attribution</td><td class="hl"><span class="cy">✓</span></td><td><span class="cn">✕</span></td><td><span class="cp">~ Limited</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">A/B conversation testing</td><td class="hl"><span class="cy">✓</span></td><td><span class="cn">✕</span></td><td><span class="cn">✕</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">Performance-based pricing</td><td class="hl"><span class="cy">✓</span><span class="comp-badge">Unique</span></td><td><span class="cn">✕</span></td><td><span class="cn">✕</span></td><td><span class="cn">✕</span></td></tr>
-          <tr><td class="fn">Starting price</td><td class="hl" style="color:var(--green);font-weight:500;">Free forever</td><td>$29/seat/mo<span class="price-note-small">AI resolutions billed at $0.99 each. Costs scale sharply.</span></td><td>$2,500/mo minimum<span class="price-note-small">Annual contract. Sales call required before trial.</span></td><td>$55/agent/mo<span class="price-note-small">AI add-ons billed on top. Real costs typically 2–3× base.</span></td></tr>
-          <tr><td class="fn">Setup time</td><td class="hl" style="color:var(--green);font-weight:500;">~10 minutes</td><td>Days</td><td>Weeks + onboarding fees</td><td>Days</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section class="ob-section" id="onboarding">
-  <div class="w1100">
-    <div class="sec-label">// Setup</div>
+<!-- SETUP -->
+<section class="section">
+  <div class="w">
+    <div class="label">Setup</div>
     <h2>Live on your site in<br><em>under 10 minutes</em></h2>
-    <p class="sec-sub">No engineering team required. Four steps from signup to your first AI-assisted conversion.</p>
-    <div class="ob-steps">
-      <div class="ob-list">
-        <div class="ob-item active" onclick="selStep(0,this)"><div class="ob-num">01</div><div><div class="ob-title">Create your account</div><div class="ob-desc">Sign up and connect your website. We auto-scan your pages, products, and pricing to pre-train your AI.</div></div></div>
-        <div class="ob-item" onclick="selStep(1,this)"><div class="ob-num">02</div><div><div class="ob-title">Train your AI persona</div><div class="ob-desc">Define your brand voice, upload your sales playbook, and set objection scripts. Or let us generate them.</div></div></div>
-        <div class="ob-item" onclick="selStep(2,this)"><div class="ob-num">03</div><div><div class="ob-title">Paste one script tag</div><div class="ob-desc">Drop a single line of code before your closing &lt;/body&gt; tag. Works with any website builder.</div></div></div>
-        <div class="ob-item" onclick="selStep(3,this)"><div class="ob-num">04</div><div><div class="ob-title">Watch conversions climb</div><div class="ob-desc">Your dashboard tracks conversations, qualified leads, demos booked, and revenue attributed. Live.</div></div></div>
+    <p class="sec-sub">No engineering team. No complex integration. Four steps from sign-up to your first closed lead.</p>
+    <div class="setup-grid">
+      <div class="setup-steps">
+        <div class="setup-step active" onclick="selSetup(0,this)">
+          <div class="step-num-box">01</div>
+          <div><div class="step-title">Connect your website</div><div class="step-desc">Enter your URL. Converge scans your pages, reads your services and pricing, and builds an initial closing script automatically.</div></div>
+        </div>
+        <div class="setup-step" onclick="selSetup(1,this)">
+          <div class="step-num-box">02</div>
+          <div><div class="step-title">Review and tune</div><div class="step-desc">We send you the generated persona and script. You confirm it or request changes. Takes five minutes.</div></div>
+        </div>
+        <div class="setup-step" onclick="selSetup(2,this)">
+          <div class="step-num-box">03</div>
+          <div><div class="step-title">Paste one script tag</div><div class="step-desc">Drop a single line before your closing &lt;/body&gt; tag. Works with Webflow, WordPress, Shopify, or any custom site.</div></div>
+        </div>
+        <div class="setup-step" onclick="selSetup(3,this)">
+          <div class="step-num-box">04</div>
+          <div><div class="step-title">Watch conversations start</div><div class="step-desc">Your closer is live. Qualified leads, booked calls, and conversation summaries arrive directly to your inbox.</div></div>
+        </div>
       </div>
-      <div class="ob-preview">
-        <div class="ob-tab-bar"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--green);">● Preview</div></div>
-        <div class="ob-content" id="obContent">
-          <div id="ostep0">
-            <div style="background:var(--deep);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;">
-              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:20px;">Create your workspace</div>
-              <div style="margin-bottom:12px;"><div style="font-size:12px;color:var(--muted2);margin-bottom:6px;font-family:'DM Mono',monospace;">Company website</div><div style="background:var(--card);border:1px solid var(--green);border-radius:8px;padding:11px 14px;font-size:14px;color:var(--white);">https://yourcompany.com</div></div>
-              <div style="background:var(--green-glow);border:1px solid rgba(56,189,248,.2);border-radius:8px;padding:12px 14px;">
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:18px;">🔍</span><div id="scanStatusText" style="font-size:13px;color:var(--green);font-weight:500;">Scanning your website...</div></div>
-                <div class="scan-progress"><div class="scan-bar" id="scanBar"></div></div>
-                <div class="scan-findings" id="scanFindings"></div>
+      <div class="setup-preview">
+        <div class="preview-tab">Preview</div>
+        <div class="preview-body" id="setupBody">
+          <div id="sp0">
+            <div style="font-size:13px;color:var(--off);margin-bottom:20px;line-height:1.6;">Converge reads your site so your AI already knows your product, pricing, and services before its first conversation with a visitor.</div>
+            <div style="background:var(--paper-warm);border:1px solid var(--rule);padding:16px 20px;">
+              <div style="font-size:12px;color:var(--gold);font-family:'DM Mono',monospace;margin-bottom:10px;" id="sp0txt">Reading pages...</div>
+              <div style="height:1px;background:var(--rule);overflow:hidden;"><div id="sp0bar" style="height:100%;width:0%;background:var(--gold);transition:width .5s;"></div></div>
+            </div>
+          </div>
+          <div id="sp1" style="display:none">
+            <div style="font-size:12px;color:var(--off);font-family:'DM Mono',monospace;margin-bottom:14px;">Generated persona preview</div>
+            <div style="background:var(--paper-warm);border:1px solid var(--rule);padding:18px;margin-bottom:14px;">
+              <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">Agent: Aria — Sales Closer</div>
+              <div style="font-size:12px;color:var(--off);line-height:1.6;font-style:italic;">"When a visitor describes a problem, treat it as the reason they arrived. Qualify and book. Never apologise for their situation."</div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button style="flex:1;background:var(--ink);color:var(--paper);border:none;padding:10px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;">Looks good</button>
+              <button style="flex:1;background:transparent;color:var(--ink);border:1px solid var(--rule);padding:10px;font-size:12px;cursor:pointer;font-family:inherit;">Request changes</button>
+            </div>
+          </div>
+          <div id="sp2" style="display:none">
+            <div class="code-wrap">
+              <button class="cp-btn" onclick="cpCode(this)">Copy</button>
+              <div><span class="cc">&lt;!-- Converge AI Sales Closer --&gt;</span></div>
+              <div><span class="ct">&lt;script</span></div>
+              <div>&nbsp;&nbsp;<span class="ca">src</span>=<span class="cv">"https://cdn.converge.ai/v2/widget.js"</span></div>
+              <div>&nbsp;&nbsp;<span class="ca">data-key</span>=<span class="cv">"cvg_live_yourkey"</span></div>
+              <div>&nbsp;&nbsp;<span class="ca">async</span></div>
+              <div><span class="ct">&gt;&lt;/script&gt;</span></div>
+            </div>
+            <div style="font-size:12px;color:var(--off);line-height:1.5;padding:10px;background:var(--paper-warm);border:1px solid var(--rule);">Works with Webflow, WordPress, Shopify, React, custom HTML. Under 8kb — zero impact on page speed.</div>
+          </div>
+          <div id="sp3" style="display:none">
+            <div style="background:var(--paper-warm);border:1px solid var(--rule);padding:16px;margin-bottom:12px;">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--off-light);margin-bottom:12px;">INBOX SUMMARY — Today</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--signal-bright);padding:10px 14px;">
+                  <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;">Call booked — James T.</div>
+                  <div style="font-size:11px;color:var(--off);">Immigration consultation. Tomorrow 10am. Urgent timeline.</div>
+                </div>
+                <div style="background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--gold);padding:10px 14px;">
+                  <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;">Lead captured — Amara K.</div>
+                  <div style="font-size:11px;color:var(--off);">Asked about pricing. High intent. In follow-up sequence.</div>
+                </div>
               </div>
             </div>
-            <div style="font-size:13px;color:var(--muted2);line-height:1.6;">We analyze your content so your AI already knows your product before its first conversation.</div>
           </div>
-          <div id="ostep1" style="display:none"><div style="margin-bottom:16px;"><div style="font-size:12px;color:var(--muted2);margin-bottom:12px;font-family:'DM Mono',monospace">Choose your AI personality</div><div style="display:flex;flex-direction:column;gap:8px;"><div style="background:var(--green-glow);border:1px solid rgba(56,189,248,.3);border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:500;color:var(--white);">Consultative Advisor</div><div style="font-size:12px;color:var(--green);margin-top:2px;">Asks questions · listens · recommends</div></div><div style="width:18px;height:18px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--black);font-weight:700;">✓</div></div><div style="background:var(--deep);border:1px solid var(--border);border-radius:8px;padding:12px 16px;"><div style="font-size:14px;color:var(--muted2);">Direct Closer</div><div style="font-size:12px;color:var(--muted);">Drives urgency · pushes to decision</div></div><div style="background:var(--deep);border:1px solid var(--border);border-radius:8px;padding:12px 16px;"><div style="font-size:14px;color:var(--muted2);">Friendly Educator</div><div style="font-size:12px;color:var(--muted);">Informs · builds trust first</div></div></div></div></div>
-          <div id="ostep2" style="display:none"><div class="code-block"><button class="code-copy" onclick="copyCode(this)">Copy</button><div><span class="cc">&lt;!-- Converge AI Sales Closer --&gt;</span></div><div><span class="ct">&lt;script</span></div><div>&nbsp;&nbsp;<span class="ca">src</span>=<span class="cv">"https://cdn.converge.ai/v2/widget.js"</span></div><div>&nbsp;&nbsp;<span class="ca">data-key</span>=<span class="cv">"cvg_live_a8f2x..."</span></div><div>&nbsp;&nbsp;<span class="ca">async</span></div><div><span class="ct">&gt;&lt;/script&gt;</span></div></div><div style="display:flex;flex-direction:column;gap:8px;"><div style="display:flex;gap:10px;align-items:center;padding:10px 14px;background:var(--deep);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--green);">✓</span><span style="font-size:13px;color:var(--muted2);">Works with Webflow, WordPress, Shopify, React, Next.js</span></div><div style="display:flex;gap:10px;align-items:center;padding:10px 14px;background:var(--deep);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--green);">✓</span><span style="font-size:13px;color:var(--muted2);">Under 8kb · zero impact on Core Web Vitals</span></div></div></div>
-          <div id="ostep3" style="display:none"><div class="dash-hdr"><div class="dash-title">This week</div><div class="dash-badge">● Live</div></div><div class="dash-metrics"><div class="dash-m"><div class="dm-v g">347</div><div class="dm-l">Conversations</div><div class="dm-c">↑ +23%</div></div><div class="dash-m"><div class="dm-v">89</div><div class="dm-l">Qualified leads</div><div class="dm-c">↑ +41%</div></div><div class="dash-m"><div class="dm-v">$28k</div><div class="dm-l">Pipeline</div><div class="dm-c">↑ 3.2x</div></div></div><div class="dash-chart-wrap"><div style="font-size:11px;color:var(--muted);margin-bottom:12px;font-family:'DM Mono',monospace">Daily conversions</div><div class="chart-bars"><div class="chart-bar" style="height:30%"></div><div class="chart-bar" style="height:45%"></div><div class="chart-bar" style="height:38%"></div><div class="chart-bar" style="height:60%"></div><div class="chart-bar" style="height:52%"></div><div class="chart-bar hi" style="height:85%"></div><div class="chart-bar" style="height:70%"></div></div></div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="price-section" id="pricing">
-  <div class="w1100" style="position:relative;">
-    <div style="text-align:center;margin-bottom:64px">
-      <div class="sec-label">// Pricing</div>
-      <h2>Start free. Scale when<br>you're <em>making money.</em></h2>
-      <p class="sec-sub" style="margin:16px auto 0">Your first conversions are on us. Paid plans scale with the revenue we help you generate — our incentives are fully aligned.</p>
+<!-- PRICING -->
+<section class="section section-warm" id="pricing">
+  <div class="w">
+    <div style="text-align:center;margin-bottom:64px;">
+      <div class="label" style="justify-content:center;">Pricing</div>
+      <h2>Straightforward pricing.<br><em>No hidden fees.</em></h2>
+      <p class="sec-sub" style="margin:16px auto 0;text-align:center;">Every plan includes setup support. Live in under 10 minutes, or we do it for you.</p>
     </div>
     <div class="price-grid">
-      <div class="price-card"><div class="price-name">Free</div><div class="price-tag">Try it, no strings</div><div class="price-num"><sup style="visibility:hidden">$</sup>$0</div><div class="price-per">forever</div><div class="price-note">50 AI conversations/mo included</div><div class="price-div"></div><div class="price-feats"><div class="pf"><span class="pfc">✓</span>50 conversations / month</div><div class="pf"><span class="pfc">✓</span>1 AI persona</div><div class="pf"><span class="pfc">✓</span>Lead capture</div><div class="pf"><span class="pfc">✓</span>Email notifications</div><div class="pf dim"><span class="pfc">—</span>CRM sync</div><div class="pf dim"><span class="pfc">—</span>Remove "Powered by Converge"</div></div><button class="price-cta pf-out" onclick="openModal()">Start Free</button></div>
-      <div class="price-card"><div class="price-name">Starter</div><div class="price-tag">For early-stage teams</div><div class="price-num"><sup>$</sup>49</div><div class="price-per">/ month</div><div class="price-note">+ $0.50 per qualified lead after 200/mo</div><div class="price-div"></div><div class="price-feats"><div class="pf"><span class="pfc">✓</span>1,000 conversations/mo</div><div class="pf"><span class="pfc">✓</span>2 AI personas</div><div class="pf"><span class="pfc">✓</span>Full qualification playbook</div><div class="pf"><span class="pfc">✓</span>Calendly integration</div><div class="pf"><span class="pfc">✓</span>Remove branding</div><div class="pf dim"><span class="pfc">—</span>CRM sync</div></div><button class="price-cta pf-out" onclick="openModal()">Get Started</button></div>
-      <div class="price-card feat"><div class="price-name">Growth</div><div class="price-tag">For scaling businesses</div><div class="price-num"><sup>$</sup>149</div><div class="price-per">/ month</div><div class="price-note">+ 1.5% of revenue attributed to Converge</div><div class="price-div"></div><div class="price-feats"><div class="pf"><span class="pfc">✓</span>Unlimited conversations</div><div class="pf"><span class="pfc">✓</span>5 AI personas</div><div class="pf"><span class="pfc">✓</span>HubSpot + Salesforce sync</div><div class="pf"><span class="pfc">✓</span>A/B conversation testing</div><div class="pf"><span class="pfc">✓</span>Revenue attribution</div><div class="pf"><span class="pfc">✓</span>Multilingual (40+ languages)</div><div class="pf"><span class="pfc">✓</span>Priority support</div></div><button class="price-cta pf-green" onclick="openModal()">Start Free Trial</button></div>
-      <div class="price-card"><div class="price-name">Enterprise</div><div class="price-tag">High-volume orgs</div><div class="price-num" style="font-size:30px;letter-spacing:-1px">Custom</div><div class="price-per">volume-based</div><div class="price-note">Dedicated success manager included</div><div class="price-div"></div><div class="price-feats"><div class="pf"><span class="pfc">✓</span>Everything in Growth</div><div class="pf"><span class="pfc">✓</span>Custom model fine-tuning</div><div class="pf"><span class="pfc">✓</span>SSO + advanced security</div><div class="pf"><span class="pfc">✓</span>SLA guarantees</div><div class="pf"><span class="pfc">✓</span>White-label option</div><div class="pf"><span class="pfc">✓</span>Custom integrations</div></div><button class="price-cta pf-out" onclick="openModal()">Talk to Sales</button></div>
+      <div class="price-card rv">
+        <div class="price-name">Starter</div>
+        <div class="price-tag">For small teams getting started</div>
+        <div class="price-num"><sup>£</sup>49</div>
+        <div class="price-per">per month</div>
+        <div class="price-div"></div>
+        <div class="price-list">
+          <div class="pi"><span class="pi-check">✓</span>1,000 conversations per month</div>
+          <div class="pi"><span class="pi-check">✓</span>1 AI persona, tuned to your site</div>
+          <div class="pi"><span class="pi-check">✓</span>Lead capture and qualification</div>
+          <div class="pi"><span class="pi-check">✓</span>Calendar booking integration</div>
+          <div class="pi"><span class="pi-check">✓</span>Email lead notifications</div>
+        </div>
+        <button class="price-cta-btn" onclick="openModal()">Get Started</button>
+      </div>
+      <div class="price-card featured rv" style="transition-delay:.1s">
+        <div class="price-name">Growth</div>
+        <div class="price-tag">For businesses serious about conversion</div>
+        <div class="price-num"><sup>£</sup>149</div>
+        <div class="price-per">per month</div>
+        <div class="price-div"></div>
+        <div class="price-list">
+          <div class="pi"><span class="pi-check">✓</span>Unlimited conversations</div>
+          <div class="pi"><span class="pi-check">✓</span>3 AI personas</div>
+          <div class="pi"><span class="pi-check">✓</span>HubSpot and Salesforce sync</div>
+          <div class="pi"><span class="pi-check">✓</span>Page context awareness</div>
+          <div class="pi"><span class="pi-check">✓</span>Objection handling scripts</div>
+          <div class="pi"><span class="pi-check">✓</span>Multilingual support</div>
+          <div class="pi"><span class="pi-check">✓</span>Priority support</div>
+        </div>
+        <button class="price-cta-btn" onclick="openModal()">Start Free Trial</button>
+      </div>
+      <div class="price-card rv" style="transition-delay:.2s">
+        <div class="price-name">Managed</div>
+        <div class="price-tag">We set it up and run it for you</div>
+        <div class="price-num" style="font-size:36px;letter-spacing:-1px;">Custom</div>
+        <div class="price-per">setup + monthly retainer</div>
+        <div class="price-div"></div>
+        <div class="price-list">
+          <div class="pi"><span class="pi-check">✓</span>Full setup and configuration</div>
+          <div class="pi"><span class="pi-check">✓</span>Monthly prompt tuning</div>
+          <div class="pi"><span class="pi-check">✓</span>Performance reporting</div>
+          <div class="pi"><span class="pi-check">✓</span>Everything in Growth</div>
+          <div class="pi"><span class="pi-check">✓</span>White-label option</div>
+          <div class="pi"><span class="pi-check">✓</span>Dedicated account manager</div>
+        </div>
+        <button class="price-cta-btn" onclick="openModal()">Talk to Us</button>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="proof-section">
-  <div class="w1100" style="position:relative;">
-    <div class="sec-label">// Results</div>
-    <h2>Numbers that make<br><em>CFOs smile</em></h2>
-    <div style="display:flex;gap:0;margin-top:40px;margin-bottom:48px;background:var(--card);border:1px solid rgba(56,189,248,.2);border-radius:16px;overflow:hidden;">
-      <div style="flex:1;padding:24px;text-align:center;border-right:1px solid var(--border);"><div class="proof-counter" id="ctr1">0</div><div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;">demos booked this week</div></div>
-      <div style="flex:1;padding:24px;text-align:center;border-right:1px solid var(--border);"><div class="proof-counter" id="ctr2">$0</div><div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;">pipeline added today</div></div>
-      <div style="flex:1;padding:24px;text-align:center;"><div class="proof-counter" id="ctr3">0%</div><div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;">avg. conversion lift</div></div>
-    </div>
-    <div class="proof-grid">
-      <div class="proof-card"><div class="proof-stars">★★★★★</div><div class="proof-text">Within 3 weeks of adding Converge, our demo bookings tripled. The AI handles objections better than half our SDR team, honestly.</div><div class="proof-author"><div class="proof-av" style="background:linear-gradient(135deg,#1a3a8f,#38bdf8);">SL</div><div><div class="proof-name">Sarah Liu</div><div class="proof-role">VP Sales · Stackify</div></div></div><div class="proof-metric">↑ 3.1x demo bookings</div></div>
-      <div class="proof-card"><div class="proof-stars">★★★★★</div><div class="proof-text">We booked a $22k client at 1:30am on a Saturday. They found us online and Converge qualified them and locked in a call while I was asleep.</div><div class="proof-author"><div class="proof-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">DM</div><div><div class="proof-name">David Mercer</div><div class="proof-role">Founder · Mercer Legal Group</div></div></div><div class="proof-metric">$22k client at 1:30am</div></div>
-      <div class="proof-card"><div class="proof-stars">★★★★★</div><div class="proof-text">We added $2.3M in pipeline in Q1 we can directly attribute to Converge conversations. The ROI case writes itself.</div><div class="proof-author"><div class="proof-av" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d);">AR</div><div><div class="proof-name">Aisha Rashid</div><div class="proof-role">CRO · Luminary Cloud</div></div></div><div class="proof-metric">$2.3M pipeline Q1</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="faq-section" id="faq">
-  <div class="faq-inner">
-    <div class="sec-label">// FAQ</div>
-    <h2>Questions we get<br><em>all the time</em></h2>
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="w faq-wrap">
+    <div class="label">FAQ</div>
+    <h2>Common questions</h2>
     <div class="faq-list">
-      <div class="faq-item open"><div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">How much revenue am I actually losing right now?</div><div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-ai">More than most founders realise. Research consistently shows that <strong>between 60 and 65% of B2B buying decisions involve after-hours research</strong> — evenings, early mornings, and weekends, when your team is offline.<br><br><div class="fpill r">📊 62% of purchase decisions involve after-hours or weekend activity</div><br>Without a closer available at those moments, visitors land, browse, hit a question and leave. Forever. <strong>The average website converts under 2% of its traffic</strong>, meaning 98 out of every 100 people you paid to acquire never become customers.<br><br>Converge engages them at the exact moment of intent — 2pm Tuesday or 11pm Sunday. Use the ROI calculator above to see your specific number.</div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">How is Converge different from Intercom or Drift?</div><div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-ai">Intercom and Zendesk are built for <strong>customer support</strong> — answering tickets, routing to agents. They wait for someone to ask a question and then try to answer it.<br><br>Drift was a conversational marketing pioneer, but it was acquired by Salesloft in 2024 and now sits inside an enterprise sales platform priced at $2,500/month minimum.<br><br>Converge is built for <strong>revenue generation</strong>: proactive conversations, qualification, objection handling, and conversion — without human involvement. Your best SDR, available at 3am on a Sunday, starting free.<br><br><div class="fpill g">💡 Intercom starts at $29/seat/mo. Drift starts at $2,500/mo. Converge starts free.</div></div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">Will it sound robotic? I don't want to put off potential customers.</div><div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-ai">This is the question we get most. The short answer: <strong>no, if you train it well. And we make that easy.</strong><br><br>During setup, you define your brand voice, tone, and response style. Upload existing sales scripts, FAQs, and example conversations from your best reps. The result sounds like your company.<br><br>Customers in our beta consistently report visitors couldn't tell they were talking to AI. Full transparency is always an option — both approaches convert well.</div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">What happens when someone wants to talk to a real person?</div><div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-ai">Converge knows when to step aside. When a visitor requests a human, or when the AI detects a high-intent lead, it routes to your team via Slack, email, or your CRM <strong>with the full conversation context attached.</strong><br><br>Your rep jumps in already knowing what the prospect wants, what they've been told, and where they are in the decision. No awkward recaps, no dropped context.</div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">How does the free plan work?</div><div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-ai">The free plan gives you <strong>50 AI conversations per month</strong>. No credit card, no time limit. It's designed to let you experience the conversion lift before deciding to grow.<br><br>Included: 1 AI persona, lead capture, email notifications, and basic analytics. The main constraint is volume and the small "Powered by Converge" badge on the widget.<br><br><div class="fpill g">💡 Most teams upgrade within 2 weeks after seeing the lift firsthand.</div></div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">What does "1.5% of attributed revenue" mean on the Growth plan?</div><div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-ai">It means our incentives are aligned with yours. We only charge the performance percentage on revenue we can <strong>demonstrably prove Converge helped generate</strong> — tracked through CRM integration or UTM parameters on closed deals with a Converge conversation in the journey.<br><br>The $149/mo base covers platform access. <strong>If you're converting well, the 1.5% is a fraction of what you're gaining.</strong> A customer with $50,000/mo in attributed revenue pays $750 on the performance side and gained $50,000.</div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFAQ(this)"><div class="faq-qt">Where did the name "Converge" come from?</div><div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-ai">Two things need to meet in every sale: a visitor with a problem, and a product that solves it. Most websites let those two things pass each other in the night. The visitor leaves, the moment is gone.<br><br><strong>Converge is that moment they actually meet.</strong> Visitor + product = conversion. The name also reflects how we bring together sales methodology, AI capability, and conversion science into a single platform.</div></div></div>
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)"><div class="faq-qt">How is Converge different from Intercom or Drift?</div><div class="faq-ic">+</div></div>
+        <div class="faq-a"><div class="faq-ai">Intercom and Zendesk are built for <strong>customer support</strong> — answering tickets, routing to agents. Drift was acquired by Salesloft in 2024 and now starts at $2,500 per month with an annual contract.<br><br>Converge is built for <strong>revenue generation</strong>: proactive conversations, qualification, objection handling, and conversion without human involvement. The specific difference is inquiry-based closing logic: when a visitor describes a problem, Converge qualifies and books rather than empathising and waiting.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)"><div class="faq-qt">Will it sound robotic or put visitors off?</div><div class="faq-ic">+</div></div>
+        <div class="faq-a"><div class="faq-ai">Not if it's set up correctly. During installation, we read your site and generate a persona that matches your brand voice. You review and approve before it goes live.<br><br>The closing logic is designed to sound like a knowledgeable member of your team, not a scripted bot. It references specifics from your site and responds to what visitors actually say.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)"><div class="faq-qt">What does installation actually involve?</div><div class="faq-ic">+</div></div>
+        <div class="faq-a"><div class="faq-ai">One script tag before your closing body tag. No backend access, no CMS credentials, no developer required. Works with Webflow, WordPress, Shopify, custom HTML, or any platform that allows you to add HTML to the page.<br><br>If you have a developer, it's a two-minute job. If you don't, we walk you through it, or do it for you on the Managed plan.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)"><div class="faq-qt">What happens when someone wants to speak to a real person?</div><div class="faq-ic">+</div></div>
+        <div class="faq-a"><div class="faq-ai">Converge either books a call directly into your calendar, or routes the conversation to your team via email or Slack with the full conversation context attached. Your team jumps in already knowing what the prospect wants, what they've been told, and where they are in the decision.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)"><div class="faq-qt">Is there a free trial?</div><div class="faq-ic">+</div></div>
+        <div class="faq-a"><div class="faq-ai">We offer a <strong>7-day pilot</strong> on the Growth plan so you can see real results before committing to a monthly subscription. Use the live demo above first — enter your URL and watch Converge read your site and open with a message specific to your business. No signup required for that.</div></div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="cta-section">
-  <div class="cta-glow"></div><div class="cta-glow2"></div>
-  <div class="sec-label">// Get Started</div>
-  <h2>Your best salesperson<br>starts work <em>tonight</em></h2>
-  <p class="sec-sub" style="margin:20px auto 40px;text-align:center;">Free forever for small teams. No credit card. No engineering. Just more revenue, starting with your next visitor.</p>
-  <div class="hero-actions" style="justify-content:center">
-    <a href="#" class="btn-p" onclick="openModal();return false;"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Start Free Today</a>
-    <a href="#showcase" class="btn-s">See it in action</a>
+<!-- FINAL CTA -->
+<section class="cta-final">
+  <div class="w" style="text-align:center;position:relative;">
+    <div class="label" style="justify-content:center;color:rgba(200,146,42,.7);">Get started</div>
+    <h2>Your closer starts work<br><em>tonight</em></h2>
+    <p class="sec-sub" style="margin:20px auto 44px;text-align:center;">No credit card for the pilot. No engineering team. Live in 10 minutes.</p>
+    <div class="cta-group" style="justify-content:center;">
+      <button class="btn-primary" onclick="openModal()" style="background:var(--gold);color:var(--ink);">Start your free pilot</button>
+      <a href="#demo" class="btn-ghost" style="color:rgba(200,200,188,.6);border-color:rgba(200,200,188,.25);">See the live demo</a>
+    </div>
   </div>
 </section>
 
-<footer><div class="foot-inner">
-  <div class="foot-logo">Converge</div>
-  <div class="foot-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Docs</a><a href="#">Blog</a><a href="#">Contact</a></div>
-  <div class="foot-copy">© 2026 Converge AI, Inc.</div>
-</div></footer>
+<footer>
+  <div class="foot-inner">
+    <div class="foot-logo">Converge</div>
+    <div class="foot-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div>
+    <div class="foot-copy">&copy; 2026 Converge AI</div>
+  </div>
+</footer>
 
-<div class="modal-ov" id="modalOv" onclick="handleOvClick(event)">
+<!-- MODAL -->
+<div class="modal-ov" id="modalOv" onclick="handleOv(event)">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">×</button>
-    <div class="badge" style="margin-bottom:16px;display:inline-flex"><span class="badge-dot"></span>Free forever · No card needed</div>
-    <h3>Get your first<br>conversions tonight</h3>
-    <p class="modal-sub">Setup takes under 10 minutes. Start free, upgrade when you're ready.</p>
-    <div class="fr"><div class="fg"><label class="fl">First name</label><input class="fi" type="text" placeholder="Alex"></div><div class="fg"><label class="fl">Last name</label><input class="fi" type="text" placeholder="Johnson"></div></div>
+    <button class="modal-close" onclick="closeModal()">&#215;</button>
+    <div class="modal-eyebrow">7-day pilot — no card needed</div>
+    <h3>Get your first<br>closed leads tonight</h3>
+    <p class="modal-sub">Setup takes under 10 minutes. We read your site and build your closer automatically.</p>
+    <div class="fr2">
+      <div class="fg"><label class="fl">First name</label><input class="fi" type="text" placeholder="Alex"></div>
+      <div class="fg"><label class="fl">Last name</label><input class="fi" type="text" placeholder="Johnson"></div>
+    </div>
     <div class="fg"><label class="fl">Work email</label><input class="fi" type="email" placeholder="alex@company.com"></div>
     <div class="fg"><label class="fl">Company website</label><input class="fi" type="url" placeholder="https://yourcompany.com"></div>
-    <div class="fg"><label class="fl">Monthly visitors (approx.)</label><select class="fi" style="cursor:pointer"><option>Under 1,000</option><option>1,000 – 10,000</option><option selected>10,000 – 100,000</option><option>100,000+</option></select></div>
-    <button class="fsub" onclick="submitForm(this)">Create My Free Account →</button>
-    <p class="fdisc">SOC 2 compliant · No credit card · Cancel anytime</p>
-  </div>
-</div>
-
-<div class="exit-modal-ov" id="exitModalOv" onclick="handleExitOvClick(event)">
-  <div class="exit-modal">
-    <button class="modal-close" onclick="closeExitModal()">×</button>
-    <div class="exit-eyebrow">// Before you go</div>
-    <div class="exit-headline">Every visitor who just left<br>cost you money.</div>
-    <p class="exit-sub">Converge catches the ones who almost converted and closes them — automatically. Takes 10 minutes to set up. Free forever to start.</p>
-    <div class="fg"><label class="fl">Work email</label><input class="fi" type="email" placeholder="you@company.com" id="exitEmail"></div>
-    <div class="fg"><label class="fl">Your website</label><input class="fi" type="url" placeholder="https://yoursite.com" id="exitUrl"></div>
-    <button class="fsub" onclick="submitExitForm(this)">Show me the revenue I'm missing →</button>
-    <p class="fdisc">We reply within an hour. No spam, ever.</p>
+    <div class="fg">
+      <label class="fl">What's your main challenge?</label>
+      <select class="fi" style="cursor:pointer;">
+        <option>Leads going cold after hours</option>
+        <option>Low contact form conversion</option>
+        <option>Competitor comparison questions</option>
+        <option>High-intent visitors not booking</option>
+        <option>Something else</option>
+      </select>
+    </div>
+    <button class="fsub" onclick="submitModal(this)">Start My 7-Day Pilot</button>
+    <p class="fdisc">No credit card. Cancel anytime.</p>
   </div>
 </div>
 
 <script>
+// ── NAV ──────────────────────────────────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);
+});
+function toggleBurger(){
+  document.getElementById('burger').classList.toggle('open');
+  document.getElementById('mobNav').classList.toggle('open');
+}
+function closeBurger(){
+  document.getElementById('burger').classList.remove('open');
+  document.getElementById('mobNav').classList.remove('open');
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────
 function openModal(){document.getElementById('modalOv').classList.add('open');}
 function closeModal(){document.getElementById('modalOv').classList.remove('open');}
-function handleOvClick(e){if(e.target===document.getElementById('modalOv'))closeModal();}
-function submitForm(btn){btn.textContent='✓ You\'re in! Check your email.';btn.disabled=true;setTimeout(closeModal,2200);}
-function closeExitModal(){document.getElementById('exitModalOv').classList.remove('open');sessionStorage.setItem('exitShown','1');}
-function handleExitOvClick(e){if(e.target===document.getElementById('exitModalOv'))closeExitModal();}
-function submitExitForm(btn){btn.textContent='✓ We\'ll be in touch!';btn.disabled=true;setTimeout(closeExitModal,2000);}
-let exitFired=false;
-document.addEventListener('mouseleave',function(e){if(e.clientY<10&&!exitFired&&!sessionStorage.getItem('exitShown')){exitFired=true;setTimeout(()=>document.getElementById('exitModalOv').classList.add('open'),300);}});
-window.addEventListener('scroll',()=>{const nav=document.getElementById('mainNav');if(window.scrollY>60)nav.classList.add('scrolled');else nav.classList.remove('scrolled');});
-function toggleMobileNav(){document.getElementById('navBurger').classList.toggle('open');document.getElementById('navMobile').classList.toggle('open');}
-function closeMobileNav(){document.getElementById('navBurger').classList.remove('open');document.getElementById('navMobile').classList.remove('open');}
-let widgetOpen=true;
-function toggleWidget(){widgetOpen=!widgetOpen;document.getElementById('cvgPanel').style.display=widgetOpen?'block':'none';}
-let widgetHistory=[],widgetDomain='';
-function addWidgetMsg(text,isAI){
-  const msgs=document.getElementById('cvgMsgs');
-  const d=document.createElement('div');
-  d.className='cvg-msg '+(isAI?'cvg-msg-ai':'cvg-msg-user');
-  d.style.cssText='opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s;';
-  const b=document.createElement('div');b.className='cvg-msg-b';b.innerHTML=text;d.appendChild(b);
-  const lbl=document.createElement('div');lbl.className='cvg-msg-lbl';lbl.textContent=isAI?'Aria · AI Sales Closer':'You';d.appendChild(lbl);
-  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.opacity='1';d.style.transform='translateY(0)';}));
-  return d;
+function handleOv(e){if(e.target===document.getElementById('modalOv'))closeModal();}
+function submitModal(btn){
+  btn.textContent='Check your email — we\'ll be in touch shortly';
+  btn.disabled=true;
+  setTimeout(closeModal,2400);
 }
-function showTyping(){
-  if(document.getElementById('cvgTyping'))return;
-  const msgs=document.getElementById('cvgMsgs');
-  const d=document.createElement('div');d.className='cvg-msg cvg-msg-ai';d.id='cvgTyping';
-  d.innerHTML='<div class="cvg-typing"><span></span><span></span><span></span></div>';
-  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+
+// ── REVEAL ────────────────────────────────────────────────────────────────
+const rvObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+},{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
+
+// ── FAQ ───────────────────────────────────────────────────────────────────
+function toggleFaq(el){
+  const item=el.parentElement;
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
 }
-function removeTyping(){const t=document.getElementById('cvgTyping');if(t)t.remove();}
-async function sendWidgetMsg(){
-  const input=document.getElementById('cvgUserInput');
-  const text=input.value.trim();if(!text)return;
-  input.value='';addWidgetMsg(text,false);widgetHistory.push({role:'user',content:text});showTyping();
-  try{
-    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:widgetHistory.slice(-10),clientKey:window._cvgRegisteredKey||'cvg_demo',pageContext:{section:'Live Demo — '+widgetDomain}})});
-    const data=await res.json();
-    const reply=data.reply||"That's a great question — what's the best email to reach you?";
-    removeTyping();addWidgetMsg(reply,true);widgetHistory.push({role:'assistant',content:reply});
-    if(reply.toLowerCase().includes('email')&&document.getElementById('cvgEmailCap').style.display==='none'){
-      setTimeout(()=>document.getElementById('cvgEmailCap').style.display='block',400);
-      document.getElementById('cvgInputArea').style.display='none';
-    }
-  }catch(e){
-    removeTyping();addWidgetMsg("Drop your email and I'll follow up with everything you need.",true);
-    setTimeout(()=>document.getElementById('cvgEmailCap').style.display='block',400);
+
+// ── SETUP STEPS ───────────────────────────────────────────────────────────
+function selSetup(idx,el){
+  document.querySelectorAll('.setup-step').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  for(let i=0;i<=3;i++){
+    const s=document.getElementById('sp'+i);
+    if(s)s.style.display=i===idx?'block':'none';
   }
+  if(idx===0)runSp0();
 }
-function submitWidgetEmail(){
-  const email=document.getElementById('cvgEmail').value.trim();if(!email)return;
-  document.getElementById('cvgEmailCap').style.display='none';
-  widgetHistory.push({role:'user',content:'My email is '+email});addWidgetMsg(email,false);
-  setTimeout(()=>addWidgetMsg('Perfect — sending your personalised setup now. You\'ll be live in under 10 minutes. 🚀',true),700);
+function runSp0(){
+  const bar=document.getElementById('sp0bar');
+  const txt=document.getElementById('sp0txt');
+  if(!bar)return;
+  bar.style.width='0%';
+  const steps=[
+    {w:'20%',t:'Reading pages...',d:400},
+    {w:'42%',t:'Found pricing and services...',d:1200},
+    {w:'65%',t:'Analysing your offers...',d:2100},
+    {w:'84%',t:'Generating closing script...',d:3000},
+    {w:'100%',t:'Ready.',d:3800},
+  ];
+  steps.forEach(s=>setTimeout(()=>{bar.style.width=s.w;if(txt)txt.textContent=s.t;},s.d));
+}
+window.addEventListener('load',()=>setTimeout(runSp0,600));
+
+function cpCode(btn){
+  btn.textContent='Copied';
+  btn.style.color='var(--gold)';
+  setTimeout(()=>{btn.textContent='Copy';btn.style.color='';},2000);
 }
 
 // ── LIVE TESTER ───────────────────────────────────────────────────────────
+let cvgOpen=true, wHistory=[], wDomain='';
+
+function toggleCvg(){
+  cvgOpen=!cvgOpen;
+  document.getElementById('cvgPanel').style.display=cvgOpen?'block':'none';
+}
+function addWMsg(text,isAI){
+  const msgs=document.getElementById('cvgMsgs');
+  const d=document.createElement('div');
+  d.className='cvg-msg '+(isAI?'cvg-msg-ai':'cvg-msg-u');
+  d.style.cssText='opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;';
+  const b=document.createElement('div');b.className='cvg-msg-b';b.innerHTML=text;d.appendChild(b);
+  const lbl=document.createElement('div');lbl.className='cvg-msg-lbl';
+  lbl.textContent=isAI?'Aria — Converge':'You';
+  d.appendChild(lbl);
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.opacity='1';d.style.transform='translateY(0)';}));
+}
+function showTyping(){
+  if(document.getElementById('wTyping'))return;
+  const msgs=document.getElementById('cvgMsgs');
+  const d=document.createElement('div');d.id='wTyping';d.className='cvg-msg cvg-msg-ai';
+  d.innerHTML='<div class="cvg-typing"><span></span><span></span><span></span></div>';
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+function removeTyping(){const t=document.getElementById('wTyping');if(t)t.remove();}
+
+async function sendWidget(){
+  const input=document.getElementById('cvgUserInput');
+  const text=input.value.trim();if(!text)return;
+  input.value='';addWMsg(text,false);
+  wHistory.push({role:'user',content:text});showTyping();
+  try{
+    const res=await fetch('/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:wHistory.slice(-10),clientKey:window._cvgKey||'cvg_demo',pageContext:{section:'Live Demo — '+wDomain}})
+    });
+    const data=await res.json();removeTyping();
+    const reply=data.reply||"What's the best way to get you connected with the right person today?";
+    addWMsg(reply,true);wHistory.push({role:'assistant',content:reply});
+  }catch{
+    removeTyping();addWMsg("Drop your email and I'll follow up directly.",true);
+  }
+}
+
 async function runTester(){
   const urlInput=document.getElementById('testerUrl');
   const btn=document.getElementById('testerBtn');
@@ -861,193 +1382,109 @@ async function runTester(){
   let url=urlInput.value.trim();
   if(!url){status.textContent='Enter your site URL first.';return;}
   if(!url.startsWith('http'))url='https://'+url;
-  btn.disabled=true;btn.innerHTML='Reading your site...';status.textContent='';
+  btn.disabled=true;btn.textContent='READING...';status.textContent='';
   let domain='';
   try{domain=new URL(url).hostname.replace('www.','');}catch{domain=url;}
-  widgetDomain=domain;widgetHistory=[];window._cvgRegisteredKey=null;
+  wDomain=domain;wHistory=[];window._cvgKey=null;
 
-  const _ss=document.getElementById('browserScreenshot');
-  const _sk=document.getElementById('browserSkeleton');
-  if(_ss){_ss.style.opacity='0';_ss.src='';}
-  if(_sk){_sk.style.opacity='1';}
-  document.getElementById('browserUrl').innerHTML='<span class="url-domain">'+domain+'</span>';
+  const shot=document.getElementById('shotImg');
+  const skel=document.getElementById('bskel');
+  if(shot){shot.style.opacity='0';shot.src='';}
+  if(skel)skel.style.opacity='1';
+  document.getElementById('bbarUrl').textContent=domain;
+
   const mockup=document.getElementById('browserMockup');
   mockup.style.display='block';
   mockup.scrollIntoView({behavior:'smooth',block:'center'});
+
   document.getElementById('cvgMsgs').innerHTML='';
-  document.getElementById('cvgEmailCap').style.display='none';
-  document.getElementById('cvgInputArea').style.display='none';
-  document.getElementById('cvgPanel').style.cssText='display:block;visibility:visible;opacity:1;';
-  document.getElementById('cvgWidget').style.cssText='display:block;visibility:visible;opacity:1;';
-  widgetOpen=true;
+  document.getElementById('cvgInput').style.display='none';
+  document.getElementById('cvgPanel').style.cssText='display:block;';
+  cvgOpen=true;
   showTyping();
 
-  const scanOverlay=document.getElementById('scanOverlay');
-  const scanBar=document.getElementById('scanOverlayBar');
-  const scanText=document.getElementById('scanOverlayText');
-  if(scanOverlay)scanOverlay.style.display='flex';
+  const scanOv=document.getElementById('scanOv');
+  const scanBar=document.getElementById('scanBar');
+  const scanTxt=document.getElementById('scanTxt');
+  if(scanOv)scanOv.style.display='flex';
   if(scanBar)scanBar.style.width='0%';
 
-  const scanSteps=[
-    {pct:8,  text:'🔍 Loading '+domain+'...',           ms:0},
-    {pct:22, text:'📄 Reading your pages...',           ms:1400},
-    {pct:38, text:'💰 Extracting pricing & offers...',  ms:3000},
-    {pct:54, text:'🎯 Mapping your key services...',    ms:4600},
-    {pct:70, text:'🧠 Understanding your customers...', ms:6200},
-    {pct:84, text:'✍️  Writing Aria\'s opening line...', ms:7800},
-    {pct:95, text:'⚡ Almost ready...',                  ms:9200},
+  const steps=[
+    {p:10,t:'Loading '+domain+'...',ms:0},
+    {p:25,t:'Reading your pages...',ms:1500},
+    {p:45,t:'Finding pricing and services...',ms:3200},
+    {p:62,t:'Mapping your offer...',ms:4800},
+    {p:78,t:'Writing opening line...',ms:6400},
+    {p:92,t:'Almost ready...',ms:8000},
   ];
-  const stepTimers=[];
-  scanSteps.forEach(step=>{
+  const timers=[];
+  steps.forEach(s=>{
     const t=setTimeout(()=>{
-      if(scanBar)scanBar.style.width=step.pct+'%';
-      if(scanText)scanText.textContent=step.text;
-    },step.ms);
-    stepTimers.push(t);
+      if(scanBar)scanBar.style.width=s.p+'%';
+      if(scanTxt)scanTxt.textContent=s.t;
+    },s.ms);
+    timers.push(t);
   });
 
-  // Screenshot — background, non-blocking, via CORS proxy
+  // Screenshot — background, non-blocking
   (async()=>{
     try{
       const mlUrl='https://api.microlink.io/?url='+encodeURIComponent(url)+'&screenshot=true&meta=false';
       const proxyUrl='https://api.allorigins.win/get?url='+encodeURIComponent(mlUrl);
       const r=await fetch(proxyUrl,{signal:AbortSignal.timeout(22000)});
-      const proxyData=await r.json();
-      const mlData=JSON.parse(proxyData.contents);
-      const imgUrl=mlData?.data?.screenshot?.url;
+      const pd=await r.json();
+      const ml=JSON.parse(pd.contents);
+      const imgUrl=ml?.data?.screenshot?.url;
       if(!imgUrl)return;
-      const img=document.getElementById('browserScreenshot');
-      const sk=document.getElementById('browserSkeleton');
-      if(img){img.onload=()=>{img.style.opacity='1';if(sk)sk.style.opacity='0';};img.src=imgUrl;}
-    }catch(e){}
+      const img=document.getElementById('shotImg');
+      if(img){img.onload=()=>{img.style.opacity='1';if(skel)skel.style.opacity='0';};img.src=imgUrl;}
+    }catch{}
   })();
 
-  // Register — scrapes site + generates real greeting via Groq on YOUR server
-  // Your GROQ_API_KEY stays in Vercel env vars, never touches the browser
   const clientKey='cvg_tester_'+domain;
   let regData=null;
   try{
     const regRes=await fetch('/api/register',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({clientKey:clientKey,siteUrl:url}),
+      body:JSON.stringify({clientKey,siteUrl:url}),
       signal:AbortSignal.timeout(25000)
     });
     regData=await regRes.json();
-  }catch(e){}
+  }catch{}
 
-  stepTimers.forEach(t=>clearTimeout(t));
+  timers.forEach(t=>clearTimeout(t));
   if(scanBar)scanBar.style.width='100%';
-  if(scanText)scanText.textContent='✓ Aria has read '+domain;
-  setTimeout(()=>{if(scanOverlay)scanOverlay.style.display='none';},700);
+  if(scanTxt)scanTxt.textContent='Ready';
+  setTimeout(()=>{if(scanOv)scanOv.style.display='none';},600);
 
-  // Store the clientKey we sent — config is saved under this key in clients.json
-  // /api/chat will look it up automatically for all follow-up replies
-  window._cvgRegisteredKey=clientKey;
+  window._cvgKey=clientKey;
 
-  // Use the greeting the AI wrote after reading their actual site
-  let openerMsg=regData?.config?.greeting||'';
-
-  // Fallback: ask /api/chat using the now-registered key (has full site context)
-  if(!openerMsg){
+  let opener=regData?.config?.greeting||'';
+  if(!opener){
     try{
       const fbRes=await fetch('/api/chat',{
         method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
-          messages:[{role:'user',content:'Greet this visitor. You have just read their website. Write one warm opening line that references what this business actually does — not generic. End with one soft qualifying question. 2 sentences max. No markdown.'}],
-          clientKey:clientKey,
-          pageContext:{section:'Live demo — '+domain}
+          messages:[{role:'user',content:'You have just read this website. Write one direct opening line that references what this business actually does. End with one qualifying question. 2 sentences max. No sympathy language, no generic openers.'}],
+          clientKey,pageContext:{section:'Live demo — '+domain}
         }),
         signal:AbortSignal.timeout(8000)
       });
-      const fbData=await fbRes.json();
-      openerMsg=fbData.reply||'';
-    }catch(e){}
+      const fbData=await fbRes.json();opener=fbData.reply||'';
+    }catch{}
   }
-
-  if(!openerMsg)openerMsg="I've just read through your site — what's the main thing you're trying to figure out today?";
+  if(!opener)opener="I've just read your site. What's the main thing you're trying to solve today?";
 
   removeTyping();
-  await new Promise(r=>setTimeout(r,400));
-  addWidgetMsg(openerMsg,true);
-  widgetHistory.push({role:'assistant',content:openerMsg});
-  document.getElementById('cvgInputArea').style.display='block';
-  status.textContent='✓ Aria has read '+domain+' — she\'s ready to close';
+  await new Promise(r=>setTimeout(r,300));
+  addWMsg(opener,true);
+  wHistory.push({role:'assistant',content:opener});
+  document.getElementById('cvgInput').style.display='block';
+  status.textContent='Converge has read '+domain+' and is ready';
   btn.disabled=false;
-  btn.innerHTML='<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Try another site';
+  btn.textContent='TRY ANOTHER SITE';
 }
 document.getElementById('testerUrl').addEventListener('keydown',e=>{if(e.key==='Enter')runTester();});
-
-// ── CONVERSATION SHOWCASE ─────────────────────────────────────────────────
-const scenarios=[
-  {name:'Aria · Plan Advisor',status:'Active now',msgs:[{t:'u',text:"I'm not sure which plan is right for me."},{t:'ai',text:"No problem. Quick question: roughly how many people will be using it on your team?"},{t:'u',text:"About 15 people across two departments."},{t:'ai',text:"For a team that size, most companies choose the <strong>Growth plan</strong>. It gives you unlimited conversations, 5 AI personas, and full CRM sync. Want me to walk you through exactly what's included?"},{t:'u',text:"Yes please."},{t:'ai',text:"Here's what you get: unlimited conversations, HubSpot and Salesforce sync, A/B testing, and revenue attribution so you can prove the ROI. It's $149/mo plus a small % of revenue we help generate. We only win when you do. Want to start a free trial right now?"},{t:'u',text:"Sure, let's do it."}],outcome:{icon:'✓',text:'Growth plan free trial started'}},
-  {name:'Aria · Objection Handler',status:'Active now',msgs:[{t:'u',text:"This looks expensive for what it does."},{t:'ai',text:"That's a fair reaction. Can I show you something?"},{t:'u',text:"Go ahead."},{t:'ai',text:"Most customers recover the full cost from <strong>one extra customer per month</strong>. At typical traffic levels, that usually happens in the first week. The real question isn't the cost. It's what it's costing you to keep missing those conversions."},{t:'u',text:"Fair point."},{t:'ai',text:"And you can try it completely free. 50 conversations, no card required. If it doesn't pay for itself, you never upgrade. Want to start now?"},{t:'u',text:"Yeah, let's try it."}],outcome:{icon:'✓',text:'Free plan activated — no card needed'}},
-  {name:'Aria · After-Hours Closer',status:'Active now · 11:47pm',msgs:[{t:'u',text:"Hi. I'm looking for a real estate attorney. Not sure if you're the right fit."},{t:'ai',text:"You've come to the right place. What's the situation — buying, selling, or a dispute?"},{t:'u',text:"Buying commercial property. It's a $1.8M deal and I want someone experienced."},{t:'ai',text:"We handle transactions at that level regularly. Our team has closed over $200M in commercial real estate. For a deal this size, the key questions are timing and due diligence complexity. How soon are you looking to close?"},{t:'u',text:"Probably 6 weeks. Is that realistic?"},{t:'ai',text:"Tight, but doable. We've done it in 4. I'm booking you in for a 20-minute call with Marcus, our commercial lead. I have slots tomorrow at 9am or 2pm. Which works?"},{t:'u',text:"9am works."}],outcome:{icon:'📅',text:'Discovery call booked — 9am tomorrow'}},
-  {name:'Aria · Competitor Handler',status:'Active now',msgs:[{t:'u',text:"We're already looking at Intercom. Why should we use Converge instead?"},{t:'ai',text:"They're actually different tools built for different jobs. Intercom is built for <strong>customer support</strong>: tickets, agent routing, help docs. Converge is built for <strong>revenue</strong>: qualifying leads, handling objections, closing sales."},{t:'u',text:"We need both support and sales though."},{t:'ai',text:"A lot of teams do. Converge handles the sales side and integrates with your support stack. You could run Intercom for tickets and Converge for conversions. Many customers do exactly that — they say Converge pays for itself while Intercom is a cost centre."},{t:'u',text:"That's actually a good point. How do I get started?"}],outcome:{icon:'✓',text:'Trial started — converting from evaluation'}}
-];
-let activeScenario=0,convoTimer=null,autoCycleTimer=null;
-function switchConvo(idx,el){document.querySelectorAll('.convo-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');activeScenario=idx;playScenario(idx);}
-function playScenario(idx){
-  clearTimeout(convoTimer);
-  const sc=scenarios[idx];
-  const msgsEl=document.getElementById('convoMsgs');
-  const outcomeEl=document.getElementById('convoOutcome');
-  msgsEl.innerHTML='';outcomeEl.classList.remove('show');
-  document.getElementById('convoPHName').textContent=sc.name;
-  document.getElementById('convoPHStatus').textContent=sc.status;
-  document.getElementById('coIcon').textContent=sc.outcome.icon;
-  document.getElementById('coText').textContent=sc.outcome.text;
-  let delay=200;
-  sc.msgs.forEach((msg,i)=>{
-    convoTimer=setTimeout(()=>{
-      const d=document.createElement('div');
-      d.className=msg.t==='u'?'cm cm-u':'cm cm-ai';
-      d.innerHTML=`<div class="cm-b">${msg.text}</div><div class="cm-label">${msg.t==='u'?'Visitor':'Converge AI'}</div>`;
-      msgsEl.appendChild(d);msgsEl.scrollTop=msgsEl.scrollHeight;
-      requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('show')));
-      if(i===sc.msgs.length-1)setTimeout(()=>outcomeEl.classList.add('show'),600);
-    },delay);
-    delay+=msg.t==='u'?700:1100;
-  });
-}
-function startAutoCycle(){autoCycleTimer=setInterval(()=>{const next=(activeScenario+1)%scenarios.length;document.querySelectorAll('.convo-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.convo-tab')[next].classList.add('active');activeScenario=next;playScenario(next);},9000);}
-window.addEventListener('load',()=>{playScenario(0);startAutoCycle();});
-document.querySelectorAll('.convo-tab').forEach(t=>{t.addEventListener('click',()=>{clearInterval(autoCycleTimer);setTimeout(startAutoCycle,20000);});});
-function selStep(idx,el){
-  document.querySelectorAll('.ob-item').forEach(i=>i.classList.remove('active'));
-  el.classList.add('active');
-  for(let i=0;i<=3;i++){const s=document.getElementById('ostep'+i);if(s)s.style.display=i===idx?'block':'none';}
-  if(idx===0)runScanAnimation();
-}
-function runScanAnimation(){
-  const bar=document.getElementById('scanBar');const findings=document.getElementById('scanFindings');const statusTxt=document.getElementById('scanStatusText');
-  if(!bar)return;
-  bar.style.width='0%';findings.innerHTML='';statusTxt.textContent='Scanning your website...';
-  const steps=[{pct:18,text:'Loading pages...',delay:300},{pct:35,text:'Found 14 pages',delay:900},{pct:52,text:'Extracting pricing tiers...',delay:1500},{pct:68,text:'Found 3 pricing tiers',delay:2100},{pct:80,text:'Mapping product features...',delay:2700},{pct:92,text:'Found 52 features',delay:3300},{pct:100,text:'Training complete ✓',delay:3900}];
-  steps.forEach(s=>{setTimeout(()=>{bar.style.width=s.pct+'%';const f=document.createElement('div');f.className='scan-finding';f.innerHTML=`<div class="scan-finding-dot"></div>${s.text}`;findings.appendChild(f);requestAnimationFrame(()=>requestAnimationFrame(()=>f.classList.add('appear')));if(s.pct===100)statusTxt.textContent='Ready — AI trained on your site ✓';},s.delay);});
-}
-function copyCode(btn){btn.textContent='Copied!';btn.style.color='var(--green)';setTimeout(()=>{btn.textContent='Copy';btn.style.color='';},2000);}
-function toggleFAQ(el){const item=el.parentElement;const wasOpen=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!wasOpen)item.classList.add('open');}
-function fmt(n){if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'$'+(n/1000).toFixed(0)+'k';return'$'+Math.round(n);}
-function fmtN(n){if(n>=1000)return(n/1000).toFixed(1)+'k';return Math.round(n).toString();}
-function calcROI(){
-  const v=+document.getElementById('vSlide').value,c=+document.getElementById('cSlide').value/100,aov=+document.getElementById('aSlide').value;
-  document.getElementById('vDisp').textContent=v>=1000?(v/1000).toFixed(1)+'k':v;
-  document.getElementById('cDisp').textContent=(c*100).toFixed(1)+'%';
-  document.getElementById('aDisp').textContent=aov>=1000?'$'+(aov/1000).toFixed(1)+'k':'$'+aov;
-  const curr=v*c*aov,newR=Math.min(c*3.2,.25),nRev=v*newR*aov,lift=nRev-curr,leads=Math.round(v*(newR-c)),roi=lift>0?Math.round(lift/149):0;
-  document.getElementById('roiMain').textContent=fmt(lift);document.getElementById('roiCurr').textContent=fmt(curr);document.getElementById('roiNew').textContent=fmt(nRev);document.getElementById('roiLeads').textContent=fmtN(leads);document.getElementById('roiROI').textContent=roi+'x';
-}
-calcROI();
-function animateCounter(el,end,prefix,suffix,duration){
-  let start=0;const step=end/60;
-  const timer=setInterval(()=>{start=Math.min(start+step,end);el.textContent=prefix+Math.round(start).toLocaleString()+suffix;if(start>=end)clearInterval(timer);},duration/60);
-}
-const counterObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){animateCounter(document.getElementById('ctr1'),847,'','',1200);animateCounter(document.getElementById('ctr2'),142000,'$','',1400);animateCounter(document.getElementById('ctr3'),220,'','%',1600);counterObs.disconnect();}});},{threshold:.3});
-const ctrEl=document.getElementById('ctr1');
-if(ctrEl)counterObs.observe(ctrEl.closest('div[style]')||ctrEl.parentElement);
-const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:.08});
-document.querySelectorAll('.feat-card,.proof-card,.price-card,.how-step,.for-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity .5s ease,transform .5s ease';obs.observe(el);});
-window.addEventListener('load',()=>setTimeout(runScanAnimation,400));
 </script>
 </body>
 </html>
